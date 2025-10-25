@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XVIII-N</title>
+<style>
+body {
+  background-color: #0b0b0b;
+  color: #e0dede;
+  font-family: "Courier New", monospace;
+  text-align: center;
+  padding-top: 100px;
+}
+input {
+  background: none;
+  border: 1px solid #555;
+  color: #e0dede;
+  padding: 8px;
+}
+button {
+  background-color: #111;
+  color: #e0dede;
+  border: 1px solid #777;
+  padding: 8px 14px;
+  margin-top: 10px;
+}
+#access {
+  display: none;
+  margin-top: 30px;
+}
+</style>
+</head>
+<body>
+  <h2>ACCESS RESTRICTED</h2>
+  <p>Enter access key:</p>
+  <input type="password" id="pass">
+  <button onclick="check()">ENTER</button>
+
+  <div id="access">
+    <h3>Welcome, Agent XVIII-N</h3>
+    <p>The first clue awaits.</p>
+  </div>
+
+<script>
+function check() {
+  let key = document.getElementById("pass").value;
+  if (key === "0811") { // možeš promeniti šifru ovde
+    document.getElementById("access").style.display = "block";
+  } else {
+    alert("Access Denied");
+  }
+}
+</script>
+</body>
+</html>
