@@ -34,6 +34,10 @@
     margin-top: 10px;
     cursor: pointer;
   }
+  #timer {
+    color: #999;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
@@ -42,26 +46,16 @@
   <input id="codeInput" type="text" placeholder="Enter code">
   <button onclick="checkCode()">Submit</button>
   <p id="message"></p>
-
-<script>
-function checkCode() {
-  const input = document.getElementById('codeInput').value.toLowerCase().trim();
-  const message = document.getElementById('message');
-  if (input === 'prava ljubav' || input === 'pravaljubav') {
-    message.textContent = 'Access granted. Further instructions incoming...';
+  <p id="timer"></p>
   <button id="nextButton" style="display:none;" onclick="location.href='mission3.html'">Proceed</button>
-<p id="timer" style="margin-top:10px; color:#999;"></p>
-  } else {
-    message.textContent = 'Access denied.';
-  }
-}
+
 <script>
 function checkCode() {
   const input = document.getElementById('codeInput').value.toLowerCase().trim();
   const message = document.getElementById('message');
   const nextButton = document.getElementById('nextButton');
   const timer = document.getElementById('timer');
-  const unlockDate = new Date("2025-11-03T00:00:00"); // ← datum i vreme otključavanja
+  const unlockDate = new Date("2025-11-03T00:00:00"); // datum otključavanja
   const now = new Date();
 
   if (input === 'prava ljubav' || input === 'pravaljubav') {
@@ -71,10 +65,11 @@ function checkCode() {
       timer.textContent = '';
     } else {
       const diff = unlockDate - now;
-      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       message.textContent = 'Access granted. Mission 3 locked.';
-      timer.textContent = `Unlocks on November 3, 2025 — ${hours}h ${minutes}m remaining.`;
+      timer.textContent = `Unlocks on November 3, 2025 — ${days}d ${hours}h ${minutes}m remaining.`;
       nextButton.style.display = 'none';
     }
   } else {
