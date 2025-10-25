@@ -1,1 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 3: The Lost Image</title>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    padding: 40px;
+  }
+  img {
+    width: 90%;
+    max-width: 600px;
+    margin: 30px 0;
+    border: 1px solid #444;
+  }
+  input {
+    background-color: black;
+    color: white;
+    border: 1px solid #888;
+    padding: 10px;
+    margin: 8px;
+    width: 250px;
+    text-align: center;
+    font-family: "Courier New", monospace;
+  }
+  button {
+    background-color: #222;
+    color: white;
+    border: 1px solid #888;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
 
+<h2>MISSION 3: THE LOST IMAGE</h2>
+<p><i>Recovered File: IMG_03-Δ<br>Status: Classified – Visual evidence recovered</i></p>
+
+<p>The Agency has intercepted a visual fragment.<br>
+Its exact origin remains undetermined.</p>
+
+<p><b>Your task:</b><br>
+1. Identify the <u>location</u> where the image was taken.<br>
+2. Determine the <u>crucial trace</u> visible within it.</p>
+
+<p><i>Hint: Some memories are clearer than any photograph.</i></p>
+
+<img src="20190913_235241_Original.jpeg" alt="Recovered visual evidence">
+
+<div id="form">
+  <input type="text" id="location" placeholder="Location"><br>
+  <input type="text" id="trace" placeholder="Crucial Trace"><br>
+  <button onclick="checkAnswers()">Submit</button>
+</div>
+
+<p id="result"></p>
+
+<script>
+function checkAnswers() {
+  const loc = document.getElementById('location').value.trim().toLowerCase();
+  const trace = document.getElementById('trace').value.trim().toLowerCase();
+  const result = document.getElementById('result');
+  const unlockDate = new Date("2025-11-04T00:00:00"); // unlocks 4. novembra
+
+  const now = new Date();
+
+  if (
+    (loc === "čarda aqua doria" || loc === "carda aqua doria") &&
+    (trace === "8 tamburaša" || trace === "osam tamburaša" || trace === "8 tamburasa" || trace === "osam tamburasa")
+  ) {
+    if (now < unlockDate) {
+      const diff = Math.floor((unlockDate - now) / (1000 * 60 * 60 * 24));
+      result.innerHTML = `Decryption complete. Memory verified.<br>Next transmission locked.<br>Unlocks on November 4, 2025 — ${diff} days remaining.`;
+    } else {
+      result.innerHTML = `<b>Decryption complete.</b><br>Memory verified.<br><a href='mission4.html' style='color:white;'>Access next mission</a>`;
+    }
+  } else {
+    result.innerHTML = "Access denied. Try again.";
+  }
+}
+</script>
+
+</body>
+</html>
