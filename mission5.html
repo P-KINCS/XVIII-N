@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 5: System Breach</title>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    padding: 40px;
+    overflow: hidden;
+  }
+
+  #glitch {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      #000,
+      #000 2px,
+      #111 3px,
+      #000 4px
+    );
+    animation: glitch 0.1s infinite;
+    z-index: 999;
+  }
+
+  @keyframes glitch {
+    0% {opacity: 1; transform: translate(0,0);}
+    20% {opacity: 0.9; transform: translate(3px,-3px);}
+    40% {opacity: 0.8; transform: translate(-3px,3px);}
+    60% {opacity: 1; transform: translate(2px,2px);}
+    80% {opacity: 0.7; transform: translate(-2px,-2px);}
+    100% {opacity: 1; transform: translate(0,0);}
+  }
+
+  #content {
+    display: none;
+    animation: fadeIn 1.5s forwards;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  button {
+    background-color: #222;
+    color: white;
+    border: 1px solid #888;
+    padding: 12px 25px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+  }
+
+  button:hover {
+    background-color: #333;
+  }
+</style>
+</head>
+<body>
+
+<div id="glitch"></div>
+
+<div id="content">
+  <h2>MISSION 5: SYSTEM BREACH</h2>
+
+  <p><b>⚠️ SECURITY ALERT ⚠️</b></p>
+
+  <p>An unknown entity is breaching the Agency’s secure network.<br>
+  Intruder tag detected: <b>M</b></p>
+
+  <p>The system shows traces of manipulated data streams.<br>
+  Before the connection was lost, one visual record was recovered.</p>
+
+  <p><i>INSTRUCTIONS:</i><br>
+  Watch the recovered footage carefully.<br>
+  The message appears to be encrypted.<br>
+  Determine whether it contains usable data or false leads.<br><br>
+  Proceed with extreme caution — the source is still active.</p>
+
+  <button onclick="openVideo()">▶ Access Recovered Video</button>
+
+  <p style="margin-top:40px; color:#777; font-size:14px;">
+    [Signal detected again — same frequency: M]<br>
+    [Transmission cut]
+  </p>
+</div>
+
+<script>
+setTimeout(() => {
+  document.getElementById("glitch").style.display = "none";
+  document.getElementById("content").style.display = "block";
+}, 2000);
+
+function openVideo() {
+  window.open("IMG_8646.mov", "_blank");
+}
+</script>
+
+</body>
+</html>
