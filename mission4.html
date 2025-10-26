@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 4: Cross Connection</title>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    padding: 40px;
+  }
+  input {
+    background-color: black;
+    color: white;
+    border: 1px solid #888;
+    padding: 10px;
+    margin: 10px;
+    width: 250px;
+    text-align: center;
+    font-family: "Courier New", monospace;
+  }
+  button {
+    background-color: #222;
+    color: white;
+    border: 1px solid #888;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+  }
+  img {
+    display: block;
+    margin: 40px auto 0;
+    max-width: 600px;
+    width: 90%;
+    border: 1px solid #333;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<h2>MISSION 4: CROSS CONNECTION</h2>
+
+<p><i>EVIDENCE UPLOADED</i></p>
+
+<p>Two documents. One shared detail.</p>
+
+<input type="text" id="answer" placeholder="Enter your conclusion">
+<br>
+<button onclick="checkAnswer()">Submit</button>
+
+<p id="result"></p>
+<img id="messageImage" class="hidden" src="F4D20A00-09B2-4E3B-8CE6-7287D7D535E7" alt="Decrypted note">
+
+<script>
+function checkAnswer() {
+  const answer = document.getElementById('answer').value.trim().toLowerCase();
+  const result = document.getElementById('result');
+  const image = document.getElementById('messageImage');
+
+  if (answer === "james chapman") {
+    result.innerHTML = "<b>ACCESS GRANTED</b><br><br>Excellent work, Agent B.<br>The pattern is confirmed.<br><br>It seems this file contained a hidden layer.<br>Keep it safe — we don’t know when it might become useful.<br><br>";
+    image.classList.remove('hidden');
+  } else {
+    result.innerHTML = "Access denied. Try again.";
+  }
+}
+</script>
+
+</body>
+</html>
