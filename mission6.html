@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 6 - Surveillance Terminal</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff99;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    padding: 40px;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  input {
+    padding: 10px;
+    margin: 5px;
+    background-color: #0a0a0a;
+    color: #00ff99;
+    border: 1px solid #00ff99;
+    width: 200px;
+    font-family: "Courier New", monospace;
+  }
+
+  button {
+    background-color: #0a0a0a;
+    color: #00ff99;
+    border: 1px solid #00ff99;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background-color: #003322;
+  }
+
+  #login-section, #timestamp-section, #video-section {
+    display: none;
+    margin-top: 20px;
+  }
+
+  #hint {
+    color: #888;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h2>SECURE SURVEILLANCE TERMINAL</h2>
+<p>Access restricted. Authorized personnel only.</p>
+
+<div id="login-section">
+  <p>LOGIN REQUIRED</p>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password"><br>
+  <button onclick="checkLogin()">Access</button>
+  <p id="login-error"></p>
+  <p id="hint">Hint: favorite names.</p>
+</div>
+
+<div id="timestamp-section">
+  <p>Authentication successful.<br>Enter timestamp to access the recovered feed.</p>
+  <input type="text" id="time" placeholder="Time (e.g. 20:35)">
+  <input type="text" id="date" placeholder="Date (e.g. 26.10.)"><br>
+  <button onclick="checkTimestamp()">Retrieve Recording</button>
+  <p id="timestamp-error"></p>
+</div>
+
+<div id="video-section">
+  <p>Recovered security footage:</p>
+  <video controls width="70%">
+    <source src="20251026221934.mov" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <p style="color:#999; margin-top:10px;">End of transmission.</p>
+</div>
+
+<script>
+document.getElementById("login-section").style.display = "block";
+
+function checkLogin() {
+  const user = document.getElementById("username").value.trim().toLowerCase();
+  const pass = document.getElementById("password").value.trim().toLowerCase();
+  if (user === "boris" && pass === "klara") {
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("timestamp-section").style.display = "block";
+  } else {
+    document.getElementById("login-error").innerText = "Access denied. Invalid credentials.";
+  }
+}
+
+function checkTimestamp() {
+  const time = document.getElementById("time").value.trim();
+  const date = document.getElementById("date").value.trim();
+  if (time === "20:35" && (date === "26.10." || date === "26.10")) {
+    document.getElementById("timestamp-section").style.display = "none";
+    document.getElementById("video-section").style.display = "block";
+  } else {
+    document.getElementById("timestamp-error").innerText = "No match found. Verify timestamp.";
+  }
+}
+</script>
+
+</body>
+</html>
