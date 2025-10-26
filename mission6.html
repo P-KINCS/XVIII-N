@@ -1,56 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Mission 6 - Surveillance Terminal</title>
 <style>
   body {
-    background-color: black;
+    background-color: #000;
     color: #00ff99;
     font-family: "Courier New", monospace;
     text-align: center;
     padding: 40px;
   }
-
-  h2 {
-    margin-bottom: 10px;
-  }
-
+  h2 { margin-bottom: 10px; letter-spacing: 2px; }
+  p { line-height: 1.6; }
   input {
-    padding: 10px;
-    margin: 5px;
-    background-color: #0a0a0a;
+    padding: 12px;
+    margin: 8px 0;
+    background: #060606;
     color: #00ff99;
-    border: 1px solid #00ff99;
-    width: 200px;
+    border: 2px solid #00ff99;
+    width: 260px;
     font-family: "Courier New", monospace;
+    box-sizing: border-box;
   }
-
   button {
-    background-color: #0a0a0a;
+    background: #060606;
     color: #00ff99;
-    border: 1px solid #00ff99;
-    padding: 10px 20px;
+    border: 2px solid #00ff99;
+    padding: 10px 24px;
     cursor: pointer;
     font-family: "Courier New", monospace;
-    margin-top: 10px;
+    margin-top: 12px;
   }
-
-  button:hover {
-    background-color: #003322;
-  }
-
-  #login-section, #timestamp-section, #video-section {
-    display: none;
-    margin-top: 20px;
-  }
-
-  #hint {
-    color: #888;
-    font-size: 14px;
-    margin-top: 8px;
-  }
+  button:hover { background:#003322; }
+  #login-section, #timestamp-section, #video-section { display: none; margin-top: 20px; }
+  #hint { color:#888; font-size:14px; margin-top: 8px; }
+  #timestamp-error, #login-error { color:#ff9999; margin-top:8px; }
 </style>
 </head>
 <body>
@@ -58,27 +44,30 @@
 <h2>SECURE SURVEILLANCE TERMINAL</h2>
 <p>Access restricted. Authorized personnel only.</p>
 
+<!-- LOGIN -->
 <div id="login-section">
   <p>LOGIN REQUIRED</p>
-  <input type="text" id="username">
-  <input type="password" id="password"><br>
+  <input id="username" type="text" placeholder="Username" autocomplete="off" />
+  <input id="password" type="password" placeholder="Password" autocomplete="off" /><br>
   <button onclick="checkLogin()">Access</button>
   <p id="login-error"></p>
   <p id="hint">Hint: favorite names.</p>
 </div>
 
+<!-- TIMESTAMP -->
 <div id="timestamp-section">
   <p>Authentication successful.<br>Enter timestamp to access the recovered feed.</p>
-  <input type="text" id="time">
-  <input type="text" id="date"><br>
+  <input id="time" type="text" placeholder="Time (e.g. 00:00)" autocomplete="off" />
+  <input id="date" type="text" placeholder="Date (e.g. 11.11.)" autocomplete="off" /><br>
   <button onclick="checkTimestamp()">Retrieve Recording</button>
   <p id="timestamp-error"></p>
   <p id="hint2" style="color:#888; font-size:14px;">Hint: check the details on the frame.</p>
 </div>
 
+<!-- VIDEO -->
 <div id="video-section">
   <p>Recovered security footage:</p>
-  <video controls width="70%">
+  <video controls width="80%" style="max-width:900px;">
     <source src="20251026221934.mov" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -86,29 +75,40 @@
 </div>
 
 <script>
-document.getElementById("login-section").style.display = "block";
+/* show login on load */
+window.onload = function() {
+  document.getElementById("login-section").style.display = "block";
+};
 
+/* credentials (case-insensitive check) */
 function checkLogin() {
   const user = document.getElementById("username").value.trim().toLowerCase();
   const pass = document.getElementById("password").value.trim().toLowerCase();
+  const loginErr = document.getElementById("login-error");
   if (user === "boris" && pass === "klara") {
+    loginErr.innerText = "";
     document.getElementById("login-section").style.display = "none";
     document.getElementById("timestamp-section").style.display = "block";
-    document.getElementById("login-error").innerText = "";
+    // put focus on first timestamp input
+    setTimeout(()=>document.getElementById("time").focus(), 50);
   } else {
-    document.getElementById("login-error").innerText = "Access denied. Invalid credentials.";
+    loginErr.innerText = "Access denied. Invalid credentials.";
   }
 }
 
+/* timestamp check */
 function checkTimestamp() {
   const time = document.getElementById("time").value.trim();
   const date = document.getElementById("date").value.trim();
-  if (time === "20:35" && (date === "26.10." || date === "26.10")) {
+  const tsErr = document.getElementById("timestamp-error");
+  // accept "26.10." or "26.10" for convenience
+  const dateOk = (date === "26.10." || date === "26.10");
+  if (time === "20:35" && dateOk) {
+    tsErr.innerText = "";
     document.getElementById("timestamp-section").style.display = "none";
     document.getElementById("video-section").style.display = "block";
-    document.getElementById("timestamp-error").innerText = "";
   } else {
-    document.getElementById("timestamp-error").innerText = "No match found. Verify timestamp.";
+    tsErr.innerText = "No match found. Verify timestamp.";
   }
 }
 </script>
