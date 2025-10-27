@@ -55,10 +55,18 @@
   }
 
   #success-message {
-    margin-top: 20px;
+    margin-top: 25px;
     color: #00ff99;
     font-size: 18px;
     display: none;
+    animation: fadeIn 1s ease-in-out forwards;
+  }
+
+  #success-message em {
+    display: block;
+    font-size: 15px;
+    color: #66ffcc;
+    margin-top: 5px;
   }
 
   #error-message {
@@ -66,13 +74,18 @@
     color: #ff4444;
     display: none;
   }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
 </style>
 </head>
 <body>
 
 <h2>MISSION 9 // FRAGMENT RECONSTRUCTION</h2>
-<p>Unrelated data received — possibly encrypted.  
-They seem out of order, but they might mean something to you.  
+<p>Unrelated data received — possibly encrypted.<br>
+They seem out of order, but they might mean something to you.<br>
 Try to arrange them correctly.</p>
 
 <!-- Audio player -->
@@ -83,29 +96,31 @@ Try to arrange them correctly.</p>
 
 <p>Enter what you heard, in the right order:</p>
 
-<form id="fragmentForm" style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+<form id="fragmentForm" onsubmit="event.preventDefault(); checkAnswers();" style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
   <div style="display: flex; gap: 10px;">
-    <input type="text" placeholder="Date" required style="width: 140px;">
-    <input type="text" placeholder="Event" required style="width: 200px;">
+    <input id="a1" type="text" placeholder="Date" required>
+    <input id="b1" type="text" placeholder="Event" required>
   </div>
   <div style="display: flex; gap: 10px;">
-    <input type="text" placeholder="Date" required style="width: 140px;">
-    <input type="text" placeholder="Event" required style="width: 200px;">
+    <input id="a2" type="text" placeholder="Date" required>
+    <input id="b2" type="text" placeholder="Event" required>
   </div>
   <div style="display: flex; gap: 10px;">
-    <input type="text" placeholder="Date" required style="width: 140px;">
-    <input type="text" placeholder="Event" required style="width: 200px;">
+    <input id="a3" type="text" placeholder="Date" required>
+    <input id="b3" type="text" placeholder="Event" required>
   </div>
   <div style="display: flex; gap: 10px;">
-    <input type="text" placeholder="Date" required style="width: 140px;">
-    <input type="text" placeholder="Event" required style="width: 200px;">
+    <input id="a4" type="text" placeholder="Date" required>
+    <input id="b4" type="text" placeholder="Event" required>
   </div>
-  <button type="submit" style="margin-top: 15px;">Confirm</button>
+
+  <button type="submit">Confirm</button>
 </form>
 
-<button onclick="checkAnswers()">Confirm</button>
-
-<p id="success-message">Correct sequence confirmed. Transmission restored.</p>
+<p id="success-message">
+  Good memory, Agent B. Or maybe it’s intuition 😉  
+  <em>“We didn’t just love each other.”</em>
+</p>
 <p id="error-message">Incorrect order. Try again.</p>
 
 <script>
