@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 10 // Identification</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff99;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    padding: 40px;
+  }
+
+  h2 {
+    color: #00ff99;
+    margin-bottom: 10px;
+  }
+
+  p {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    font-size: 16px;
+    color: #80ffcc;
+  }
+
+  input {
+    padding: 10px;
+    width: 250px;
+    background-color: #0a0a0a;
+    border: 1px solid #00ff99;
+    color: #00ff99;
+    text-align: center;
+    font-family: "Courier New", monospace;
+  }
+
+  button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #0a0a0a;
+    border: 1px solid #00ff99;
+    color: #00ff99;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+  }
+
+  button:hover {
+    background-color: #003322;
+  }
+
+  #images {
+    margin-top: 30px;
+  }
+
+  #images img {
+    width: 220px;
+    margin: 10px;
+    border: 1px solid #00ff99;
+  }
+
+  #reveal {
+    display: none;
+    color: #d4af37;
+    font-family: "Garamond", serif;
+    margin-top: 50px;
+    animation: fadeIn 2s ease-in-out forwards;
+  }
+
+  #reveal h3 {
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+
+  #reveal p {
+    color: #d4af37;
+    max-width: 600px;
+    margin: 0 auto 10px;
+    font-size: 16px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<h2>MISSION 10 // IDENTIFICATION</h2>
+<p>A new fragment has been recovered. It’s crucial to the project that you identify this figure.<br>
+Start with this: <strong>What do they call this person?</strong></p>
+
+<input type="text" id="answer" placeholder="Enter your answer">
+<button onclick="checkAnswer()">Confirm</button>
+
+<div id="images">
+  <!-- OVDE UBACI SVOJE SLIKE -->
+  <img src="IMG_8696.jpeg" alt="Fragment 1">
+  <img src="IMG_8697.jpeg" alt="Fragment 2">
+  <img src="IMG_8698.jpeg" alt="Fragment 3">
+  <img src="IMG_8699.webp" alt="Fragment 4">
+</div>
+
+<div id="reveal">
+  <h3>Revealed: The Bloody Countess</h3>
+  <p>History named her a monster.<br>
+  But behind the myth was a woman who stood too tall for her time.<br>
+  Erzsébet Báthory was never given a fair trial — locked away without judgment,<br>
+  silenced by fear, politics, and the threat she posed as a powerful woman.</p>
+
+  <p>Thank you for recognizing strength instead of fearing it —<br>
+  for never trying to cage me,<br>
+  for knowing that my power grows from your love,<br>
+  and that everything I become, I become for us.</p>
+
+  <p><em>“Megtanultuk egymást.”</em></p>
+</div>
+
+<script>
+function checkAnswer() {
+  const input = document.getElementById("answer").value.trim().toLowerCase();
+  const correct = "bloody countess";
+
+  if (input === correct) {
+    document.body.style.backgroundColor = "black";
+    document.body.innerHTML = document.getElementById("reveal").outerHTML;
+    document.body.querySelector("#reveal").style.display = "block";
+  }
+}
+</script>
+
+</body>
+</html>
