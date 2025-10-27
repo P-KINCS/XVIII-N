@@ -43,7 +43,7 @@
     background-color: #003322;
   }
 
-  #message, #secret {
+  #message, #openFileBtn, #secret {
     display: none;
     margin-top: 20px;
   }
@@ -60,8 +60,8 @@
 
 <h2>MISSION 8 // CLASSIFIED RECORD</h2>
 <img src="IMG_8681.jpeg" alt="Encrypted image">
-<p>Enter the recorded date:</p>
 
+<p>Enter the recorded date:</p>
 <input type="text" id="dateInput" placeholder="dd.mm.yyyy">
 <button onclick="checkDate()">Confirm</button>
 <p id="error"></p>
@@ -69,11 +69,12 @@
 <div id="message">
   <p>The files list that day as irrelevant.<br>
   But it was the day the story began — long before I knew it.<br>— M</p>
+  <button id="openFileBtn" onclick="revealFile()">Open File</button>
+</div>
 
-  <div id="secret">
-    <p><em>Declassified file attached below:</em></p>
-    <img src="IMG_8682.jpeg" alt="Declassified file">
-  </div>
+<div id="secret">
+  <p><em>Declassified file attached below:</em></p>
+  <img src="IMG_8682.jpeg" alt="Declassified file">
 </div>
 
 <script>
@@ -82,11 +83,15 @@ function checkDate() {
   const validDates = ["8.11.2000", "08.11.2000", "8.11.00", "08.11.00"];
   if (validDates.includes(date)) {
     document.getElementById("message").style.display = "block";
-    document.getElementById("secret").style.display = "block";
+    document.getElementById("openFileBtn").style.display = "inline-block";
     document.getElementById("error").innerText = "";
   } else {
     document.getElementById("error").innerText = "Access denied. Invalid record.";
   }
+}
+
+function revealFile() {
+  document.getElementById("secret").style.display = "block";
 }
 </script>
 
