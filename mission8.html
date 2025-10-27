@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 8 - Recovered Fragments</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff99;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  h2 {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  p {
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto 25px;
+  }
+
+  img {
+    width: 60%;
+    max-width: 400px;
+    border: 1px solid #00ff99;
+    margin-top: 20px;
+  }
+
+  input {
+    padding: 8px;
+    margin-top: 10px;
+    background-color: #0a0a0a;
+    color: #00ff99;
+    border: 1px solid #00ff99;
+    font-family: "Courier New", monospace;
+    width: 220px;
+    text-align: center;
+  }
+
+  button {
+    background-color: #000;
+    color: #00ff99;
+    border: 1px solid #00ff99;
+    padding: 8px 18px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+  }
+
+  button:hover {
+    background-color: #003322;
+  }
+
+  #continue {
+    display: none;
+    margin-top: 40px;
+  }
+
+  .correct {
+    color: #00ff99;
+    font-size: 14px;
+  }
+
+  .incorrect {
+    color: #ff3333;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<h2>THE AGENCY // RECOVERED FRAGMENTS</h2>
+<hr style="border:1px solid #004422; width:50%;">
+<p>
+Several damaged images were recovered from the lost archives.<br>
+Each contains a hidden message.<br>
+Enter all three correctly to unlock the next transmission.
+</p>
+
+<!-- IMAGE 1 -->
+<img src="IMG_8673.jpeg" alt="Fragment 1"><br>
+<input type="text" id="code1" placeholder="Enter keyword 1"><br>
+<p id="feedback1"></p>
+
+<!-- IMAGE 2 -->
+<img src="IMG_8676.webp" alt="Fragment 2"><br>
+<input type="text" id="code2" placeholder="Enter keyword 2"><br>
+<p id="feedback2"></p>
+
+<!-- IMAGE 3 -->
+<img src="IMG_8677.jpeg" alt="Fragment 3"><br>
+<input type="text" id="code3" placeholder="Enter keyword 3"><br>
+<p id="feedback3"></p>
+
+<button onclick="checkCodes()">VERIFY</button>
+
+<div id="continue">
+  <p>All fragments verified.<br>Proceed to next transmission.</p>
+  <button onclick="location.href='mission8message.html'">CONTINUE</button>
+</div>
+
+<script>
+function normalize(input) {
+  return input.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function checkCodes() {
+  const c1 = normalize(document.getElementById("code1").value);
+  const c2 = normalize(document.getElementById("code2").value);
+  const c3 = normalize(document.getElementById("code3").value);
+
+  let correct = 0;
+
+  if (c1 === "youredoinggreatandimgladyouexist") {
+    document.getElementById("feedback1").innerHTML = "✅ Correct";
+    document.getElementById("feedback1").className = "correct";
+    correct++;
+  } else {
+    document.getElementById("feedback1").innerHTML = "❌ Incorrect";
+    document.getElementById("feedback1").className = "incorrect";
+  }
+
+  if (c2 === "missyou") {
+    document.getElementById("feedback2").innerHTML = "✅ Correct";
+    document.getElementById("feedback2").className = "correct";
+    correct++;
+  } else {
+    document.getElementById("feedback2").innerHTML = "❌ Incorrect";
+    document.getElementById("feedback2").className = "incorrect";
+  }
+
+  if (c3 === "hithere") {
+    document.getElementById("feedback3").innerHTML = "✅ Correct";
+    document.getElementById("feedback3").className = "correct";
+    correct++;
+  } else {
+    document.getElementById("feedback3").innerHTML = "❌ Incorrect";
+    document.getElementById("feedback3").className = "incorrect";
+  }
+
+  if (correct === 3) {
+    document.getElementById("continue").style.display = "block";
+  } else {
+    document.getElementById("continue").style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>
