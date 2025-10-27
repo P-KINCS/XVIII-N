@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 9 // Fragment Reconstruction</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff99;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    padding: 40px;
+  }
+
+  h2 {
+    color: #00ff99;
+  }
+
+  p {
+    max-width: 500px;
+    margin: 0 auto 30px;
+    font-size: 16px;
+    color: #80ffcc;
+  }
+
+  audio {
+    margin: 20px 0;
+    filter: brightness(0.7);
+  }
+
+  input {
+    padding: 10px;
+    margin: 5px;
+    background-color: #0a0a0a;
+    color: #00ff99;
+    border: 1px solid #00ff99;
+    width: 180px;
+    text-align: center;
+    font-family: "Courier New", monospace;
+  }
+
+  button {
+    background-color: #0a0a0a;
+    color: #00ff99;
+    border: 1px solid #00ff99;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+    margin-top: 15px;
+  }
+
+  button:hover {
+    background-color: #003322;
+  }
+
+  #success-message {
+    margin-top: 20px;
+    color: #00ff99;
+    font-size: 18px;
+    display: none;
+  }
+
+  #error-message {
+    margin-top: 20px;
+    color: #ff4444;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<h2>MISSION 9 // FRAGMENT RECONSTRUCTION</h2>
+<p>Unrelated data received — possibly encrypted.  
+They seem out of order, but they might mean something to you.  
+Try to arrange them correctly.</p>
+
+<!-- Audio player -->
+<audio controls>
+  <source src="ScreenRecording_10-27-2025 19-33-24_1.mov" type="audio/mp4">
+  Your browser does not support the audio element.
+</audio>
+
+<p>Enter what you heard, in the right order:</p>
+
+<div id="inputs">
+  <input type="text" id="a1" placeholder="Date (e.g. 13.09)">
+  <input type="text" id="b1" placeholder="Event (e.g. First date)"><br>
+  <input type="text" id="a2" placeholder="Date (e.g. 21.09)">
+  <input type="text" id="b2" placeholder="Event (e.g. First kiss)"><br>
+  <input type="text" id="a3" placeholder="Date (e.g. 08.09)">
+  <input type="text" id="b3" placeholder="Event (e.g. The promise proposal)"><br>
+  <input type="text" id="a4" placeholder="Date (e.g. 30.05)">
+  <input type="text" id="b4" placeholder="Event (e.g. The true proposal)"><br>
+</div>
+
+<button onclick="checkAnswers()">Confirm</button>
+
+<p id="success-message">Correct sequence confirmed. Transmission restored.</p>
+<p id="error-message">Incorrect order. Try again.</p>
+
+<script>
+function normalize(text) {
+  return text.trim().toLowerCase().replaceAll('.', '').replaceAll('-', '').replaceAll(' ', '');
+}
+
+function checkAnswers() {
+  const a1 = normalize(document.getElementById('a1').value);
+  const b1 = normalize(document.getElementById('b1').value);
+  const a2 = normalize(document.getElementById('a2').value);
+  const b2 = normalize(document.getElementById('b2').value);
+  const a3 = normalize(document.getElementById('a3').value);
+  const b3 = normalize(document.getElementById('b3').value);
+  const a4 = normalize(document.getElementById('a4').value);
+  const b4 = normalize(document.getElementById('b4').value);
+
+  const correct =
+    a1 === "1309" && b1.includes("firstdate") &&
+    a2 === "2109" && b2.includes("firstkiss") &&
+    a3 === "0809" && (b3.includes("promiseproposal") || b3.includes("thepromiseproposal")) &&
+    a4 === "3005" && (b4.includes("trueproposal") || b4.includes("thetrueproposal"));
+
+  if (correct) {
+    document.getElementById('success-message').style.display = 'block';
+    document.getElementById('error-message').style.display = 'none';
+  } else {
+    document.getElementById('error-message').style.display = 'block';
+    document.getElementById('success-message').style.display = 'none';
+  }
+}
+</script>
+
+</body>
+</html>
