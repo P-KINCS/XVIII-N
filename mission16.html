@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 16 // The Memory Gamez</title>
+<style>
+  :root{
+    --beige:#f5e6c8;
+    --gold:#d4af37;
+    --ink:#4b3d22;
+    --green:#00ff99;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:"Garamond",serif; color:#2c2c2c; background:#000;}
+  .screen{max-width:900px; width:100%; padding:28px 18px; text-align:center; margin:0 auto;}
+  h2{color:var(--green); font-family:"Courier New",monospace; letter-spacing:1px; margin:0 0 10px;}
+  p.lead{color:#a9ffd8; font-family:"Courier New",monospace; line-height:1.5; margin:6px 0;}
+  .btn{display:inline-block; margin-top:22px; padding:12px 28px; cursor:pointer;
+       font-family:"Courier New",monospace; font-size:16px; color:var(--green);
+       background:#0a0a0a; border:1px solid var(--green);}
+  .btn:hover{background:#003322;}
+
+  /* GAME */
+  #game{display:none; background:var(--beige); color:var(--ink); min-height:100vh; width:100vw;}
+  #game .inner{max-width:900px; margin:0 auto; padding:22px 16px 64px; text-align:center;}
+  .img-wrap{display:flex; justify-content:center; align-items:center; margin:10px 0 16px;}
+  .img-wrap img{max-width:96vw; max-height:58vh; width:auto; height:auto; object-fit:contain; border:1px solid rgba(0,0,0,.08);}
+  .controls{display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:wrap;}
+  input[type="text"]{width:min(680px,90vw); padding:12px 14px; font-size:16px; text-align:center;
+                     border:1px solid var(--gold); background:#fff; color:#2c2c2c;}
+  .confirm{padding:10px 16px; border:1px solid var(--gold); background:rgba(212,175,55,.15);
+           color:#7a6428; cursor:pointer; border-radius:14px;}
+  .confirm:hover{background:rgba(212,175,55,.25);}
+  .hint-btn{margin-left:4px; padding:8px 12px; border:1px dashed #b7902b; background:transparent;
+            color:#7a6428; cursor:pointer; border-radius:10px;}
+  .hint{margin-top:10px; color:#7a6428; font-style:italic; display:none;}
+  .ok{color:#1b7f4a; font-family:"Courier New",monospace; margin-top:14px;}
+  .err{color:#a11b1b; font-family:"Courier New",monospace; margin-top:14px;}
+  #progress{margin-top:10px; font-family:"Courier New",monospace; color:#7a6428;}
+
+  /* END SCREEN */
+  #endScreen{
+    display:none; position:fixed; inset:0; background:#000;
+    justify-content:center; align-items:center; flex-direction:column;
+    color:var(--gold); font-family:"Courier New",monospace; text-align:center;
+    z-index:10;
+  }
+  #messageM{display:none; font-size:20px; margin-top:20px; white-space:pre-wrap;}
+  canvas{position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;}
+</style>
+</head>
+<body>
+
+<!-- START -->
+<section id="start" class="screen">
+  <h2>MISSION 16 // THE MEMORY GAME</h2>
+  <p class="lead">They say memories fade.<br>Let’s find out if ours do.</p>
+  <p class="lead">Each piece below hides a word, a place, a trace of something that once belonged to us.</p>
+  <p class="lead">Write what you see — or rather, what you remember.</p>
+  <button class="btn" onclick="begin()">START</button>
+</section>
+
+<!-- GAME -->
+<section id="game">
+  <div class="inner">
+    <div id="progress"></div>
+    <div class="img-wrap"><img id="pimg" src="" alt="fragment"></div>
+    <div class="controls">
+      <input id="answer" type="text" placeholder="">
+      <button class="confirm" onclick="check()">Confirm</button>
+      <button id="hintBtn" class="hint-btn" style="display:none" onclick="toggleHint()">Hint</button>
+    </div>
+    <div id="hint" class="hint"></div>
+    <div id="result"></div>
+  </div>
+</section>
+
+<!-- END SCREEN -->
+<div id="endScreen">
+  <canvas id="fireworks"></canvas>
+  <div id="messageM">Not bad at all, Agent B.<br>See you tomorrow.<br><br>— M</div>
+</div>
+
+<script>
+function normalize(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9čćšđž\s]/gi,'')
+    .replace(/\s+/g,'');
+}
+
+const steps=[
+  {img:"IMG_8750.jpeg",answer:"Želim jako da te zagrlim sada. Da ti oči iskoče iz lobanje.",hint:null},
+  {img:"1D5E88A5-F800-488D-954E-3F6FD0956596.png",answer:"najbolji osećaj na svetu",hint:"osećaj."},
+  {img:"IMG_8746.jpeg",answer:"ti si moje malo fascinantno stvorenje",hint:"guglaj/messages, fascinantno."},
+  {img:"IMG_8748.jpeg",answer:"p!nk - perfect",hint:"i=!"}
+];
+let i=0;
+
+function begin(){
+  document.getElementById('start').style.display='none';
+  document.getElementById('game').style.display='block';
+  loadStep();
+}
+
+function loadStep(){
+  const s=steps[i];
+  document.getElementById('pimg').src=s.img;
+  document.getElementById('answer').value="";
+  document.getElementById('result').innerHTML="";
+  document.getElementById('progress').textContent=`${i+1}/${steps.length}`;
+  if(s.hint){
+    document.getElementById('hintBtn').style.display='inline-block';
+    document.getElementById('hint').style.display='none';
+    document.getElementById('hint').textContent=s.hint;
+  }else{
+    document.getElementById('hintBtn').style.display='none';
+    document.getElementById('hint').style.display='none';
+  }
+}
+
+function toggleHint(){
+  const h=document.getElementById('hint');
+  h.style.display=h.style.display==='none'?'block':'none';
+}
+
+function check(){
+  const user=normalize(document.getElementById('answer').value);
+  const correct=normalize(steps[i].answer);
+  const result=document.getElementById('result');
+  if(user && user===correct){
+    result.className='ok';
+    result.textContent='✔ Correct.';
+    i++;
+    if(i<steps.length){setTimeout(loadStep,600);}
+    else{setTimeout(endSequence,800);}
+  }else{
+    result.className='err';
+    result.textContent='✖ Try again.';
+  }
+}
+
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('game').style.display==='block' && e.key==='Enter'){check();}
+});
+
+// ----- END SEQUENCE -----
+function endSequence(){
+  document.getElementById('game').style.display='none';
+  const end=document.getElementById('endScreen');
+  end.style.display='flex';
+  startFireworks();
+  setTimeout(()=>{
+    document.getElementById('messageM').style.display='block';
+  },8000);
+}
+
+// ----- FIREWORKS -----
+function startFireworks(){
+  const canvas=document.getElementById('fireworks');
+  const ctx=canvas.getContext('2d');
+  let w=canvas.width=window.innerWidth;
+  let h=canvas.height=window.innerHeight;
+  window.addEventListener('resize',()=>{w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;});
+  const particles=[];
+  function random(min,max){return Math.random()*(max-min)+min;}
+  function Firework(){
+    this.x=random(0,w);
+    this.y=random(h*0.3,h*0.7);
+    this.radius=random(1,3);
+    this.color=`hsl(${random(40,60)},100%,${random(60,80)}%)`;
+    this.vx=random(-3,3);
+    this.vy=random(-3,3);
+    this.life=100;
+  }
+  function draw(){
+    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillRect(0,0,w,h);
+    for(let i=0;i<particles.length;i++){
+      const p=particles[i];
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+      ctx.fillStyle=p.color;
+      ctx.fill();
+      p.x+=p.vx; p.y+=p.vy;
+      p.life--;
+      if(p.life<=0)particles.splice(i,1);
+    }
+    if(Math.random()<0.1){
+      for(let j=0;j<50;j++)particles.push(new Firework());
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+</script>
+</body>
+</html>
