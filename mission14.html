@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 14 // The Dragon’s Breath</title>
+<style>
+  body {
+    margin: 0;
+    background-color: black;
+    color: #ffd700;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  h2 {
+    margin-top: 50px;
+    color: #ffd700;
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+
+  #dragon {
+    position: absolute;
+    top: 50%;
+    left: -300px;
+    transform: translateY(-50%);
+    width: 300px;
+    opacity: 0;
+    animation: fly 3s ease-in-out 1s forwards;
+  }
+
+  @keyframes fly {
+    0% { left: -300px; opacity: 0; transform: translateY(-50%) scale(1); }
+    20% { opacity: 1; }
+    50% { left: 50%; transform: translate(-50%, -60%) scale(1.3); opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 120%; opacity: 0; transform: translateY(-50%) scale(1); }
+  }
+
+  #symbols {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 70px;
+    letter-spacing: 40px;
+    opacity: 0;
+    animation: appear 2s ease-in-out 3s forwards;
+  }
+
+  @keyframes appear {
+    to { opacity: 1; }
+  }
+
+  #inputZone {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    animation: fadeIn 2s ease-in 5s forwards;
+  }
+
+  input {
+    padding: 10px;
+    width: 200px;
+    background-color: #0a0a0a;
+    border: 1px solid #ffd700;
+    color: #ffd700;
+    text-align: center;
+    font-family: "Courier New", monospace;
+  }
+
+  button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #0a0a0a;
+    border: 1px solid #ffd700;
+    color: #ffd700;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+  }
+
+  button:hover {
+    background-color: #2b1f00;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  #light {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(0,0,0,0.9) 80%);
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
+  #message {
+    display: none;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
+    color: #fff8dc;
+    font-family: "Garamond", serif;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<h2>MISSION 14 // THE DRAGON’S BREATH</h2>
+
+<img id="dragon" src="https://upload.wikimedia.org/wikipedia/commons/5/59/Chinese_Dragon_Golden.png" alt="dragon">
+<div id="symbols">火 山 水</div>
+
+<div id="inputZone">
+  <input id="answer" type="text" placeholder="">
+  <button onclick="checkAnswer()">Confirm</button>
+</div>
+
+<div id="light"></div>
+
+<div id="message">私たちは互いの中で新しい自分を見つけ続けた。</div>
+
+<script>
+function checkAnswer(){
+  const val = document.getElementById('answer').value.trim().toLowerCase();
+  if(val === "water"){
+    document.getElementById('symbols').style.display = 'none';
+    document.getElementById('inputZone').style.display = 'none';
+    document.getElementById('dragon').style.display = 'none';
+    document.body.style.backgroundColor = 'black';
+    document.getElementById('light').style.display = 'block';
+    setTimeout(()=>{
+      document.getElementById('light').style.display = 'none';
+      document.getElementById('message').style.display = 'block';
+    },4000);
+  }
+}
+</script>
+
+</body>
+</html>
