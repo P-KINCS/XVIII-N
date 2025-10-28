@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 18 // The Name Onlu He Knows</title>
+<style>
+  body {
+    margin: 0;
+    background-color: #000;
+    color: #d4af37;
+    font-family: "Garamond", serif;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  h2 {
+    margin-top: 60px;
+    letter-spacing: 1px;
+    font-family: "Courier New", monospace;
+  }
+
+  img {
+    max-width: 90%;
+    height: auto;
+    margin: 40px auto 20px;
+    display: block;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  input {
+    padding: 10px;
+    width: 250px;
+    text-align: center;
+    border: 1px solid #d4af37;
+    background: rgba(255,255,255,0.1);
+    color: #d4af37;
+    font-size: 16px;
+    margin-right: 8px;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: 1px solid #d4af37;
+    background: transparent;
+    color: #d4af37;
+    font-family: "Courier New", monospace;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: rgba(212,175,55,0.15);
+  }
+
+  #hint {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #a68c2c;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  #hintText {
+    display: none;
+    margin-top: 5px;
+    color: #c5a63c;
+    font-style: italic;
+  }
+
+  #message {
+    display: none;
+    margin-top: 60px;
+    font-size: 22px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .shine {
+    animation: shine 2s ease-in-out;
+  }
+
+  @keyframes shine {
+    from { opacity: 0; text-shadow: 0 0 5px #fff, 0 0 20px #ffd700; }
+    to { opacity: 1; text-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<h2>MISSION 18 // THE NAME ONLU HE KNOWS</h2>
+
+<img src="IMG_8769.jpeg" alt="Mission image">
+
+<div id="inputSection">
+  <input id="answer" type="text" placeholder="">
+  <button onclick="checkAnswer()">Confirm</button>
+</div>
+
+<span id="hint" onclick="showHint()">Hint</span>
+<div id="hintText">Try a little harder. 😋</div>
+
+<div id="message" class="shine">
+  Well done, Agent B.<br>
+  I'm proud of you.<br>
+  See you in the next mission.<br><br>
+  <i>Tvoja Šašavica</i>
+</div>
+
+<script>
+function normalize(s){
+  return s.trim().toLowerCase().replace(/\s+/g,'').replace(/[^\w]/g,'');
+}
+
+function checkAnswer(){
+  const val = normalize(document.getElementById('answer').value);
+  const correct = normalize('you sillybean');
+  if(val === correct){
+    document.querySelector('img').style.display = 'none';
+    document.getElementById('inputSection').style.display = 'none';
+    document.getElementById('hint').style.display = 'none';
+    document.getElementById('hintText').style.display = 'none';
+    const msg = document.getElementById('message');
+    msg.style.display = 'block';
+    msg.classList.add('shine');
+  }
+}
+
+function showHint(){
+  document.getElementById('hintText').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
