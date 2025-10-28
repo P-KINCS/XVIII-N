@@ -54,7 +54,7 @@
 
 <!-- START -->
 <section id="start" class="screen">
-  <h2>MISSION 16 // THE MEMORY GAME</h2>
+  <h2>MISSION 16 // THE MEMORY GAMEZ</h2>
   <p class="lead">They say memories fade.<br>Let’s find out if ours do.</p>
   <p class="lead">Each piece below hides a word, a place, a trace of something that once belonged to us.</p>
   <p class="lead">Write what you see — or rather, what you remember.</p>
@@ -80,6 +80,7 @@
 <div id="endScreen">
   <canvas id="fireworks"></canvas>
   <div id="messageM">Not bad at all, Agent B.<br>See you tomorrow.<br><br>— M</div>
+  <audio id="fxFireworks" src="https://cdn.pixabay.com/download/audio/2021/10/26/audio_8af5b9dfb5.mp3?filename=fireworks-ambient-110154.mp3" preload="auto"></audio>
 </div>
 
 <script>
@@ -151,9 +152,16 @@ function endSequence(){
   const end=document.getElementById('endScreen');
   end.style.display='flex';
   startFireworks();
+
+  const sfx=document.getElementById('fxFireworks');
+  sfx.volume=0.25;
+  sfx.currentTime=0;
+  sfx.play().catch(()=>{});
   setTimeout(()=>{
+    sfx.pause();
+    document.getElementById('fireworks').style.display='none';
     document.getElementById('messageM').style.display='block';
-  },8000);
+  },5000);
 }
 
 // ----- FIREWORKS -----
@@ -172,7 +180,7 @@ function startFireworks(){
     this.color=`hsl(${random(40,60)},100%,${random(60,80)}%)`;
     this.vx=random(-3,3);
     this.vy=random(-3,3);
-    this.life=100;
+    this.life=80;
   }
   function draw(){
     ctx.fillStyle="rgba(0,0,0,0.2)";
@@ -183,12 +191,11 @@ function startFireworks(){
       ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
       ctx.fillStyle=p.color;
       ctx.fill();
-      p.x+=p.vx; p.y+=p.vy;
-      p.life--;
+      p.x+=p.vx; p.y+=p.vy; p.life--;
       if(p.life<=0)particles.splice(i,1);
     }
     if(Math.random()<0.1){
-      for(let j=0;j<50;j++)particles.push(new Firework());
+      for(let j=0;j<40;j++)particles.push(new Firework());
     }
     requestAnimationFrame(draw);
   }
