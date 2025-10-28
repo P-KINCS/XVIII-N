@@ -7,7 +7,7 @@
 <style>
   body {
     margin: 0;
-    background: #f5e6c8 url('https://i.ibb.co/k8DMJwM/stone-texture.jpg') center/cover no-repeat;
+    background-color: #f5e6c8;
     font-family: "Garamond", serif;
     color: #d4af37;
     text-align: center;
@@ -24,15 +24,16 @@
 
   #door {
     margin: 60px auto 0;
-    width: 400px;
+    width: 100%;
+    max-width: 420px;
     height: auto;
     cursor: pointer;
-    filter: brightness(2.5) blur(1px);
+    filter: brightness(2.3);
     transition: filter 0.8s ease;
   }
 
   #door:hover {
-    filter: brightness(3) blur(0.5px);
+    filter: brightness(3);
   }
 
   #pantheon {
@@ -54,9 +55,9 @@
     display: none;
     position: absolute;
     top: 0; left: 50%;
-    width: 5px;
+    width: 6px;
     height: 0;
-    background: linear-gradient(to bottom, rgba(255,255,180,0.9), rgba(255,255,120,0));
+    background: linear-gradient(to bottom, rgba(255,255,190,0.95), rgba(255,255,150,0));
     transform: translateX(-50%);
     animation: beamExpand 2s ease-in-out forwards;
   }
@@ -141,7 +142,7 @@
 
 <h2>MISSION 15 // THE ETERNAL CITY</h2>
 
-<img id="door" src="IMG_8728.png" alt="Golden Door" onclick="enterPantheon()">
+<img id="door" src="6C9F6E69-9EB2-47B0-91A4-D4345EAC4F5C.png" alt="Golden Door" onclick="enterPantheon()">
 
 <div id="pantheon">
   <div id="beam"></div>
@@ -158,7 +159,6 @@
 
 <script>
 function enterPantheon() {
-  document.body.innerHTML += ''; // for safety
   document.querySelector('h2').style.display = 'none';
   document.getElementById('door').style.display = 'none';
   document.getElementById('pantheon').style.display = 'block';
