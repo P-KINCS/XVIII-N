@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vission 19 // The Secret Ingredient</title>
+<style>
+  body {
+    background-color: #000;
+    color: #d4af37;
+    font-family: "Garamond", serif;
+    text-align: center;
+    margin: 0;
+    padding: 40px 20px;
+  }
+
+  h2 {
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+    font-family: "Courier New", monospace;
+  }
+
+  img {
+    width: 90%;
+    max-width: 600px;
+    height: auto;
+    margin: 15px auto;
+    display: block;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  input {
+    margin-top: 25px;
+    padding: 10px;
+    width: 240px;
+    text-align: center;
+    border: 1px solid #d4af37;
+    background: rgba(255,255,255,0.1);
+    color: #d4af37;
+    font-size: 16px;
+    font-family: "Courier New", monospace;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: 1px solid #d4af37;
+    background: transparent;
+    color: #d4af37;
+    margin-left: 8px;
+    font-family: "Courier New", monospace;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: rgba(212,175,55,0.15);
+  }
+
+  #message {
+    display: none;
+    margin-top: 40px;
+    font-size: 20px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    animation: fadeIn 2s ease-in-out;
+  }
+
+  #finalImage {
+    display: none;
+    margin-top: 30px;
+    width: 90%;
+    max-width: 600px;
+    height: auto;
+    border: 1px solid rgba(255,255,255,0.1);
+    animation: fadeIn 2s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<h2>VISSION 19 // THE SECRET INGREDIENT</h2>
+
+<img src="IMG_8775.jpeg" alt="Ingredient clue 1">
+<img src="IMG_8776.jpeg" alt="Ingredient clue 2">
+<img src="IMG_8779.jpeg" alt="Ingredient clue 3">
+
+<div>
+  <input id="answer" type="text" placeholder="">
+  <button onclick="checkAnswer()">Confirm</button>
+</div>
+
+<img id="finalImage" src="IMG_8759.jpeg" alt="Final message">
+<div id="message">
+Attention and tenderness —<br>
+they are my favorite ingredients for love.<br>
+Thank you for always adding them to us.<br><br>
+I will always try to give you the same —<br>
+to care for you, to listen, to think of what makes you smile.<br>
+And I will keep learning your heart,<br>
+until I make you the happiest man in the world.<br><br>
+— M 💛
+</div>
+
+<script>
+function normalize(s){
+  return s.trim().toLowerCase().replace(/\s+/g,'');
+}
+
+function checkAnswer(){
+  const val = normalize(document.getElementById('answer').value);
+  const correct = normalize('jamie oliver');
+  if(val === correct){
+    document.querySelectorAll('img').forEach(img => img.style.display = 'none');
+    document.getElementById('finalImage').style.display = 'block';
+    document.getElementById('message').style.display = 'block';
+  }
+}
+</script>
+
+</body>
+</html>
