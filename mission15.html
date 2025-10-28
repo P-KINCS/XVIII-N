@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 15 // The Eternal City</title>
+<style>
+  body {
+    margin: 0;
+    background: #f5e6c8 url('https://i.ibb.co/k8DMJwM/stone-texture.jpg') center/cover no-repeat;
+    font-family: "Garamond", serif;
+    color: #d4af37;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  h2 {
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-top: 40px;
+    color: #d4af37;
+    text-shadow: 0 0 6px rgba(212,175,55,0.4);
+  }
+
+  #door {
+    margin: 60px auto 0;
+    width: 400px;
+    height: auto;
+    cursor: pointer;
+    filter: brightness(2.5) blur(1px);
+    transition: filter 0.8s ease;
+  }
+
+  #door:hover {
+    filter: brightness(3) blur(0.5px);
+  }
+
+  #pantheon {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: url("IMG_8727.jpeg") center/cover no-repeat;
+    overflow: hidden;
+    animation: fadeIn 2s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #beam {
+    display: none;
+    position: absolute;
+    top: 0; left: 50%;
+    width: 5px;
+    height: 0;
+    background: linear-gradient(to bottom, rgba(255,255,180,0.9), rgba(255,255,120,0));
+    transform: translateX(-50%);
+    animation: beamExpand 2s ease-in-out forwards;
+  }
+
+  @keyframes beamExpand {
+    from { height: 0; opacity: 0; }
+    to { height: 100vh; opacity: 1; }
+  }
+
+  #inputZone {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.9;
+  }
+
+  input {
+    padding: 10px;
+    width: 200px;
+    background-color: rgba(255,255,255,0.4);
+    border: 1px solid #d4af37;
+    color: #6b5724;
+    font-size: 16px;
+    text-align: center;
+    font-family: "Garamond", serif;
+  }
+
+  #message {
+    display: none;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    line-height: 1.6;
+    color: #d4af37;
+    text-shadow: 0 0 10px rgba(255,215,0,0.6);
+    width: 90%;
+    max-width: 700px;
+    white-space: pre-wrap;
+    animation: textAppear 6s ease-in-out forwards;
+  }
+
+  @keyframes textAppear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #scrollIcon {
+    display: none;
+    font-size: 36px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.3s;
+  }
+
+  #scrollIcon:hover {
+    transform: translateX(-50%) scale(1.2);
+  }
+
+  #finalImage {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+  }
+
+  #finalImage img {
+    max-width: 90%;
+    max-height: 90%;
+    border: 2px solid #d4af37;
+  }
+</style>
+</head>
+<body>
+
+<h2>MISSION 15 // THE ETERNAL CITY</h2>
+
+<img id="door" src="IMG_8728.png" alt="Golden Door" onclick="enterPantheon()">
+
+<div id="pantheon">
+  <div id="beam"></div>
+  <div id="inputZone">
+    <input id="answer" type="text" placeholder="">
+  </div>
+  <div id="message">Si mutatio perpetua est, tu causa es cur mea pulchra facta sit.</div>
+  <div id="scrollIcon" onclick="showScroll()">📜</div>
+</div>
+
+<div id="finalImage">
+  <img src="IMG_8730.jpeg" alt="Scroll">
+</div>
+
+<script>
+function enterPantheon() {
+  document.body.innerHTML += ''; // for safety
+  document.querySelector('h2').style.display = 'none';
+  document.getElementById('door').style.display = 'none';
+  document.getElementById('pantheon').style.display = 'block';
+  document.getElementById('beam').style.display = 'block';
+}
+
+function checkAnswer() {
+  const val = document.getElementById('answer').value.trim().toLowerCase();
+  if(val === 'rome' || val === 'amor') {
+    document.getElementById('beam').style.height = '100vh';
+    document.getElementById('beam').style.display = 'block';
+    setTimeout(()=>{
+      document.getElementById('message').style.display = 'block';
+      setTimeout(()=>{
+        document.getElementById('scrollIcon').style.display = 'block';
+      },7000);
+    },2000);
+  }
+}
+
+document.getElementById('answer').addEventListener('keypress', function(e){
+  if(e.key === 'Enter'){ checkAnswer(); }
+});
+
+function showScroll(){
+  document.getElementById('finalImage').style.display = 'flex';
+  document.getElementById('pantheon').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
