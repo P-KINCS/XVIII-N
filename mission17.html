@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 17 // A Code Within</title>
+<style>
+  :root{
+    --gold:#d4af37;
+    --dark:#000;
+  }
+  body{
+    margin:0;
+    background-color:var(--dark);
+    color:var(--gold);
+    font-family:"Garamond",serif;
+    text-align:center;
+    overflow:hidden;
+  }
+  h2{
+    margin-top:60px;
+    letter-spacing:1px;
+    font-family:"Courier New",monospace;
+  }
+  p{max-width:600px;margin:20px auto;font-size:18px;line-height:1.5;}
+  .earth{font-size:80px;letter-spacing:6px;margin:40px auto 20px;font-family:"Courier New",monospace;}
+  input{
+    padding:10px;
+    width:220px;
+    text-align:center;
+    border:1px solid var(--gold);
+    background:rgba(255,255,255,0.1);
+    color:var(--gold);
+    font-size:16px;
+    margin-right:6px;
+  }
+  button{
+    padding:10px 20px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold);
+    font-family:"Courier New",monospace;
+    cursor:pointer;
+  }
+  button:hover{background:rgba(212,175,55,0.15);}
+  #message,#continueBtn,#secondStage,#finalMsg{display:none;}
+  #secondStage{
+    background:#f5e6c8;
+    color:#4b3d22;
+    position:fixed;inset:0;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+  }
+  #secondStage img{max-width:90%;max-height:70vh;margin-bottom:20px;border:1px solid rgba(0,0,0,0.1);}
+  #finalMsg{
+    position:fixed;inset:0;background:#000;
+    color:var(--gold);
+    display:flex;justify-content:center;align-items:center;flex-direction:column;
+    font-family:"Courier New",monospace;text-align:center;
+    white-space:pre-wrap;
+  }
+</style>
+</head>
+<body>
+
+<h2>MISSION 17 // A CODE WITHIN</h2>
+<p>“You’ve learned to read signs around you.<br>Now try to read what’s hidden inside.”</p>
+
+<div class="earth" id="earthWord">EARTH</div>
+<div>
+  <input id="answer" type="text" placeholder="">
+  <button onclick="check()">Confirm</button>
+</div>
+<p id="message"></p>
+
+<button id="continueBtn" onclick="showSecond()">Continue</button>
+
+<!-- Second Stage -->
+<div id="secondStage">
+  <img src="IMG_8762.jpeg" alt="image">
+  <div>
+    <input id="ans2" type="text" placeholder="">
+    <button onclick="check2()">Confirm</button>
+  </div>
+</div>
+
+<!-- Final Message -->
+<div id="finalMsg">
+  <div id="finalText">Good job, Agent B.<br>
+  Looks like Jean-Paul finally realized he couldn’t live without love…<br>
+  Good thing we’ve known that all along.<br><br>
+  Be ready for tomorrow’s mission.<br><br>
+  Forever yours,<br>— M</div>
+</div>
+
+<!-- Sounds -->
+<audio id="fxHeart" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_456fb7a0b8.mp3?filename=soft-heartbeat-ambient-110066.mp3" preload="auto" loop></audio>
+<audio id="fxTransform" src="https://cdn.pixabay.com/download/audio/2021/10/26/audio_1fba6d1a37.mp3?filename=magic-transition-110090.mp3" preload="auto"></audio>
+<audio id="fxFlip" src="https://cdn.pixabay.com/download/audio/2021/09/07/audio_880e405d5c.mp3?filename=page-turn-107376.mp3" preload="auto"></audio>
+
+<script>
+function normalize(s){return s.trim().toLowerCase().replaceAll(' ','').replaceAll('.','');}
+
+function check(){
+  const val=normalize(document.getElementById('answer').value);
+  const earth=document.getElementById('earthWord');
+  const msg=document.getElementById('message');
+  const heart=document.getElementById('fxHeart');
+  if(val==='heart'){
+    heart.play();
+    document.getElementById('fxTransform').play();
+    earth.style.transition='opacity 1s';
+    earth.style.opacity='0';
+    setTimeout(()=>{
+      earth.textContent='HEART';
+      earth.style.opacity='1';
+      msg.innerHTML="You found what’s hidden inside the world.<br>Now let’s see if you can read what’s hidden inside the words.";
+      document.getElementById('continueBtn').style.display='inline-block';
+      heart.pause();
+    },1200);
+  }else{
+    msg.textContent="Not quite. Look again — it’s already there.";
+  }
+}
+
+function showSecond(){
+  document.getElementById('fxFlip').play();
+  document.body.style.background='#000';
+  document.querySelector('h2').style.display='none';
+  document.querySelectorAll('p').forEach(p=>p.style.display='none');
+  document.getElementById('earthWord').style.display='none';
+  document.querySelector('div[style]').style.display='none';
+  document.getElementById('continueBtn').style.display='none';
+  document.getElementById('secondStage').style.display='flex';
+}
+
+function check2(){
+  const val=normalize(document.getElementById('ans2').value);
+  const correct=normalize('I love you very much, my dear Beaver');
+  if(val===correct){
+    document.getElementById('secondStage').style.display='none';
+    document.getElementById('finalMsg').style.display='flex';
+  }
+}
+</script>
+</body>
+</html>
