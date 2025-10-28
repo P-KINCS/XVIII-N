@@ -5,136 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mission 15 // The Eternal City</title>
 <style>
-  body {
-    margin: 0;
-    background-color: #f5e6c8;
-    font-family: "Garamond", serif;
-    color: #d4af37;
-    text-align: center;
-    overflow: hidden;
+  /* Global */
+  :root{
+    --beige:#f5e6c8;
+    --gold:#d4af37;
+    --ink:#6b5724;
+  }
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--beige); font-family:"Garamond", serif;
+    color:var(--gold); text-align:center; overflow:hidden;
+  }
+  h2{ margin:40px 16px 10px; font-size:26px; letter-spacing:1px; text-shadow:0 0 6px rgba(212,175,55,.35); }
+
+  /* Doors (unchanged image) */
+  #doorWrap{ display:flex; justify-content:center; }
+  #door{
+    width:min(86vw, 430px); height:auto; cursor:pointer; display:block;
   }
 
-  h2 {
-    font-size: 26px;
-    letter-spacing: 1px;
-    margin-top: 40px;
-    color: #d4af37;
-    text-shadow: 0 0 6px rgba(212,175,55,0.4);
+  /* Flash on click */
+  #flash{
+    display:none; position:fixed; inset:0; pointer-events:none; z-index:9;
+    background:radial-gradient(circle at 50% 50%, rgba(255,255,255,1) 0%, rgba(255,255,255,.85) 22%, rgba(255,255,255,.35) 45%, rgba(255,255,255,0) 70%);
+    animation:flashZoom 1.2s ease-in forwards;
+  }
+  @keyframes flashZoom{
+    0%{ transform:scale(0.6); opacity:.0;}
+    20%{ transform:scale(1); opacity:1;}
+    100%{ transform:scale(2.2); opacity:0;}
   }
 
-  #door {
-    margin: 60px auto 0;
-    width: 100%;
-    max-width: 420px;
-    height: auto;
-    cursor: pointer;
-    filter: brightness(2.3);
-    transition: filter 0.8s ease;
+  /* Pantheon scene */
+  #pantheon{
+    display:none; position:fixed; inset:0; z-index:5;
+    background:url("IMG_8727.jpeg") center/cover no-repeat;
+    animation:sceneIn .9s ease-out forwards;
+  }
+  @keyframes sceneIn{
+    from{ opacity:0; transform:scale(1.06); }
+    to{ opacity:1; transform:scale(1); }
   }
 
-  #door:hover {
-    filter: brightness(3);
+  /* Input + small gold button */
+  #inputZone{
+    position:absolute; left:50%; bottom:64px; transform:translateX(-50%);
+    display:flex; gap:8px; align-items:center;
   }
-
-  #pantheon {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: url("IMG_8727.jpeg") center/cover no-repeat;
-    overflow: hidden;
-    animation: fadeIn 2s ease forwards;
+  #answer{
+    width:190px; padding:10px; font-size:16px; text-align:center;
+    background:rgba(255,255,255,.5); color:var(--ink);
+    border:1px solid var(--gold);
   }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  #confirmBtn{
+    padding:9px 14px; font-size:14px; border:1px solid var(--gold);
+    background:rgba(212,175,55,.15); color:var(--gold); cursor:pointer; border-radius:14px;
   }
+  #confirmBtn:active{ transform:scale(.98); }
 
-  #beam {
-    display: none;
-    position: absolute;
-    top: 0; left: 50%;
-    width: 6px;
-    height: 0;
-    background: linear-gradient(to bottom, rgba(255,255,190,0.95), rgba(255,255,150,0));
-    transform: translateX(-50%);
-    animation: beamExpand 2s ease-in-out forwards;
+  /* Latin message reveal */
+  #message{
+    display:none; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(92vw, 740px); color:var(--gold); text-shadow:0 0 10px rgba(255,215,0,.55);
+    font-size:22px; line-height:1.6; text-align:center; white-space:pre-wrap;
+    animation:msgFade 4s ease forwards;
   }
+  @keyframes msgFade{ from{opacity:0} to{opacity:1} }
 
-  @keyframes beamExpand {
-    from { height: 0; opacity: 0; }
-    to { height: 100vh; opacity: 1; }
+  /* Scroll image overlay */
+  #scrollIcon{
+    display:none; position:absolute; left:50%; bottom:26px; transform:translateX(-50%);
+    font-size:32px; cursor:pointer; filter:drop-shadow(0 0 6px rgba(0,0,0,.3));
   }
-
-  #inputZone {
-    position: absolute;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0.9;
+  #overlay{
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,.85);
+    justify-content:center; align-items:center; z-index:20;
   }
-
-  input {
-    padding: 10px;
-    width: 200px;
-    background-color: rgba(255,255,255,0.4);
-    border: 1px solid #d4af37;
-    color: #6b5724;
-    font-size: 16px;
-    text-align: center;
-    font-family: "Garamond", serif;
-  }
-
-  #message {
-    display: none;
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    line-height: 1.6;
-    color: #d4af37;
-    text-shadow: 0 0 10px rgba(255,215,0,0.6);
-    width: 90%;
-    max-width: 700px;
-    white-space: pre-wrap;
-    animation: textAppear 6s ease-in-out forwards;
-  }
-
-  @keyframes textAppear {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  #scrollIcon {
-    display: none;
-    font-size: 36px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: transform 0.3s;
-  }
-
-  #scrollIcon:hover {
-    transform: translateX(-50%) scale(1.2);
-  }
-
-  #finalImage {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-  }
-
-  #finalImage img {
-    max-width: 90%;
-    max-height: 90%;
-    border: 2px solid #d4af37;
+  #overlay img{
+    max-width:92vw; max-height:92vh; border:2px solid var(--gold);
   }
 </style>
 </head>
@@ -142,51 +90,59 @@
 
 <h2>MISSION 15 // THE ETERNAL CITY</h2>
 
-<img id="door" src="6C9F6E69-9EB2-47B0-91A4-D4345EAC4F5C.png" alt="Golden Door" onclick="enterPantheon()">
-
-<div id="pantheon">
-  <div id="beam"></div>
-  <div id="inputZone">
-    <input id="answer" type="text" placeholder="">
-  </div>
-  <div id="message">Si mutatio perpetua est, tu causa es cur mea pulchra facta sit.</div>
-  <div id="scrollIcon" onclick="showScroll()">📜</div>
+<div id="doorWrap">
+  <!-- tvoja nova PNG slika vrata, NIŠTA joj ne menjamo -->
+  <img id="door" src="6C9F6E69-9EB2-47B0-91A4-D4345EAC4F5C.png" alt="Golden Door">
 </div>
 
-<div id="finalImage">
+<!-- Bljesak preko scena -->
+<div id="flash"></div>
+
+<!-- Pantheon scena -->
+<div id="pantheon">
+  <div id="inputZone">
+    <input id="answer" type="text" placeholder="">
+    <button id="confirmBtn" onclick="checkAnswer()">Confirm</button>
+  </div>
+  <div id="message">Si mutatio perpetua est, tu causa es cur mea pulchra facta sit.</div>
+  <div id="scrollIcon" onclick="openScroll()">📜</div>
+</div>
+
+<!-- Overlay sa finalnom slikom -->
+<div id="overlay" onclick="this.style.display='none'">
   <img src="IMG_8730.jpeg" alt="Scroll">
 </div>
 
 <script>
-function enterPantheon() {
-  document.querySelector('h2').style.display = 'none';
-  document.getElementById('door').style.display = 'none';
-  document.getElementById('pantheon').style.display = 'block';
-  document.getElementById('beam').style.display = 'block';
-}
-
-function checkAnswer() {
-  const val = document.getElementById('answer').value.trim().toLowerCase();
-  if(val === 'rome' || val === 'amor') {
-    document.getElementById('beam').style.height = '100vh';
-    document.getElementById('beam').style.display = 'block';
+  // 1) Ulazak: bljesak + prelaz u Pantheon
+  document.getElementById('door').addEventListener('click', ()=>{
+    document.getElementById('flash').style.display='block';
+    // posle kratkog bljeska, prikaži Pantheon
     setTimeout(()=>{
-      document.getElementById('message').style.display = 'block';
-      setTimeout(()=>{
-        document.getElementById('scrollIcon').style.display = 'block';
-      },7000);
-    },2000);
+      document.querySelector('h2').style.display='none';
+      document.getElementById('doorWrap').style.display='none';
+      document.getElementById('pantheon').style.display='block';
+    }, 700);
+  });
+
+  // 2) Provera rešenja
+  function checkAnswer(){
+    const v = document.getElementById('answer').value.trim().toLowerCase();
+    if(v==='rome' || v==='amor'){
+      document.getElementById('message').style.display='block';
+      // pojavi se ikonica posle ispisivanja
+      setTimeout(()=>{ document.getElementById('scrollIcon').style.display='block'; }, 4200);
+    }
   }
-}
+  // Enter key
+  document.getElementById('answer').addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ checkAnswer(); }
+  });
 
-document.getElementById('answer').addEventListener('keypress', function(e){
-  if(e.key === 'Enter'){ checkAnswer(); }
-});
-
-function showScroll(){
-  document.getElementById('finalImage').style.display = 'flex';
-  document.getElementById('pantheon').style.display = 'none';
-}
+  // 3) Otvaranje završne slike
+  function openScroll(){
+    document.getElementById('overlay').style.display='flex';
+  }
 </script>
 
 </body>
