@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 13 // Italy</title>
+<style>
+  body {
+    margin: 0;
+    background-color: black;
+    color: #00ff99;
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 40px;
+    font-size: 22px;
+  }
+
+  #inputs {
+    margin-top: 25px;
+  }
+
+  input {
+    padding: 10px;
+    width: 150px;
+    margin: 5px;
+    background-color: #0a0a0a;
+    border: 1px solid #00ff99;
+    color: #00ff99;
+    text-align: center;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #0a0a0a;
+    border: 1px solid #00ff99;
+    color: #00ff99;
+    cursor: pointer;
+    font-family: "Courier New", monospace;
+  }
+
+  button:hover {
+    background-color: #003322;
+  }
+
+  #doors {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    margin: 60px auto;
+    perspective: 800px;
+  }
+
+  .door {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    background: linear-gradient(90deg, #111 0%, #333 100%);
+    border: 2px solid #00ff99;
+    transform-origin: center;
+    transition: transform 2s ease-in-out;
+  }
+
+  .left { left: 0; transform-origin: left; }
+  .right { right: 0; transform-origin: right; }
+
+  .open .left { transform: rotateY(-100deg); }
+  .open .right { transform: rotateY(100deg); }
+
+  /* Fade-out door scene */
+  #transition {
+    display: none;
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background-color:black;
+    animation: zoomIn 3s ease-in-out forwards;
+    z-index:10;
+  }
+
+  @keyframes zoomIn {
+    0% { transform: scale(1); opacity:1; }
+    100% { transform: scale(4); opacity:0; }
+  }
+
+  /* Room scene */
+  #room {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100vw; height:100vh;
+    overflow-x:scroll; overflow-y:hidden;
+    white-space:nowrap;
+  }
+
+  #room img {
+    height:100vh;
+    width:auto;
+    display:block;
+  }
+
+</style>
+</head>
+<body>
+
+<h2>Agente B, today you travel to Italy. 🇮🇹</h2>
+
+<div id="inputs">
+  <input type="text" id="c1" placeholder="">
+  <input type="text" id="c2" placeholder="">
+  <input type="text" id="c3" placeholder="">
+  <br>
+  <button onclick="checkColors()">Confirm</button>
+</div>
+
+<div id="doors">
+  <div class="door left"></div>
+  <div class="door right"></div>
+</div>
+
+<div id="transition"></div>
+
+<div id="room">
+  <img src="IMG_8718.jpeg" alt="Italian room">
+</div>
+
+<script>
+function norm(t){ return t.trim().toLowerCase(); }
+
+function checkColors(){
+  const c1 = norm(document.getElementById('c1').value);
+  const c2 = norm(document.getElementById('c2').value);
+  const c3 = norm(document.getElementById('c3').value);
+  const correct1 = "#008c45";
+  const correct2 = "#f4f5f0";
+  const correct3 = "#cd212a";
+
+  if(c1===correct1 && c2===correct2 && c3===correct3){
+    document.querySelector('#doors').classList.add('open');
+    setTimeout(()=>{
+      document.getElementById('transition').style.display='block';
+    },2000);
+    setTimeout(()=>{
+      document.body.style.backgroundColor='black';
+      document.getElementById('transition').style.display='none';
+      document.getElementById('inputs').style.display='none';
+      document.getElementById('doors').style.display='none';
+      document.getElementById('room').style.display='block';
+    },5000);
+  }
+}
+</script>
+
+</body>
+</html>
