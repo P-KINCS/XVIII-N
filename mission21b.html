@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mission 21b // The Bomb</title>
+<style>
+  :root{
+    --gold:#d4af37; --red:#ff4d4d; --bg:#000; --amber:#ffcc00;
+  }
+  html,body{margin:0;height:100%;background:#000;color:var(--gold);font-family:"Garamond",serif;overflow:hidden}
+  .wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px}
+  h2{margin:8px 0 4px;font-family:"Courier New",monospace;letter-spacing:1px}
+  p.lead{text-align:center;max-width:820px;line-height:1.5;margin:0 0 8px;color:#e6d59c}
+  .topbar{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+  .alarm{font-size:12px;color:#ff6b6b;font-family:"Courier New",monospace;animation:blink 1s linear infinite}
+  @keyframes blink{0%,60%{opacity:1} 61%,100%{opacity:0.2}}
+  #timer{font-family:"Courier New",monospace;font-size:22px;color:var(--amber);background:#111;padding:6px 10px;border:1px solid rgba(255,255,255,0.1);border-radius:4px}
+  .panel{margin-top:64px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);padding:18px;border-radius:10px;box-shadow:0 0 0 1px rgba(212,175,55,0.07) inset}
+  .panelTitle{font-size:12px;color:#b59b48;text-align:center}
+  .device{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .core{width:140px;height:140px;border-radius:12px;background:linear-gradient(180deg,#2b2b2b,#111);display:flex;align-items:center;justify-content:center;border:2px solid rgba(212,175,55,0.15)}
+  .core .t{font-size:12px;color:#b59b48}
+  .core .c{font-weight:700;font-size:20px;margin-top:6px}
+  .wires{display:flex;flex-direction:column;gap:14px}
+  .wire{width:260px;height:18px;border-radius:6px;position:relative;display:flex;align-items:center;padding-left:16px;font-family:"Courier New",monospace;color:#000;font-weight:700;user-select:none}
+  .wire.red{background:linear-gradient(90deg,#ff7b7b,#8b0000)}
+  .wire.blue{background:linear-gradient(90deg,#7bd7ff,#003f6b)}
+  .wire.green{background:linear-gradient(90deg,#7bff9e,#016a2d)}
+  .wire.cut{opacity:0.25;text-decoration:line-through}
+  .wire::before{content:"";width:12px;height:12px;border-radius:50%;background:#1113;display:inline-block;margin-right:8px}
+  .tools{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .scissors{width:56px;height:56px;border-radius:8px;background:linear-gradient(180deg,#212121,#0f0f0f);border:2px solid rgba(212,175,55,0.18);display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none}
+  .scissors.drag{opacity:0.8;cursor:grabbing}
+  .toolsTip{font-size:12px;color:#b59b48;text-align:center;max-width:180px}
+  /* explosion canvas */
+  #boomCanvas{position:fixed;left:0;top:0;width:100%;height:100%;display:none;pointer-events:none;z-index:999}
+  /* video stage */
+  #videoStage{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:1000}
+  #videoStage video{width:100vw;height:100vh;object-fit:cover;object-position:center center}
+  .mNote{position:absolute;left:0;right:0;bottom:4%;text-align:center;color:var(--gold);font-family:"Courier New",monospace;text-shadow:0 0 10px rgba(212,175,55,0.35);padding:0 16px}
+  /* tap overlay if autoplay blocked */
+  #tapToPlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);color:#fff;font-family:"Courier New",monospace}
+  #tapToPlay .btn{border:1px solid #fff;padding:10px 16px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="alarm">ALERT // ONE ATTEMPT</div>
+  <div id="timer">00:40</div>
+</div>
+
+<div class="wrap">
+  <h2>MISSION 21b // THE BOMB</h2>
+  <p class="lead">
+    You have only one attempt.<br>
+    If you cut the wrong wire — or fail to act in time —<br>
+    the self-destruction protocol will initiate.<br>
+    The Project will be lost forever. The Box will remain sealed.
+  </p>
+
+  <div class="panel">
+    <div class="panelTitle">BOMB DEVICE</div>
+    <div class="device">
+      <div class="core">
+        <div style="text-align:center">
+          <div class="t">DEVICE</div>
+          <div class="c">CORE</div>
+        </div>
+      </div>
+
+      <div class="wires" id="wires">
+        <div class="wire red" data-wire="RED">RED WIRE</div>
+        <div class="wire blue" data-wire="BLUE">BLUE WIRE</div>
+        <div class="wire green" data-wire="GREEN">GREEN WIRE</div>
+      </div>
+
+      <div class="tools">
+        <div class="scissors" id="scissors" title="Drag to a wire to cut">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="#d4af37" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2,6 L9,13 L2,20 L4,22 L11,15 L18,22 L20,20 L13,13 L20,6 L18,4 L11,11 L4,4 Z"/>
+          </svg>
+        </div>
+        <div class="toolsTip">Hold and drag the clippers onto a wire</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<canvas id="boomCanvas"></canvas>
+
+<!-- VIDEO STAGE -->
+<div id="videoStage">
+  <video id="prankVid" playsinline preload="auto">
+    <source src="ScreenRecording_10-29-2025 13-39-39_1.mov" type="video/mp4" />
+    <!-- iOS often plays .mov; keeping mp4 type hint is ok; browser will choose if supported -->
+  </video>
+  <div class="mNote">
+    <b>You really thought the world was ending, didn’t you? 😏</b><br>
+    Calm down, Agent B — it was never a bomb.<br>
+    Just a reminder that you’re the explosive one here. 💋<br><br>
+    — M
+  </div>
+  <div id="tapToPlay"><div class="btn">Tap to play</div></div>
+</div>
+
+<script>
+/* ====== TIMER ====== */
+let timeLeft = 40; // seconds
+let ticking = true;
+const timerEl = document.getElementById('timer');
+function fmt(s){return "00:" + String(s).padStart(2,'0');}
+function tick(){
+  if(!ticking) return;
+  timerEl.textContent = fmt(timeLeft);
+  timeLeft--;
+  if(timeLeft < 0){ triggerExplosion(); return; }
+  setTimeout(tick, 1000);
+}
+tick();
+
+/* ====== DRAG TO CUT ====== */
+const scissors = document.getElementById('scissors');
+const wires = Array.from(document.querySelectorAll('.wire'));
+let dragging = false;
+let attemptMade = false;
+
+function isOver(el, x, y){
+  const r = el.getBoundingClientRect();
+  return x>=r.left && x<=r.right && y>=r.top && y<=r.bottom;
+}
+
+function onPointerDown(e){
+  if(attemptMade) return;
+  dragging = true;
+  scissors.classList.add('drag');
+}
+function onPointerMove(e){
+  if(!dragging) return;
+  const x = (e.touches ? e.touches[0].clientX : e.clientX);
+  const y = (e.touches ? e.touches[0].clientY : e.clientY);
+  scissors.style.position='fixed';
+  scissors.style.left = (x-28) + 'px';
+  scissors.style.top  = (y-28) + 'px';
+}
+function onPointerUp(e){
+  if(!dragging) return;
+  dragging = false;
+  scissors.classList.remove('drag');
+  const x = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
+  const y = (e.changedTouches ? e.changedTouches[0].clientY : e.clientY);
+  // check each wire
+  for(const w of wires){
+    if(isOver(w, x, y)){
+      cutWire(w); return;
+    }
+  }
+}
+scissors.addEventListener('mousedown', onPointerDown);
+scissors.addEventListener('touchstart', onPointerDown, {passive:true});
+window.addEventListener('mousemove', onPointerMove, {passive:false});
+window.addEventListener('touchmove', onPointerMove, {passive:false});
+window.addEventListener('mouseup', onPointerUp);
+window.addEventListener('touchend', onPointerUp);
+
+/* ====== CUT LOGIC ====== */
+function cutWire(w){
+  if(attemptMade) return;
+  attemptMade = true;
+  w.classList.add('cut');
+  w.textContent = w.dataset.wire + " — CUT";
+  // stop timer and explode immediately
+  ticking = false;
+  triggerExplosion();
+}
+
+/* ====== EXPLOSION EFFECT ====== */
+const canvas = document.getElementById('boomCanvas');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+function triggerExplosion(){
+  // prevent multiple
+  if(canvas.style.display === 'block') return;
+  canvas.style.display = 'block';
+  // shake
+  document.body.style.transition = 'transform 0.08s';
+  let shakes = 18;
+  const shaker = setInterval(()=>{
+    document.body.style.transform = `translate(${(Math.random()-0.5)*10}px, ${(Math.random()-0.5)*10}px)`;
+    if(--shakes<=0){ clearInterval(shaker); document.body.style.transform='translate(0,0)'; }
+  }, 80);
+
+  // particles
+  const particles = [];
+  const cx = canvas.width/2, cy = canvas.height/2;
+  const colors = ['#ffd966','#ff9f1c','#ff4d4d','#ffd1a9','#fff2cc'];
+  for(let i=0;i<180;i++){
+    particles.push({
+      x: cx + (Math.random()-0.5)*240,
+      y: cy + (Math.random()-0.5)*240,
+      vx: (Math.random()-0.5)*12,
+      vy: (Math.random()-0.8)*12,
+      r: Math.random()*4+1,
+      col: colors[(Math.random()*colors.length)|0],
+      life: 1000 + Math.random()*2500
+    });
+  }
+  let start = performance.now();
+  function frame(now){
+    const t = now - start;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // flash first 250ms
+    if(t < 250){
+      ctx.fillStyle = `rgba(255,230,180,${1 - t/250})`;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.fillStyle = p.col;
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+      p.x += p.vx*0.6;
+      p.y += p.vy*0.6 + 0.12;
+      p.vy += 0.03;
+      p.life -= 16;
+    });
+    if(t < 5000) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // play boom (short)
+  try{
+    const boom = new Audio();
+    boom.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='; // silent/very short dummy
+    boom.play().catch(()=>{});
+  }catch(e){}
+
+  // after 5s -> show video
+  setTimeout(()=>startVideoStage(), 5000);
+}
+
+/* ====== VIDEO STAGE ====== */
+const videoStage = document.getElementById('videoStage');
+const prankVid = document.getElementById('prankVid');
+const tapOverlay = document.getElementById('tapToPlay');
+
+function startVideoStage(){
+  // hide bomb UI
+  document.querySelector('.wrap').style.display='none';
+  document.querySelector('.topbar').style.display='none';
+  canvas.style.display='none';
+
+  // show video
+  videoStage.style.display='flex';
+
+  // try to autoplay with sound; if blocked, show tap overlay
+  const tryPlay = () => prankVid.play().then(()=>{
+    tapOverlay.style.display='none';
+  }).catch(()=>{
+    tapOverlay.style.display='flex';
+  });
+
+  // attempt play
+  tryPlay();
+
+  // if user interacted earlier (drag), iOS usually allows autoplay with sound;
+  // if not, tap to play fallback:
+  tapOverlay.addEventListener('click', ()=>{
+    prankVid.play().then(()=> tapOverlay.style.display='none');
+  }, {once:true});
+}
+
+</script>
+</body>
+</html>
