@@ -6,12 +6,12 @@
 <title>MISSION 22 // THE GENTTLE CODES</title>
 <style>
   :root{
-    --bg: #f7f1e6;           /* blaga bež */
-    --ink:#3b2f1f;           /* topla tamno-braon za tekst */
-    --gold:#c59b2a;          /* zlatnkasta za akcente */
-    --accent:#7a5d2b;        /* tamnija nijansa */
-    --ok:#2f8f46;            /* zelena potvrda */
-    --err:#b33a3a;           /* crvena greška */
+    --bg: #f7f1e6;
+    --ink:#3b2f1f;
+    --gold:#c59b2a;
+    --accent:#7a5d2b;
+    --ok:#2f8f46;
+    --err:#b33a3a;
   }
   html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Garamond", Georgia, serif}
   .wrap{max-width:980px;margin:0 auto;padding:28px 16px}
@@ -19,12 +19,10 @@
   .lead{max-width:780px;margin:10px auto 30px;text-align:center;font-size:18px;line-height:1.5}
   .divider{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:18px 0}
 
-  /* Rows */
   .row{display:flex;gap:18px;align-items:center;justify-content:center;margin:18px 0;padding:14px 12px;background:#fff6; border:1px solid #e8dfcf; border-radius:10px}
   .imgBox{flex:0 0 220px; display:flex; align-items:center; justify-content:center}
   .imgBox img{max-width:220px;height:auto;border:1px solid #e0d6c4;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
   .col{flex:1;min-width:240px}
-  .prompt{font-style:italic;color:#6b5635;margin:6px 0 10px}
   .inputWrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   input[type="text"]{
     padding:10px 12px;border:1px solid #d9ccb7;border-radius:8px;background:#fff;color:#3b2f1f;
@@ -41,19 +39,15 @@
 
   .reveal{margin-top:10px;color:#45361f;min-height:24px;white-space:pre-wrap}
 
-  /* Final block */
   .final{margin:26px 0;padding:16px;border:1px dashed #d9ccb7;border-radius:12px;background:#fff6}
   .final label{display:block;margin-bottom:8px;color:#6b4a10;font-weight:bold}
   .final input{width:100%}
   .finalQuote{display:none;margin-top:14px;padding:16px;background:#fff;border:1px solid #e8dfcf;border-radius:12px;color:#3b2f1f}
   .closing{margin-top:10px;color:#6b4a10;font-style:italic}
 
-  /* Responsive */
   @media (max-width:720px){
     .row{flex-direction:column;align-items:stretch}
-    .imgBox{flex:0 0 auto}
     .imgBox img{max-width:100%;width:100%}
-    .inputWrap{justify-content:flex-start}
   }
 </style>
 </head>
@@ -65,15 +59,13 @@
   </div>
   <div class="divider"></div>
 
-  <!-- Row 1: BOY -->
   <div class="row" id="row1">
     <div class="imgBox">
       <img src="IMG_8810.jpeg" alt="Boy">
     </div>
     <div class="col">
-      <div class="prompt">Enter who he is (ASL hint in your head, if you like):</div>
       <div class="inputWrap">
-        <input id="in1" type="text" placeholder="Answer here (e.g., BOY)" />
+        <input id="in1" type="text" />
         <button onclick="checkOne(1,'boy')">Confirm</button>
       </div>
       <div class="msg" id="m1"></div>
@@ -81,15 +73,13 @@
     </div>
   </div>
 
-  <!-- Row 2: MOLE -->
   <div class="row" id="row2">
     <div class="imgBox">
       <img src="IMG_8811.jpeg" alt="Mole">
     </div>
     <div class="col">
-      <div class="prompt">Enter the friend who speaks softly but truly:</div>
       <div class="inputWrap">
-        <input id="in2" type="text" placeholder="Answer here (e.g., MOLE)" />
+        <input id="in2" type="text" />
         <button onclick="checkOne(2,'mole')">Confirm</button>
       </div>
       <div class="msg" id="m2"></div>
@@ -97,15 +87,13 @@
     </div>
   </div>
 
-  <!-- Row 3: FOX -->
   <div class="row" id="row3">
     <div class="imgBox">
       <img src="IMG_8812.jpeg" alt="Fox">
     </div>
     <div class="col">
-      <div class="prompt">Enter the quiet one who learned to trust:</div>
       <div class="inputWrap">
-        <input id="in3" type="text" placeholder="Answer here (e.g., FOX)" />
+        <input id="in3" type="text" />
         <button onclick="checkOne(3,'fox')">Confirm</button>
       </div>
       <div class="msg" id="m3"></div>
@@ -113,15 +101,13 @@
     </div>
   </div>
 
-  <!-- Row 4: HORSE -->
   <div class="row" id="row4">
     <div class="imgBox">
       <img src="IMG_8813.jpeg" alt="Horse">
     </div>
     <div class="col">
-      <div class="prompt">Enter the wisest friend:</div>
       <div class="inputWrap">
-        <input id="in4" type="text" placeholder="Answer here (e.g., HORSE)" />
+        <input id="in4" type="text" />
         <button onclick="checkOne(4,'horse')">Confirm</button>
       </div>
       <div class="msg" id="m4"></div>
@@ -131,10 +117,9 @@
 
   <div class="divider"></div>
 
-  <!-- Final block -->
   <div class="final">
     <label for="fin">Enter the full title:</label>
-    <input id="fin" type="text" placeholder="The Boy, the Mole, the Fox and the Horse" />
+    <input id="fin" type="text" />
     <div style="margin-top:8px">
       <button onclick="checkFinal()">Confirm</button>
     </div>
@@ -182,7 +167,6 @@ function checkOne(idx, target){
     msg.className = 'msg ok';
     msg.textContent = '✓ Correct';
     input.disabled = true;
-    // reveal text by typewriter
     if(idx===1){
       typewrite(rev, '“Sometimes I worry you’ll all realise I’m ordinary,” said the boy.');
     } else if(idx===2){
@@ -198,25 +182,20 @@ function checkOne(idx, target){
   }
 }
 
-// Accept common variations for the final title
 const finalAccept = [
-  'theboy,themole,thefoxandthehorse',
   'theboythemolethefoxandthehorse',
-  'boymolefoxhorse', // in case he omits articles/connectors
-  'theboythemolethefox&thehorse',
-  'theboy themole thefox and thehorse'
+  'boymolefoxhorse'
 ].map(norm);
 
 function checkFinal(){
   const fin = document.getElementById('fin');
   const fq = document.getElementById('finalQuote');
   const v = norm(fin.value);
-  const correct = finalAccept.includes(v) || v === norm('The Boy, the Mole, the Fox and the Horse');
+  const correct = finalAccept.includes(v);
   if(correct){
     fin.disabled = true;
     fq.style.display = 'block';
   } else {
-    // gentle shake feedback
     fin.style.transition = 'transform 0.1s';
     fin.style.transform = 'translateX(-4px)';
     setTimeout(()=>{fin.style.transform='translateX(4px)'},80);
@@ -224,7 +203,6 @@ function checkFinal(){
   }
 }
 
-// Allow Enter key to confirm quickly
 ['in1','in2','in3','in4','fin'].forEach((id,ix)=>{
   const el = document.getElementById(id);
   el.addEventListener('keypress', (e)=>{
