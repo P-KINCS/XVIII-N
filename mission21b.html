@@ -29,46 +29,31 @@
 
   #timer {
     position: absolute;
-    top: 80px;
-    right: 20px;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: rgba(17,17,17,0.7);
     border: 1px solid #d4af37;
     border-radius: 6px;
     padding: 6px 12px;
     color: #ffcc00;
     font-size: 18px;
+    z-index: 2;
   }
 
-  /* Bomb panel */
-  .panel {
-    background: radial-gradient(circle, #202020, #000);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    margin: 70px auto;
-    padding: 30px 20px;
-    width: 300px;
-    box-shadow: 0 0 15px rgba(212,175,55,0.2);
-    position: relative;
+  #bombImage {
+    display: block;
+    margin: 60px auto;
+    width: 85%;
+    height: auto;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
   }
 
-  .panel:hover {
-    box-shadow: 0 0 30px rgba(255,0,0,0.4);
+  #bombImage:hover {
+    transform: scale(1.02);
   }
 
-  .wire {
-    margin: 14px auto;
-    width: 220px;
-    height: 18px;
-    border-radius: 6px;
-  }
-
-  .wire.red { background: linear-gradient(90deg,#ff7b7b,#8b0000); }
-  .wire.blue { background: linear-gradient(90deg,#7bd7ff,#003f6b); }
-  .wire.green { background: linear-gradient(90deg,#7bff9e,#016a2d); }
-
-  /* Explosion */
   #explosion {
     position: fixed;
     inset: 0;
@@ -84,7 +69,6 @@
     100% { transform: scale(1.6); opacity: 0; }
   }
 
-  /* Second screen */
   #afterExplosion {
     display: none;
     position: fixed;
@@ -98,7 +82,7 @@
 
   #video {
     width: 100%;
-    height: 60vh;
+    height: 55vh;
     object-fit: contain;
     margin-top: 10px;
   }
@@ -120,7 +104,7 @@
 <h2>MISSION 21b // THE BOMB</h2>
 <p>
   You have only one attempt.<br>
-  If you cut the wrong wire — or fail to act in time —<br>
+  If you fail to act in time,<br>
   the self-destruction protocol will initiate.<br>
   The Project will be lost forever.<br>
   The Box will remain sealed.
@@ -128,11 +112,7 @@
 
 <div id="timer">00:60</div>
 
-<div class="panel" onclick="triggerExplosion()">
-  <div class="wire red"></div>
-  <div class="wire blue"></div>
-  <div class="wire green"></div>
-</div>
+<img id="bombImage" src="5F0063B3-7E4D-4DAE-8BF9-B099CE5D414A.jpeg" alt="Bomb" onclick="triggerExplosion()">
 
 <div id="explosion"></div>
 
