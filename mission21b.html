@@ -64,15 +64,15 @@
     position: fixed;
     inset: 0;
     display: none;
-    background: radial-gradient(circle, rgba(255,255,180,1) 0%, rgba(255,100,0,0.4) 60%, rgba(0,0,0,1) 100%);
-    animation: explode 1s ease-out forwards;
+    background: radial-gradient(circle, rgba(255,255,180,1) 0%, rgba(255,100,0,0.6) 50%, rgba(0,0,0,1) 100%);
     z-index: 999;
+    animation: explode 1s ease-out forwards;
   }
 
   @keyframes explode {
     0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.4); opacity: 0.9; filter: brightness(2); }
-    100% { transform: scale(1.6); opacity: 0; }
+    50% { transform: scale(1.8); opacity: 0.9; filter: brightness(2); }
+    100% { transform: scale(2.5); opacity: 0; }
   }
 
   #videoContainer {
@@ -127,7 +127,7 @@
 <div id="explosion"></div>
 
 <div id="videoContainer">
-  <video id="video" preload="auto" playsinline>
+  <video id="video" preload="auto" playsinline muted>
     <source src="ScreenRecording_10-29-2025 13-39-39_1.mov" type="video/mp4">
   </video>
 </div>
@@ -157,11 +157,17 @@ const video = document.getElementById("video");
 const mMessage = document.getElementById("mMessage");
 const tick = document.getElementById("tickSound");
 const boom = document.getElementById("explosionSound");
-let ticking = setInterval(updateTimer, 1000);
+let ticking;
 
 tick.volume = 0.5;
 tick.loop = true;
-tick.play();
+
+// Start countdown on first click
+function startCountdown() {
+  if (ticking) return;
+  tick.play();
+  ticking = setInterval(updateTimer, 1000);
+}
 
 function updateTimer() {
   timeLeft--;
@@ -176,14 +182,17 @@ function updateTimer() {
 }
 
 function cutWire() {
+  startCountdown(); // ensures audio permission
   clearInterval(ticking);
   triggerExplosion();
 }
 
 function triggerExplosion() {
   tick.pause();
+  tick.currentTime = 0;
   boom.play();
   explosion.style.display = "block";
+  document.querySelectorAll('.wire').forEach(w => w.style.pointerEvents = 'none');
   setTimeout(() => {
     explosion.style.display = "none";
     startVideo();
@@ -192,12 +201,18 @@ function triggerExplosion() {
 
 function startVideo() {
   videoContainer.style.display = "block";
-  video.play();
+  video.muted = true;
+  video.play().then(()=>{
+    setTimeout(()=>video.muted=false,200);
+  });
   video.onended = () => {
     videoContainer.style.display = "none";
     mMessage.style.display = "block";
   };
 }
+
+updateTimer();
+ticking = setInterval(updateTimer, 1000);
 </script>
 
 </body>
