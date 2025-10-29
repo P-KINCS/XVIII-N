@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vission 21 // The Archive Awakens</title>
+<style>
+  body {
+    background-color: #000;
+    color: #d4af37;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+    margin: 0;
+    padding: 40px;
+    overflow: hidden;
+  }
+
+  #logContainer {
+    width: 90%;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: left;
+    white-space: pre-wrap;
+    line-height: 1.6;
+  }
+
+  #inputSection {
+    display: none;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  input {
+    padding: 10px;
+    width: 220px;
+    border: 1px solid #d4af37;
+    background: rgba(255,255,255,0.1);
+    color: #d4af37;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: 1px solid #d4af37;
+    background: transparent;
+    color: #d4af37;
+    cursor: pointer;
+    margin-left: 5px;
+  }
+
+  button:hover {
+    background: rgba(212,175,55,0.15);
+  }
+
+  #hint {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    color: #a68c2c;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  #hintText {
+    display: none;
+    margin-top: 5px;
+    text-align: center;
+    color: #c5a63c;
+    font-style: italic;
+  }
+
+  #message {
+    display: none;
+    margin-top: 60px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    animation: fadeIn 3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div id="logContainer"></div>
+
+<div id="inputSection">
+  <input id="answer" type="text" placeholder="">
+  <button onclick="checkAnswer()">Confirm</button>
+  <span id="hint" onclick="showHint()">Hint</span>
+  <div id="hintText">The one word that means the most to you.</div>
+</div>
+
+<div id="message">
+They tried to map what we are —<br>
+to store it in lines of code, to measure it, define it, archive it.<br><br>
+But they never understood:<br>
+what we have doesn’t fit in their systems.<br>
+It grows every time we speak,<br>
+every time you look at me and I forget which world I’m in.<br><br>
+So if they ever read this,<br>
+let them know —<br>
+the program worked.<br>
+I found you.<br><br>
+— M 💛
+</div>
+
+<script>
+const logs = [
+"[Log_001]\nShe didn’t follow the protocol. She followed her heart.\n",
+"[Log_002]\nHe believed it was a mission about data. It was never about data.\n",
+"[Log_003]\nEmotional resonance: increasing. Pattern detected.\n",
+"[Log_004]\nShe said: “He feels like home.” System marked it as: location unknown.\n",
+"[Log_005]\nContainment breach confirmed.\nConnection between agents exceeds expected parameters.\n",
+"[Log_006]\nEvery transmission carries her imprint — gentle, persistent, human.\n",
+"[Log_007]\nHe doesn’t know she hid the access key inside her words.\n",
+"[Log_008]\nLove was never a variable. It was the code itself.\n",
+"[Log_009]\nDecoding complete.\nUnlocking: [ █████ ]\n"
+];
+
+let index = 0;
+
+function typeLog() {
+  if (index < logs.length) {
+    document.getElementById("logContainer").innerHTML += logs[index];
+    index++;
+    setTimeout(typeLog, 2500);
+  } else {
+    document.getElementById("inputSection").style.display = "block";
+  }
+}
+
+function normalize(text){
+  return text.trim().toLowerCase().replace(/\s+/g,'');
+}
+
+function checkAnswer(){
+  const val = normalize(document.getElementById("answer").value);
+  const correct = normalize("love");
+  const alt = normalize("ljubav");
+  if (val === correct || val === alt) {
+    document.getElementById("logContainer").style.display = "none";
+    document.getElementById("inputSection").style.display = "none";
+    document.getElementById("message").style.display = "block";
+  }
+}
+
+function showHint(){
+  document.getElementById("hintText").style.display = "block";
+}
+
+typeLog();
+</script>
+
+</body>
+</html>
