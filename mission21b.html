@@ -15,7 +15,7 @@
   }
 
   h2 {
-    margin-top: 40px;
+    margin-top: 30px;
     font-size: 22px;
     letter-spacing: 1px;
   }
@@ -23,28 +23,28 @@
   p {
     color: #e6d59c;
     max-width: 600px;
-    margin: 0 auto 20px;
+    margin: 10px auto 20px;
     line-height: 1.5;
   }
 
   #timer {
-    position: fixed;
-    top: 20px;
-    right: 25px;
-    background: #111;
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background: rgba(17,17,17,0.7);
     border: 1px solid #d4af37;
     border-radius: 6px;
-    padding: 8px 14px;
+    padding: 6px 12px;
     color: #ffcc00;
-    font-size: 20px;
+    font-size: 18px;
   }
 
-  /* Panel (the “bomb”) */
+  /* Bomb panel */
   .panel {
     background: radial-gradient(circle, #202020, #000);
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 12px;
-    margin: 60px auto;
+    margin: 70px auto;
     padding: 30px 20px;
     width: 300px;
     box-shadow: 0 0 15px rgba(212,175,55,0.2);
@@ -68,13 +68,13 @@
   .wire.blue { background: linear-gradient(90deg,#7bd7ff,#003f6b); }
   .wire.green { background: linear-gradient(90deg,#7bff9e,#016a2d); }
 
-  /* Explosion effect */
+  /* Explosion */
   #explosion {
     position: fixed;
     inset: 0;
     display: none;
     background: radial-gradient(circle, rgba(255,255,180,1) 0%, rgba(255,100,0,0.6) 40%, rgba(0,0,0,1) 100%);
-    animation: explode 0.8s ease-out forwards;
+    animation: explode 1s ease-out forwards;
     z-index: 999;
   }
 
@@ -84,35 +84,34 @@
     100% { transform: scale(1.6); opacity: 0; }
   }
 
-  /* Video container */
-  #videoContainer {
+  /* Second screen */
+  #afterExplosion {
     display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: black;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  #video {
     width: 100%;
     height: 60vh;
-    overflow: hidden;
-    background: black;
-  }
-
-  #videoContainer video {
-    width: 100%;
-    height: 100%;
     object-fit: contain;
+    margin-top: 10px;
   }
 
-  /* M’s message */
   #mMessage {
-    display: none;
+    width: 85%;
     color: #d4af37;
-    font-size: 18px;
-    line-height: 1.6;
-    margin: 40px auto;
-    max-width: 700px;
-    animation: fadeIn 2s ease forwards;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    font-size: 17px;
+    line-height: 1.5;
+    text-align: center;
+    white-space: pre-line;
+    overflow: hidden;
+    margin-top: 10px;
   }
 </style>
 </head>
@@ -129,33 +128,21 @@
 
 <div id="timer">00:60</div>
 
-<!-- Bomb panel -->
 <div class="panel" onclick="triggerExplosion()">
   <div class="wire red"></div>
   <div class="wire blue"></div>
   <div class="wire green"></div>
 </div>
 
-<!-- Explosion visual -->
 <div id="explosion"></div>
 
-<!-- Video -->
-<div id="videoContainer">
+<div id="afterExplosion">
   <video id="video" preload="auto" playsinline>
     <source src="ScreenRecording_10-29-2025 13-39-39_1.mov" type="video/mp4">
   </video>
+  <div id="mMessage"></div>
 </div>
 
-<!-- M’s message -->
-<div id="mMessage">
-  <p><b>You really thought the world was ending, didn’t you? 😏</b><br>
-  Calm down, Agent B — it was never a bomb.<br>
-  Just a reminder that you’re the explosive one here. 💋<br><br>
-  <i>Now breathe, Agent B … and maybe call me when you’ve recovered.</i> 💋<br><br>
-  — M</p>
-</div>
-
-<!-- Sounds -->
 <audio id="tickSound" preload="auto" loop>
   <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9bb2e0cf1a.mp3?filename=clock-ticking-8749.mp3" type="audio/mpeg">
 </audio>
@@ -168,7 +155,7 @@
 let timeLeft = 60;
 const timer = document.getElementById("timer");
 const explosion = document.getElementById("explosion");
-const videoContainer = document.getElementById("videoContainer");
+const afterExplosion = document.getElementById("afterExplosion");
 const video = document.getElementById("video");
 const mMessage = document.getElementById("mMessage");
 const tick = document.getElementById("tickSound");
@@ -194,20 +181,32 @@ function triggerExplosion() {
   tick.pause();
   boom.play();
   explosion.style.display = "block";
-
   setTimeout(() => {
     explosion.style.display = "none";
-    startVideo();
-  }, 1200);
+    showAfterScreen();
+  }, 1000);
 }
 
-function startVideo() {
-  videoContainer.style.display = "block";
+function showAfterScreen() {
+  document.body.innerHTML = "";
+  document.body.appendChild(afterExplosion);
+  afterExplosion.style.display = "flex";
   video.play();
   video.onended = () => {
-    videoContainer.style.display = "none";
-    mMessage.style.display = "block";
+    typeMessage("You really thought the world was ending, didn’t you? 😏\nCalm down, Agent B — it was never a bomb.\nJust a reminder that you’re the explosive one here. 💋\n\nNow breathe, Agent B … and maybe call me when you’ve recovered.\n\n— M");
   };
+}
+
+function typeMessage(text) {
+  let i = 0;
+  function typing() {
+    if (i < text.length) {
+      mMessage.textContent += text.charAt(i);
+      i++;
+      setTimeout(typing, 45);
+    }
+  }
+  typing();
 }
 </script>
 
