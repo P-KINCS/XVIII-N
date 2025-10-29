@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MISSION 23 // THE VORDS WE KEEP</title>
+<style>
+  :root {
+    --bg:#f7f1e6; --ink:#3b2f1f; --gold:#c59b2a; --muted:#6b5635;
+    --ok:#2f8f46; --err:#b33a3a;
+  }
+  html,body {
+    margin:0; height:100%;
+    background:var(--bg); color:var(--ink);
+    font-family:"Garamond", Georgia, serif;
+  }
+  .wrap {max-width:950px; margin:0 auto; padding:28px 16px;}
+  h1 {font-size:22px; letter-spacing:1px; text-align:center; color:#7a5d2b;}
+  .lead {text-align:center; margin:16px 0 26px; font-size:18px;}
+  .block {
+    background:#fff8; border:1px solid #e8dfcf; border-radius:12px;
+    padding:16px; margin:18px 0;
+  }
+  .code {
+    font-family:"Courier New", monospace;
+    background:#fff; border:1px solid #e8dfcf;
+    border-radius:10px; padding:14px;
+    min-height:48px; white-space:pre-wrap;
+  }
+  .row {display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+  input[type="text"] {
+    padding:10px 12px; border:1px solid #d9ccb7; border-radius:8px;
+    background:#fff; color:#3b2f1f; font-size:16px; flex:1 1 260px;
+  }
+  button {
+    padding:9px 14px; border:1px solid var(--gold);
+    border-radius:8px; background:#fff7e2; color:#6b4a10; cursor:pointer;
+  }
+  button:hover {background:#fff0c5;}
+  .msg {margin-top:8px; font-size:14px; min-height:20px;}
+  .ok {color:var(--ok);} .err{color:var(--err);}
+  .hint {
+    margin-top:8px; font-size:14px; color:#7a5d2b;
+    display:none; line-height:1.5;
+  }
+  .divider {height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:18px 0;}
+  #finalScreen {
+    display:none; position:fixed; inset:0; background:#000;
+  }
+  #finalScreen img {
+    width:100vw; height:100vh; object-fit:cover;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>MISSION 23 // THE VORDS WE KEEP</h1>
+  <div class="lead">5135555250879NBSI</div>
+
+  <!-- STEP 1 -->
+  <div class="block" id="step1">
+    <div class="row">
+      <input id="ans1" type="text"/>
+      <button onclick="check1()">Confirm</button>
+    </div>
+    <div class="msg" id="msg1"></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="block" id="step2" style="display:none">
+    <div class="code" id="seq1"></div>
+    <button onclick="showHint('hint1')">Hint</button>
+    <div class="hint" id="hint1">
+      During World War II, several Soviet spy rings communicated to Moscow Centre using two ciphers which are essentially evolutionary improvements on the basic cipher.
+    </div>
+    <div class="row">
+      <input id="ans2" type="text"/>
+      <button onclick="check2()">Confirm</button>
+    </div>
+    <div class="msg" id="msg2"></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="block" id="step3" style="display:none">
+    <div class="code" id="seq2"></div>
+    <button onclick="showHint('hint2')">Hint</button>
+    <div class="hint" id="hint2">ISO 646</div>
+    <div class="row">
+      <input id="ans3" type="text"/>
+      <button onclick="check3()">Confirm</button>
+    </div>
+    <div class="msg" id="msg3"></div>
+  </div>
+</div>
+
+<div id="finalScreen">
+  <img src="IMG_8817.jpeg" alt="Final image">
+</div>
+
+<script>
+function norm(s){
+  return (s||'').toLowerCase()
+    .replaceAll('&','and')
+    .replace(/[^\p{L}\p{N}]+/gu,'');
+}
+function typewrite(el, text, speed=15){
+  el.textContent=''; let i=0;
+  (function step(){
+    if(i<=text.length){ el.textContent=text.slice(0,i); i++; setTimeout(step,speed); }
+  })();
+}
+function showHint(id){ document.getElementById(id).style.display='block'; }
+
+/* STEP 1 */
+function check1(){
+  const val=norm(document.getElementById('ans1').value);
+  const ok=norm('winnie the pooh');
+  const msg=document.getElementById('msg1');
+  if(val===ok){
+    msg.className='msg ok'; msg.textContent='✓';
+    document.getElementById('step2').style.display='block';
+    typewrite(document.getElementById('seq1'),
+      '84 46 73 67 66 53 33 80 53 87 73 83 68 66 36 79 94 47 86 53 48 44 56 57 76 45 43 46 89 74 72 59 53 45 45 47 86 44 35 90 72 47 72 87 76 83 34 57 75 64 43 84 46 47 62 68 62 77 45 74 75 57 33 59 86 63 46 73 89 74 72 66 53 44 66 47 75 55 42 80 56 46 76 44 48 77 52 60 82 87 73 83 79 63 53 86 74',
+      7
+    );
+  } else { msg.className='msg err'; msg.textContent='Not quite.'; }
+}
+
+/* STEP 2 */
+const target2="Promise me you'll always remember: You're braver than you believe, and stronger than you seem, and smarter than you think)";
+function check2(){
+  const val=norm(document.getElementById('ans2').value);
+  const ok=norm(target2);
+  const msg=document.getElementById('msg2');
+  if(val===ok){
+    msg.className='msg ok'; msg.textContent='✓';
+    document.getElementById('step3').style.display='block';
+    typewrite(document.getElementById('seq2'),
+      '73 102 32 121 111 117 32 108 105 118 101 32 116 111 32 98 101 32 97 32 104 117 110 100 114 101 100 44 32 73 32 104 111 112 101 32 73 32 108 105 118 101 32 116 111 32 98 101 32 97 32 104 117 110 100 114 101 100 32 109 105 110 117 115 32 111 110 101 32 100 97 121 44 32 115 111 32 116 104 97 116 32 73 32 110 101 118 101 114 32 104 97 118 101 32 116 111 32 108 105 118 101 32 97 32 100 97 121 32 119 105 116 104 111 117 116 32 121 111 117 46',
+      7
+    );
+  } else { msg.className='msg err'; msg.textContent='Not quite.'; }
+}
+
+/* STEP 3 */
+const target3="If you live to be a hundred, I hope I live to be a hundred minus one day, so that I never have to live a day without you.";
+function check3(){
+  const val=norm(document.getElementById('ans3').value);
+  const ok=norm(target3);
+  const msg=document.getElementById('msg3');
+  if(val===ok){
+    msg.className='msg ok'; msg.textContent='✓';
+    setTimeout(()=>{document.getElementById('finalScreen').style.display='block';},800);
+  } else { msg.className='msg err'; msg.textContent='Not quite.'; }
+}
+
+/* Enter shortcuts */
+['ans1','ans2','ans3'].forEach((id,i)=>{
+  document.getElementById(id).addEventListener('keypress',e=>{
+    if(e.key==='Enter'){
+      if(i===0) check1(); else if(i===1) check2(); else check3();
+    }
+  });
+});
+</script>
+</body>
+</html>
