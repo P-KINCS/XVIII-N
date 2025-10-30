@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Mission 26 // AAS IN THE MOVIES</title>
+<style>
+  :root{ --bg:#0b0f17; --gold:#d4af37; --ink:#e8e1c9; --muted:#a69663; }
+  html,body{margin:0;background:var(--bg);color:var(--gold);font-family:"Garamond",serif}
+  .wrap{max-width:960px;margin:0 auto;padding:28px 16px}
+  h1{margin:6px 0 6px;letter-spacing:1px;font-size:22px}
+  .sub{color:var(--muted);margin:2px 0 18px}
+  .card{background:rgba(255,255,255,0.03);border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px 14px 18px;margin:18px 0}
+  .imgbox{display:flex;justify-content:center;margin:6px 0 10px}
+  img{max-width:100%;height:auto;border:1px solid rgba(212,175,55,.25);border-radius:8px}
+  .controls{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px}
+  input{
+    border:1px solid rgba(212,175,55,.6);background:#0e1522;color:var(--ink);
+    border-radius:8px;padding:9px 12px;font-size:16px;min-width:240px;text-align:center
+  }
+  button{
+    border:1px solid var(--gold);background:transparent;color:var(--gold);
+    border-radius:8px;padding:8px 14px;cursor:pointer;font-size:15px
+  }
+  button:hover{background:rgba(212,175,55,.10)}
+  .hidden{display:none}
+  .final{margin:26px 0 10px;white-space:pre-wrap;line-height:1.7}
+  .type{opacity:.95}
+  .ps{margin-top:12px;color:var(--ink)}
+  .choice{display:flex;gap:10px;justify-content:center;margin-top:10px}
+  .msg{margin-top:12px;color:var(--ink)}
+  /* subtle divider */
+  .div{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.4),transparent);margin:24px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mission 26 // AAS IN THE MOVIES</h1>
+  <div class="sub"><em>Guess the film.</em></div>
+
+  <!-- Item 1 -->
+  <div class="card" id="c1">
+    <div class="imgbox"><img src="IMG_8854.jpeg" alt="Scene 1"></div>
+    <div class="controls">
+      <input id="a1" type="text">
+      <button onclick="check(1,'They Drive by Night')">Confirm</button>
+    </div>
+  </div>
+
+  <!-- Item 2 -->
+  <div class="card hidden" id="c2">
+    <div class="imgbox"><img src="IMG_8856.jpeg" alt="Scene 2"></div>
+    <div class="controls">
+      <input id="a2" type="text">
+      <button onclick="check(2,'The Big Sleep')">Confirm</button>
+    </div>
+  </div>
+
+  <!-- Item 3 -->
+  <div class="card hidden" id="c3">
+    <div class="imgbox"><img src="IMG_8857.jpeg" alt="Scene 3"></div>
+    <div class="controls">
+      <input id="a3" type="text">
+      <button onclick="check(3,'Only Angels Have Wings')">Confirm</button>
+    </div>
+  </div>
+
+  <!-- Item 4 -->
+  <div class="card hidden" id="c4">
+    <div class="imgbox"><img src="IMG_8858.jpeg" alt="Scene 4"></div>
+    <div class="controls">
+      <input id="a4" type="text">
+      <button onclick="check(4,'The Lady Eve')">Confirm</button>
+    </div>
+  </div>
+
+  <!-- Item 5 -->
+  <div class="card hidden" id="c5">
+    <div class="imgbox"><img src="IMG_8859.jpeg" alt="Scene 5"></div>
+    <div class="controls">
+      <input id="a5" type="text">
+      <button onclick="check(5,'People Will Talk')">Confirm</button>
+    </div>
+  </div>
+
+  <!-- Item 6 -->
+  <div class="card hidden" id="c6">
+    <div class="imgbox"><img src="IMG_8860.jpeg" alt="Scene 6"></div>
+    <div class="controls">
+      <input id="a6" type="text">
+      <button onclick="check(6,'Charade')">Confirm</button>
+    </div>
+  </div>
+
+  <!-- Final message -->
+  <div id="finalBlock" class="hidden">
+    <div class="div"></div>
+    <p class="final type" id="finalText"></p>
+    <div class="ps"><em>P.S. Would you like to watch one of these together?</em></div>
+    <div class="choice">
+      <button onclick="choose('yes')">Yes — queue it for us.</button>
+      <button onclick="choose('no')">Not tonight — reality wins.</button>
+    </div>
+    <div class="msg" id="choiceMsg"></div>
+  </div>
+</div>
+
+<script>
+/* Normalize: ignore casing & punctuation */
+function norm(s){
+  return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'').trim();
+}
+
+function check(idx, correctTitle){
+  const inputEl = document.getElementById('a'+idx);
+  const val = norm(inputEl.value);
+  const ok  = norm(correctTitle);
+  if(val === ok){
+    // reveal next
+    const next = document.getElementById('c'+(idx+1));
+    if(next){ next.classList.remove('hidden'); }
+    else{ showFinal(); }
+    // lock this card input to prevent further edits
+    inputEl.disabled = true;
+  }else{
+    alert('Not quite, Agent.');
+  }
+}
+
+/* Typewriter for final text */
+function typewrite(el, txt, spd=22){
+  el.textContent=''; let i=0;
+  (function step(){
+    if(i<=txt.length){ el.textContent = txt.slice(0,i); i++; setTimeout(step,spd); }
+  })();
+}
+
+function showFinal(){
+  const block = document.getElementById('finalBlock');
+  block.classList.remove('hidden');
+  const t = `“It used to feel like a movie — all the glances, the chaos, the charm.
+Turns out, I never needed the screen. I had you.”
+— M`;
+  typewrite(document.getElementById('finalText'), t, 22);
+}
+
+function choose(ans){
+  const box = document.getElementById('choiceMsg');
+  if(ans==='yes'){
+    box.textContent = "Perfect. Please save this — we'll need it.";
+  }else{
+    box.textContent = "Understood, Agent B. The reel can wait — we’ve got our own scene.";
+  }
+}
+
+/* Optional: Enter key confirms current visible card */
+document.addEventListener('keypress', (e)=>{
+  if(e.key==='Enter'){
+    for(let i=1;i<=6;i++){
+      const card = document.getElementById('c'+i);
+      if(card && !card.classList.contains('hidden')){
+        const btn = card.querySelector('button');
+        if(btn){ btn.click(); }
+        break;
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
