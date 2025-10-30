@@ -7,7 +7,7 @@
 <style>
   :root{ --night:#001f3f; --gold:#d4af37; --ink:#f5e6b1; }
   html,body{margin:0;height:100%;background:var(--night);color:var(--gold);font-family:"Garamond",serif;overflow-x:hidden}
-  .wrap{max-width:900px;margin:0 auto;padding:36px 18px;text-align:center}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 18px;text-align:center;position:relative;z-index:1}
   h1{letter-spacing:1px;margin:0 0 16px}
   p{margin:12px auto;line-height:1.7;max-width:780px}
   .type{opacity:.95;white-space:pre-wrap}
@@ -17,60 +17,43 @@
   }
   .btn:hover{background:rgba(212,175,55,.08)}
   input{
-    margin:10px auto;padding:10px 12px;border-radius:8px;border:1px solid var(--gold);
+    margin:12px auto;padding:10px 12px;border-radius:8px;border:1px solid var(--gold);
     background:#0a223d;color:var(--ink);text-align:center;font-size:16px;min-width:280px;max-width:90%
   }
-  .hint{font-size:14px;opacity:.85;margin:8px 0 14px;color:#a8903a}
-  /* Twinkling stars background */
   .sky{position:fixed;inset:0;pointer-events:none;z-index:0}
   .star{
     position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;
     opacity:.4;animation:twinkle var(--t) linear infinite;filter:drop-shadow(0 0 4px rgba(212,175,55,.6))
   }
-  @keyframes twinkle{
-    0%,100%{opacity:.25;transform:scale(.9)}
-    50%{opacity:1;transform:scale(1.4)}
-  }
-  /* Sections */
-  #s1,#s2,#s3,#final{position:relative;z-index:1;display:none}
-  /* Gold particle fx */
-  #burst,#gather{position:fixed;inset:0;pointer-events:none;display:none;z-index:5}
-  .spark{
-    position:absolute;width:6px;height:6px;border-radius:50%;
-    background:radial-gradient(circle,#ffe899 0%,#ffd24a 45%,rgba(255,215,0,0) 70%);
-    opacity:0;animation:fly 1.1s ease-out forwards
-  }
-  @keyframes fly{
-    0%{opacity:0;transform:translate(0,0) scale(.5)}
-    15%{opacity:1}
-    100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.95)}
-  }
-  /* Converge to input */
+  @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.9)}50%{opacity:1;transform:scale(1.4)}}
+  #s1,#s2,#s3,#final{display:none}
+  /* fade out container on success */
+  .fadeOut{animation:fade .8s ease forwards}
+  @keyframes fade{to{opacity:0;filter:blur(2px)}}
+  /* gather burst */
+  #gather{position:fixed;inset:0;pointer-events:none;display:none;z-index:5}
   .speck{
     position:absolute;width:5px;height:5px;border-radius:50%;
     background:radial-gradient(circle,#fff3b0 0%,#ffd24a 50%,rgba(255,215,0,0) 75%);
-    opacity:0;animation:toTarget 1.1s ease-in forwards
+    opacity:0;animation:toCenter 1.1s ease-in forwards
   }
-  @keyframes toTarget{
-    0%{opacity:.1;transform:translate(0,0) scale(.6)}
+  @keyframes toCenter{
+    0%{opacity:.15;transform:translate(0,0) scale(.6)}
     100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}
   }
   /* Golden key */
-  #keyWrap{display:none;position:fixed;inset:0;z-index:6;pointer-events:none;display:flex;align-items:center;justify-content:center}
+  #keyStage{display:none;position:fixed;inset:0;z-index:6;pointer-events:none;display:flex;align-items:center;justify-content:center;flex-direction:column}
   #key{width:36px;height:auto;opacity:.95;transform:scale(.4);animation:grow 1.6s ease-out forwards}
   @keyframes grow{to{transform:scale(1.2)}}
-  /* key pulse */
   #keyPulse{position:absolute;width:90px;height:90px;border-radius:50%;border:2px solid rgba(212,175,55,.35);animation:pulse 2s ease-in-out infinite}
   @keyframes pulse{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.85;transform:scale(1.25)}}
-  /* Final signature */
-  #final{padding:22px}
   #sig{margin-top:16px;font-style:italic}
 </style>
 </head>
 <body>
 <div class="sky" id="sky"></div>
 
-<div class="wrap">
+<div class="wrap" id="content">
   <h1>MISSION 31 // THE KEY</h1>
 
   <!-- Section 1 -->
@@ -90,141 +73,108 @@
   <div id="s3">
     <p class="type" id="t2"></p>
     <input id="a2" type="text" placeholder="">
-    <div class="hint">Inside the box, there are three secrets dressed in scent. Only one was made for him.</div>
     <div><button class="btn" onclick="checkA2()">Confirm</button></div>
-  </div>
-
-  <!-- Final text -->
-  <div id="final">
-    <p class="type" id="t3"></p>
-    <p class="type" id="sig"></p>
   </div>
 </div>
 
 <!-- FX layers -->
-<div id="burst"></div>
 <div id="gather"></div>
-<div id="keyWrap">
+
+<!-- Final key + signature -->
+<div id="keyStage">
   <div id="keyPulse"></div>
-  <!-- Simple gold key (SVG) -->
   <svg id="key" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="70" cy="128" r="42" stroke="#d4af37" stroke-width="10" fill="none"/>
     <rect x="112" y="120" width="108" height="16" fill="#d4af37"/>
     <rect x="184" y="100" width="18" height="16" fill="#d4af37"/>
     <rect x="202" y="84" width="14" height="16" fill="#d4af37"/>
   </svg>
+  <p class="type" id="sig"></p>
 </div>
 
 <script>
-/* --- Utilities --- */
+/* text and normalization */
 function typewrite(el, txt, spd=26){ el.textContent=""; let i=0; (function step(){ if(i<=txt.length){ el.textContent=txt.slice(0,i); i++; setTimeout(step,spd);} })(); }
-function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s\-–—]+/g,'').replace(/\s+/g,' ').trim(); }
+function norm(s){
+  return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')   // remove accents
+    .replace(/&/g,'and')                               // treat & as 'and'
+    .replace(/[^a-z0-9\s]/g,' ')                       // strip punctuation
+    .replace(/\s+/g,' ').trim();
+}
 
-/* Twinkling stars: create sparse field */
+/* Stars */
 (function makeStars(){
   const sky = document.getElementById('sky');
   const N = 70;
   for(let i=0;i<N;i++){
     const s = document.createElement('div');
     s.className='star';
-    const x = Math.random()*100, y = Math.random()*100;
-    s.style.left = x+'vw'; s.style.top = y+'vh';
+    s.style.left = Math.random()*100+'vw';
+    s.style.top  = Math.random()*100+'vh';
     s.style.opacity = Math.random()*0.8+0.2;
     s.style.setProperty('--t', (2.5+Math.random()*3.5)+'s');
     sky.appendChild(s);
   }
 })();
 
-/* Flow */
+/* Flow refs */
 const s1 = document.getElementById('s1');
 const s2 = document.getElementById('s2');
 const s3 = document.getElementById('s3');
-const finalBox = document.getElementById('final');
+const content = document.getElementById('content');
 
 window.onload = ()=>{
   s1.style.display='block';
   typewrite(document.getElementById('t1'), "To reach the key, only one thing remains…", 28);
 };
 
-/* Section 1 → 2 */
-function goS2(){
-  s1.style.display='none';
-  s2.style.display='block';
-}
+function goS2(){ s1.style.display='none'; s2.style.display='block'; }
 
-/* Cary Grant */
 function checkA1(){
   const v = norm(document.getElementById('a1').value);
   const ok = norm("Cary Grant");
   if(v===ok){
     s2.style.display='none';
     s3.style.display='block';
-    const t2 = "Inside the box, there are three secrets dressed in scent.\nOnly one was made for him.\n\nCareful now, Agent B.\nOne wrong move might trigger… a sweet surprise.";
-    typewrite(document.getElementById('t2'), t2, 24);
-  } else {
-    alert("Not quite, Agent.");
-  }
+    typewrite(document.getElementById('t2'),
+      "Inside the box, there are three secrets dressed in scent.\nOnly one was made for him.\n\nCareful now, Agent B.\nOne wrong move might trigger… a sweet surprise.",
+      24
+    );
+  } else alert("Not quite, Agent.");
 }
 
-/* Creed – Green Irish Tweed (accept dashes/spaces) */
+/* Accepts any casing/punctuation for 'Creed – Green Irish Tweed' */
 function checkA2(){
   const v = norm(document.getElementById('a2').value);
-  const ok = norm("Creed – Green Irish Tweed");
+  const ok = norm("Creed Green Irish Tweed");
   if(v===ok){
-    // 1) quick burst around screen
-    burstGold(80);
-    // 2) particles converge into input
-    setTimeout(()=>gatherToInput('a2', 120), 450);
-    // 3) show key and final text
+    // fade out content
+    content.classList.add('fadeOut');
+    // gather stars/specks to center
+    setTimeout(()=>gatherToCenter(160), 200);
+    // show key + signature
     setTimeout(()=>{
-      document.getElementById('keyWrap').style.display='flex';
-      s3.style.display='none';
-      finalBox.style.display='block';
-      typewrite(document.getElementById('t3'),
-        "Inside the box, there are three secrets dressed in scent.\nOnly one was made for him.\n\nYou chose wisely.",
-        26
-      );
-      setTimeout(()=>{
-        typewrite(document.getElementById('sig'), "Zauvek tvoja, Maja", 28);
-      }, 1200 + 26*6);
-    }, 1400);
-  } else {
-    alert("Try again.");
-  }
+      content.style.display='none';
+      const stage = document.getElementById('keyStage');
+      stage.style.display='flex';
+      typewrite(document.getElementById('sig'), "Zauvek tvoja, Maja", 28);
+    }, 1500);
+  } else alert("Try again.");
 }
 
-/* FX: outward burst */
-function burstGold(n=60){
-  const layer = document.getElementById('burst');
-  layer.innerHTML=''; layer.style.display='block';
-  const cx = window.innerWidth/2, cy = window.innerHeight*0.4;
-  for(let i=0;i<n;i++){
-    const sp = document.createElement('div'); sp.className='spark';
-    sp.style.left = cx+'px'; sp.style.top = cy+'px';
-    sp.style.setProperty('--dx', (Math.random()-0.5)*600+'px');
-    sp.style.setProperty('--dy', (Math.random()-0.5)*420+'px');
-    layer.appendChild(sp);
-  }
-  setTimeout(()=>{layer.style.display='none'; layer.innerHTML='';}, 1200);
-}
-
-/* FX: converge to input */
-function gatherToInput(inputId, n=100){
-  const inp = document.getElementById(inputId);
-  const rect = inp.getBoundingClientRect();
-  const tx = rect.left + rect.width/2;
-  const ty = rect.top + rect.height/2;
-
+/* particles fly to screen center */
+function gatherToCenter(n=120){
   const layer = document.getElementById('gather');
   layer.innerHTML=''; layer.style.display='block';
-
+  const cx = window.innerWidth/2, cy = window.innerHeight/2;
   for(let i=0;i<n;i++){
     const sp = document.createElement('div'); sp.className='speck';
     const sx = Math.random()*window.innerWidth;
-    const sy = Math.random()*window.innerHeight*0.9;
+    const sy = Math.random()*window.innerHeight*0.95;
     sp.style.left = sx+'px'; sp.style.top = sy+'px';
-    sp.style.setProperty('--dx', (tx - sx)+'px');
-    sp.style.setProperty('--dy', (ty - sy)+'px');
+    sp.style.setProperty('--dx', (cx - sx)+'px');
+    sp.style.setProperty('--dy', (cy - sy)+'px');
     layer.appendChild(sp);
   }
   setTimeout(()=>{ layer.style.display='none'; layer.innerHTML=''; }, 1200);
