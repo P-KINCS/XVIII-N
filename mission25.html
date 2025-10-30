@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MISSjION 25 // THE WORDS BETWEEN US</title>
+<style>
+  :root{
+    --bg:#f7f1e6; --ink:#3b2f1f; --gold:#d4af37; --muted:#6b5635;
+    --card:#fff8; --line:#e8dfcf; --ok:#2f8f46; --err:#b33a3a;
+  }
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Garamond", Georgia, serif}
+  .wrap{max-width:960px;margin:0 auto; padding:28px 16px; text-align:center}
+  h1{font-size:22px;letter-spacing:1px;color:#7a5d2b;margin:0 0 10px}
+  .lead{color:var(--muted);margin:8px 0 20px}
+  #stage{position:relative; min-height:50vh; display:flex; align-items:center; justify-content:center}
+
+  .card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 18px;
+    width: min(720px, 92vw);
+    margin:0 auto;
+    text-align:center;
+    box-shadow:0 4px 14px rgba(0,0,0,.06);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .sentence{font-size:22px; line-height:1.6; margin-bottom:14px}
+  .hintWrap{margin-top:10px}
+  .hintBtn{border:1px solid var(--gold); background:#fff7e2; color:#6b4a10; border-radius:8px; padding:8px 12px; cursor:pointer}
+  .hint{display:none; margin-top:8px; color:#7a5d2b; font-style:italic}
+  .controls{margin-top:14px}
+  .confirmBtn{border:1px solid var(--gold); background:#fff7e2; color:#6b4a10; border-radius:8px; padding:10px 16px; cursor:pointer}
+  .msg{min-height:20px; margin-top:10px; font-size:14px}
+  .ok{color:var(--ok)} .err{color:var(--err)}
+
+  input.blank{
+    width:130px; max-width:40vw;
+    border:1px solid #d9ccb7; border-radius:8px; background:#fff; color:#3b2f1f;
+    font-size:18px; padding:8px 10px; margin:0 6px;
+    text-align:center;
+  }
+  .divider{height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:22px auto; width:min(760px,92vw)}
+
+  /* Stars */
+  .star{
+    position:fixed;
+    width:6px; height:6px;
+    background: radial-gradient(circle, #ffe899 0%, #ffd24a 40%, rgba(255,215,0,0) 70%);
+    border-radius:50%;
+    pointer-events:none;
+    opacity:0;
+    animation: twinkle 3s ease-out forwards;
+  }
+  @keyframes twinkle{
+    0%{opacity:0; transform: translate(0,0) scale(0.6)}
+    10%{opacity:1}
+    100%{opacity:0; transform: translate(var(--dx), var(--dy)) scale(0.9)}
+  }
+
+  /* Final screen */
+  #final{
+    display:none;
+    position:fixed; inset:0;
+    background:#f8efdc;
+    color:#b9932c;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:28px;
+  }
+  #finalText{
+    max-width:800px; font-size:24px; line-height:1.7; white-space:pre-wrap;
+    text-shadow:0 0 6px rgba(212,175,55,0.35);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>MISSjION 25 // THE WORDS BETWEEN US</h1>
+    <div class="lead"><em>Let’s see if you can remember my words, Agent.<br>They were never just words… they were clues.</em></div>
+    <div id="stage">
+      <div class="card" id="card"></div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div id="final">
+    <div id="finalText"></div>
+  </div>
+
+<script>
+/* ===== Utilities ===== */
+function norm(s){
+  return (s||'')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')  // strip diacritics
+    .replace(/[^\p{L}\p{N}]+/gu,''); // letters/numbers only
+}
+function typewrite(el, text, speed=22){
+  el.textContent='';
+  let i=0;
+  (function step(){
+    if(i<=text.length){
+      el.textContent = text.slice(0,i);
+      i++;
+      setTimeout(step, speed);
+    }
+  })();
+}
+
+/* ===== Data (steps) =====
+Each step:
+{
+  template: "Text with __ blanks __.",
+  hints: ["hint text"],
+  answers: [ [acceptable list for blank1], [acceptable list for blank2] ]
+}
+*/
+const steps = [
+  {
+    template: "Obožavam kako ___.",
+    hints: ["Uvek me umiri"],
+    answers: [ ["mirises","mirišes","mirišeš"] ]
+  },
+  {
+    template: "Moje malo ________.",
+    hints: ["Na tvom licu"],
+    answers: [ ["sazvezdje","sazvezde","sazvezdje","sazvezje","sazvežđe"] ] // tolerant
+  },
+  {
+    template: "Volim da naslonim ___ na tvoj ___.",
+    hints: ["Nije ništa bezobrazno 💋"],
+    answers: [ ["glavu","celo","celoo","celoo","celo","chelo","celo"], ["obraz"] ] // first accepts glavu/čelo; second obraz
+  },
+  {
+    template: "Izluđuje me tvoj ______.",
+    hints: ["Ne treba ti hint za ovo. 😎"],
+    answers: [ ["pogled"] ]
+  },
+  {
+    template: "Mnogo mi je slatko kad ______.",
+    hints: ["🤫"],
+    answers: [ ["suskas","suskash","suskati","suskanje","susnes","suskas","suskas","suskas","suskaš","šuskaš","šuskas","suska"] ]
+  },
+  {
+    template: "_______ na tebe.",
+    hints: ["✌️"],
+    answers: [ ["ponosnasam","ponosna","ponosan","ponosni"] ] // najbitnije: "ponosna sam"
+  },
+  {
+    template: "_____ ti se.",
+    hints: ["😮🤩"],
+    answers: [ ["divim"] ]
+  },
+  {
+    template: "_______ si.",
+    hints: ["Znaš, ne zafrkavaj. 🥰"],
+    answers: [ ["savrsen","savrsna","savrsno","savrsenji"] ] // glavno: "savrsen"
+  }
+];
+
+/* Clean expected answers by normalizing each variant once */
+steps.forEach(s=>{
+  s.answers = s.answers.map(list => Array.from(new Set(list.map(a=>norm(a)))));
+});
+
+/* For step 3 we must ensure acceptance: glavu OR čelo for first blank, and obraz second */
+steps[2].answers[0] = Array.from(new Set( steps[2].answers[0].concat([norm("glavu"), norm("čelo"), norm("celo")]) ));
+steps[2].answers[1] = [ norm("obraz") ];
+
+/* Step 5 — normalize main word "šuškaš" */
+steps[4].answers[0] = [ norm("šuškaš"), norm("suskas") ];
+
+/* Step 6 — normalize "ponosna sam" */
+steps[5].answers[0] = [ norm("ponosna sam"), norm("ponosna"), norm("ponosan") ];
+
+/* Step 8 — normalize "savršen" */
+steps[7].answers[0] = [ norm("savršen"), norm("savrsen") ];
+
+let idx = 0;
+
+/* ===== Render logic ===== */
+const card = document.getElementById('card');
+
+function renderStep(){
+  const s = steps[idx];
+  // build HTML with inputs replacing blanks
+  // Count blanks by number of answers arrays
+  const blanksCount = s.answers.length;
+
+  // Replace underscores in template with inputs
+  // Strategy: replace each occurrence of ___ or ________ with an input sequentially
+  let html = s.template;
+  // Replace long/any underscores by a placeholder token then rebuild
+  html = html.replace(/_{2,}/g, ()=>'[[BLANK]]');
+
+  let inputsHTML = [];
+  for(let i=0;i<blanksCount;i++){
+    inputsHTML.push(`<input class="blank" id="blank${i}" type="text" />`);
+  }
+  let used = 0;
+  html = html.replace(/\[\[BLANK\]\]/g, ()=> inputsHTML[used++]);
+
+  card.innerHTML = `
+    <div class="sentence">${html}</div>
+    <div class="hintWrap">
+      <button class="hintBtn" onclick="toggleHint()">${"Hint"}</button>
+      <div class="hint" id="hintBox">${s.hints[0]||""}</div>
+    </div>
+    <div class="controls">
+      <button class="confirmBtn" onclick="confirmStep()">Confirm</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  `;
+}
+
+function toggleHint(){
+  const hb = document.getElementById('hintBox');
+  hb.style.display = (hb.style.display==='block') ? 'none' : 'block';
+}
+
+function confirmStep(){
+  const s = steps[idx];
+  const msg = document.getElementById('msg');
+  // Collect inputs
+  const answers = s.answers;
+  for(let i=0;i<answers.length;i++){
+    const val = norm(document.getElementById('blank'+i).value);
+    const okList = answers[i];
+    if(!okList.includes(val)){
+      msg.className='msg err';
+      msg.textContent='Not quite.';
+      return;
+    }
+  }
+  // Correct!
+  msg.className='msg ok';
+  msg.textContent='✓';
+
+  // Stars for 3 seconds
+  sprinkleStars(36);
+  // Fade + next after 3s
+  card.style.opacity = 0.9;
+  setTimeout(()=>{
+    card.style.opacity = 0;
+  }, 2000);
+
+  setTimeout(()=>{
+    idx++;
+    if(idx < steps.length){
+      card.style.opacity = 1;
+      renderStep();
+    }else{
+      showFinal();
+    }
+  }, 3000);
+}
+
+/* ===== Stars (gold dust) ===== */
+function sprinkleStars(n=30){
+  const rect = card.getBoundingClientRect();
+  for(let i=0;i<n;i++){
+    const star = document.createElement('div');
+    star.className = 'star';
+    // start around the card center-ish
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    // random start within card bounds
+    const sx = cx + (Math.random()-0.5)*rect.width*0.6;
+    const sy = cy + (Math.random()-0.5)*rect.height*0.4;
+    // random movement deltas
+    const dx = (Math.random()-0.5)*260 + 'px';
+    const dy = (Math.random()-0.5)*180 + 'px';
+    star.style.left = sx+'px';
+    star.style.top  = sy+'px';
+    star.style.setProperty('--dx', dx);
+    star.style.setProperty('--dy', dy);
+    document.body.appendChild(star);
+    setTimeout(()=>{ star.remove(); }, 3000);
+  }
+}
+
+/* ===== Final screen ===== */
+function showFinal(){
+  const final = document.getElementById('final');
+  final.style.display='flex';
+  const text = `“I love you for all that you are,
+all that you have been
+and all that you will be.”
+
+With love,
+— M`;
+  typewrite(document.getElementById('finalText'), text, 24);
+}
+
+/* Enter key support */
+document.addEventListener('keypress', (e)=>{
+  if(e.key==='Enter'){
+    // only when a step is active
+    if(document.getElementById('final').style.display!=='flex'){
+      confirmStep();
+    }
+  }
+});
+
+/* Start */
+renderStep();
+</script>
+</body>
+</html>
