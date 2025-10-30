@@ -10,7 +10,6 @@
   .wrap{max-width:900px;margin:0 auto;padding:36px 18px;text-align:center;position:relative;z-index:1}
   h1{letter-spacing:1px;margin:0 0 16px}
   p{margin:12px auto;line-height:1.7;max-width:780px}
-  .type{opacity:.95;white-space:pre-wrap}
   .btn{
     display:inline-block;margin-top:18px;padding:8px 14px;border:1px solid var(--gold);
     color:var(--gold);background:transparent;border-radius:8px;cursor:pointer
@@ -27,10 +26,8 @@
   }
   @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.9)}50%{opacity:1;transform:scale(1.4)}}
   #s1,#s2,#s3,#final{display:none}
-  /* fade out container on success */
   .fadeOut{animation:fade .8s ease forwards}
   @keyframes fade{to{opacity:0;filter:blur(2px)}}
-  /* gather burst */
   #gather{position:fixed;inset:0;pointer-events:none;display:none;z-index:5}
   .speck{
     position:absolute;width:5px;height:5px;border-radius:50%;
@@ -41,13 +38,16 @@
     0%{opacity:.15;transform:translate(0,0) scale(.6)}
     100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}
   }
-  /* Golden key */
   #keyStage{display:none;position:fixed;inset:0;z-index:6;pointer-events:none;display:flex;align-items:center;justify-content:center;flex-direction:column}
-  #key{width:36px;height:auto;opacity:.95;transform:scale(.4);animation:grow 1.6s ease-out forwards}
+  #key{width:40px;height:auto;opacity:.95;transform:scale(.4);animation:grow 1.6s ease-out forwards}
   @keyframes grow{to{transform:scale(1.2)}}
   #keyPulse{position:absolute;width:90px;height:90px;border-radius:50%;border:2px solid rgba(212,175,55,.35);animation:pulse 2s ease-in-out infinite}
   @keyframes pulse{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.85;transform:scale(1.25)}}
-  #sig{margin-top:16px;font-style:italic}
+  #sig{
+    margin-top:30px;font-style:italic;font-family:"Great Vibes","Brush Script MT",cursive;
+    font-size:30px;opacity:0;animation:fadeIn 2s ease forwards;
+  }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
@@ -56,31 +56,26 @@
 <div class="wrap" id="content">
   <h1>MISSION 31 // THE KEY</h1>
 
-  <!-- Section 1 -->
   <div id="s1">
-    <p class="type" id="t1"></p>
+    <p id="t1"></p>
     <button class="btn" onclick="goS2()">Click when your heart is ready.</button>
   </div>
 
-  <!-- Section 2 -->
   <div id="s2">
-    <p class="type">Who said that everyone wants to be him — even he wants to be him?</p>
+    <p>Who said that everyone wants to be him — even he wants to be him?</p>
     <input id="a1" type="text" placeholder="">
     <div><button class="btn" onclick="checkA1()">Confirm</button></div>
   </div>
 
-  <!-- Section 3 -->
   <div id="s3">
-    <p class="type" id="t2"></p>
+    <p id="t2"></p>
     <input id="a2" type="text" placeholder="">
     <div><button class="btn" onclick="checkA2()">Confirm</button></div>
   </div>
 </div>
 
-<!-- FX layers -->
 <div id="gather"></div>
 
-<!-- Final key + signature -->
 <div id="keyStage">
   <div id="keyPulse"></div>
   <svg id="key" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,95 +84,55 @@
     <rect x="184" y="100" width="18" height="16" fill="#d4af37"/>
     <rect x="202" y="84" width="14" height="16" fill="#d4af37"/>
   </svg>
-  <p class="type" id="sig"></p>
+  <p id="sig"></p>
 </div>
 
 <script>
-/* text and normalization */
 function typewrite(el, txt, spd=26){ el.textContent=""; let i=0; (function step(){ if(i<=txt.length){ el.textContent=txt.slice(0,i); i++; setTimeout(step,spd);} })(); }
 function norm(s){
   return (s||'').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')   // remove accents
-    .replace(/&/g,'and')                               // treat & as 'and'
-    .replace(/[^a-z0-9\s]/g,' ')                       // strip punctuation
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/&/g,'and').replace(/[^a-z0-9\s]/g,' ')
     .replace(/\s+/g,' ').trim();
 }
-
-/* Stars */
 (function makeStars(){
-  const sky = document.getElementById('sky');
-  const N = 70;
-  for(let i=0;i<N;i++){
-    const s = document.createElement('div');
-    s.className='star';
-    s.style.left = Math.random()*100+'vw';
-    s.style.top  = Math.random()*100+'vh';
-    s.style.opacity = Math.random()*0.8+0.2;
-    s.style.setProperty('--t', (2.5+Math.random()*3.5)+'s');
-    sky.appendChild(s);
-  }
+  const sky = document.getElementById('sky'); const N=70;
+  for(let i=0;i<N;i++){const s=document.createElement('div');s.className='star';
+    s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';
+    s.style.opacity=Math.random()*0.8+0.2;s.style.setProperty('--t',(2.5+Math.random()*3.5)+'s');
+    sky.appendChild(s);}
 })();
-
-/* Flow refs */
-const s1 = document.getElementById('s1');
-const s2 = document.getElementById('s2');
-const s3 = document.getElementById('s3');
-const content = document.getElementById('content');
-
-window.onload = ()=>{
-  s1.style.display='block';
-  typewrite(document.getElementById('t1'), "To reach the key, only one thing remains…", 28);
-};
-
-function goS2(){ s1.style.display='none'; s2.style.display='block'; }
-
+const s1=document.getElementById('s1'),s2=document.getElementById('s2'),s3=document.getElementById('s3'),content=document.getElementById('content');
+window.onload=()=>{s1.style.display='block';typewrite(document.getElementById('t1'),"To reach the key, only one thing remains…",28);}
+function goS2(){s1.style.display='none';s2.style.display='block';}
 function checkA1(){
-  const v = norm(document.getElementById('a1').value);
-  const ok = norm("Cary Grant");
-  if(v===ok){
-    s2.style.display='none';
-    s3.style.display='block';
-    typewrite(document.getElementById('t2'),
-      "Inside the box, there are three secrets dressed in scent.\nOnly one was made for him.\n\nCareful now, Agent B.\nOne wrong move might trigger… a sweet surprise.",
-      24
-    );
+  const v=norm(document.getElementById('a1').value),ok=norm("Cary Grant");
+  if(v===ok){s2.style.display='none';s3.style.display='block';
+    typewrite(document.getElementById('t2'),"Inside the box, there are three secrets dressed in scent.\nOnly one was made for him.\n\nCareful now, Agent B.\nOne wrong move might trigger… a sweet surprise.",24);
   } else alert("Not quite, Agent.");
 }
-
-/* Accepts any casing/punctuation for 'Creed – Green Irish Tweed' */
 function checkA2(){
-  const v = norm(document.getElementById('a2').value);
-  const ok = norm("Creed Green Irish Tweed");
+  const v=norm(document.getElementById('a2').value),ok=norm("Creed Green Irish Tweed");
   if(v===ok){
-    // fade out content
     content.classList.add('fadeOut');
-    // gather stars/specks to center
-    setTimeout(()=>gatherToCenter(160), 200);
-    // show key + signature
+    setTimeout(()=>gatherToCenter(160),200);
     setTimeout(()=>{
       content.style.display='none';
-      const stage = document.getElementById('keyStage');
+      const stage=document.getElementById('keyStage');
       stage.style.display='flex';
-      typewrite(document.getElementById('sig'), "Zauvek tvoja, Maja", 28);
-    }, 1500);
+      typewrite(document.getElementById('sig'),"Zauvek tvoja, Maja",65);
+    },800);
   } else alert("Try again.");
 }
-
-/* particles fly to screen center */
 function gatherToCenter(n=120){
-  const layer = document.getElementById('gather');
-  layer.innerHTML=''; layer.style.display='block';
-  const cx = window.innerWidth/2, cy = window.innerHeight/2;
-  for(let i=0;i<n;i++){
-    const sp = document.createElement('div'); sp.className='speck';
-    const sx = Math.random()*window.innerWidth;
-    const sy = Math.random()*window.innerHeight*0.95;
-    sp.style.left = sx+'px'; sp.style.top = sy+'px';
-    sp.style.setProperty('--dx', (cx - sx)+'px');
-    sp.style.setProperty('--dy', (cy - sy)+'px');
-    layer.appendChild(sp);
-  }
-  setTimeout(()=>{ layer.style.display='none'; layer.innerHTML=''; }, 1200);
+  const layer=document.getElementById('gather');layer.innerHTML='';layer.style.display='block';
+  const cx=window.innerWidth/2,cy=window.innerHeight/2;
+  for(let i=0;i<n;i++){const sp=document.createElement('div');sp.className='speck';
+    const sx=Math.random()*window.innerWidth,sy=Math.random()*window.innerHeight*0.95;
+    sp.style.left=sx+'px';sp.style.top=sy+'px';
+    sp.style.setProperty('--dx',(cx-sx)+'px');sp.style.setProperty('--dy',(cy-sy)+'px');
+    layer.appendChild(sp);}
+  setTimeout(()=>{layer.style.display='none';layer.innerHTML='';},1200);
 }
 </script>
 </body>
