@@ -90,7 +90,7 @@
 </head>
 <body>
 
-<h1>MISSION 24 // THE BOOK OF TRUTH</h1>
+<h1>MISSIN 24 // THE BOOK OF TRUTH</h1>
 <p class="lead"><em>You already know how to find it, Agent.</em></p>
 
 <div class="isbn">ISBN9780451528353</div><br>
@@ -114,9 +114,14 @@ function showHint(){
 function check(){
   const val=document.getElementById("year").value.trim();
   if(val==="1958"){
+    document.querySelector("h1").style.display="none";
+    document.querySelector(".lead").style.display="none";
+    document.querySelector(".isbn").style.display="none";
+    document.querySelector("input").style.display="none";
+    document.querySelectorAll("button").forEach(b=>b.style.display="none");
+    document.getElementById("hint").style.display="none";
     document.body.style.background="black";
     document.body.style.color="#d4af37";
-    document.querySelectorAll("h1,.lead,.isbn,input,button,#hint").forEach(e=>e.style.display="none");
     document.getElementById("after").style.display="flex";
     typeText();
   }
