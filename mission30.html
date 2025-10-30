@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MISSION 30 // A FINAL CLUE</title>
+<style>
+body {
+  margin: 0;
+  background-color: #001f3f; /* midnight blue */
+  color: #d4af37; /* gold */
+  font-family: "Garamond", serif;
+  text-align: center;
+  overflow-y: auto;
+  padding: 40px 20px;
+}
+h1 {
+  letter-spacing: 1px;
+  font-size: 24px;
+  margin-bottom: 25px;
+}
+p {
+  font-size: 18px;
+  max-width: 700px;
+  margin: 0 auto 25px;
+  line-height: 1.6;
+}
+img {
+  width: 85%;
+  max-width: 500px;
+  border: 2px solid rgba(212,175,55,0.3);
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+input {
+  font-size: 16px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d4af37;
+  background: #0a223d;
+  color: #f5e6b1;
+  text-align: center;
+  margin-bottom: 10px;
+  width: 80%;
+  max-width: 400px;
+}
+button {
+  background: transparent;
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+button:hover {
+  background: rgba(212,175,55,0.1);
+}
+#finalText {
+  font-size: 20px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  opacity: 0;
+  transition: opacity 2s ease-in;
+  max-width: 700px;
+  margin: 40px auto;
+}
+.hint {
+  color: #a8903a;
+  font-size: 15px;
+  margin-bottom: 15px;
+  display: none;
+  font-style: italic;
+}
+#dot {
+  display: none;
+  margin: 60px auto 20px;
+  width: 12px;
+  height: 12px;
+  background-color: #d4af37;
+  border-radius: 50%;
+  animation: pulse 2s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+</style>
+</head>
+<body>
+
+<h1>MISSION 30 // A FINAL CLUE</h1>
+<p><em>Alright, Sherlock. Let’s see how you handle this one.</em></p>
+
+<img src="IMG_8842.jpeg" alt="mystery image">
+
+<div id="section1">
+  <input type="text" id="input1" placeholder="">
+  <br>
+  <button onclick="checkFirst()">Confirm</button>
+</div>
+
+<div id="section2" style="display:none;">
+  <p id="firstText"></p>
+  <div class="hint" id="hint1">41°53'55.2"N<br>12°28'36.8"E</div>
+  <button onclick="showHint()">Hint</button><br>
+  <input type="text" id="input2" placeholder="">
+  <br>
+  <button onclick="checkSecond()">Confirm</button>
+</div>
+
+<div id="finalText"></div>
+<div id="dot"></div>
+
+<script>
+function norm(s){return (s||'').toLowerCase().replace(/[^a-z0-9;,.°'"°\s]/g,'');}
+
+function checkFirst(){
+  const val = norm(document.getElementById("input1").value);
+  const correct = norm("A man of genius makes no mistakes; his errors are volitional and are the portals of discovery.");
+  if(val === correct){
+    document.getElementById("section1").style.display = "none";
+    document.getElementById("section2").style.display = "block";
+    typeWrite(document.getElementById("firstText"), 
+      "Maybe mistakes really are the portals of discovery.\nBut… where are they?", 30);
+  } else {
+    alert("Not quite, Agent.");
+  }
+}
+
+function showHint(){
+  const hint = document.getElementById("hint1");
+  hint.style.display = hint.style.display === "block" ? "none" : "block";
+}
+
+function checkSecond(){
+  const val = norm(document.getElementById("input2").value);
+  const correct = norm("mission 15");
+  if(val === correct){
+    document.getElementById("section2").style.display = "none";
+    const final = document.getElementById("finalText");
+    final.style.opacity = "1";
+    typeWrite(final, "Once you arrive at the destination,\nbegin with the memories.\nWalk the old path.\nAll the way to the end.", 35);
+    document.getElementById("dot").style.display = "block";
+  } else {
+    alert("Try again, Sherlock.");
+  }
+}
+
+function typeWrite(el,txt,spd){
+  el.textContent="";
+  let i=0;
+  (function t(){
+    if(i<=txt.length){
+      el.textContent=txt.slice(0,i);
+      i++;
+      setTimeout(t,spd);
+    }
+  })();
+}
+</script>
+
+</body>
+</html>
