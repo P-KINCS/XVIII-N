@@ -43,6 +43,7 @@ input {
   font-family: inherit;
   color: #3b2f1f;
   width: 140px;
+  margin: 0 5px;
 }
 .hint {
   display: none;
@@ -118,14 +119,14 @@ input {
 function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zćčšđž]+/g,'');}
 
 const steps = [
-  {text:"Obožavam kako _____.", answers:["mirises","mirišes","mirišeš"], hint:"Uvek me umiri"},
-  {text:"Moje malo ________.", answers:["sazvezdje","sazvezde","sazvezje","sazvezdje"], hint:"Na tvom licu"},
-  {text:"Volim da naslonim _____ na tvoj _____.", answers:["glavu","celo","čelo","obraz"], hint:"Nije ništa bezobrazno 💋"},
-  {text:"Izluđuje me tvoj ______.", answers:["pogled"], hint:"Ne treba ti hint za ovo. 😎"},
-  {text:"Mnogo mi je slatko kad ______.", answers:["suskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","suskas","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš"], hint:"🤫"},
-  {text:"_______ na tebe.", answers:["ponosnasam","ponosna","ponosan"], hint:"✌️"},
-  {text:"_____ ti se.", answers:["divim"], hint:"😮🤩"},
-  {text:"_______ si.", answers:["savrsen","savršen"], hint:"Znaš, ne zafrkavaj. 🥰"}
+  {text:"Obožavam kako _____.", answers:[["mirises","mirišes","mirišeš"]], hint:"Uvek me umiri"},
+  {text:"Moje malo ________.", answers:[["sazvezdje","sazvezde","sazvezje","sazvezdje","sazvezde","sazvežđe"]], hint:"Na tvom licu"},
+  {text:"Volim da naslonim _____ na tvoj _____.", answers:[["glavu","celo","čelo"],["obraz"]], hint:"Nije ništa bezobrazno 💋"},
+  {text:"Izluđuje me tvoj ______.", answers:[["pogled"]], hint:"Ne treba ti hint za ovo. 😎"},
+  {text:"Mnogo mi je slatko kad ______.", answers:[["suskaš","šuskaš","suskas","šuskaš"]], hint:"🤫"},
+  {text:"_______ na tebe.", answers:[["ponosnasam","ponosna","ponosan"]], hint:"✌️"},
+  {text:"_____ ti se.", answers:[["divim"]], hint:"😮🤩"},
+  {text:"_______ si.", answers:[["savrsen","savršen"]], hint:"Znaš, ne zafrkavaj. 🥰"}
 ];
 let i=0;
 
@@ -148,7 +149,10 @@ function startMission(){
 function showStep(){
   const s=steps[i];
   sentence.textContent=s.text;
-  inputs.innerHTML='<input id="answer" type="text">';
+  inputs.innerHTML="";
+  s.answers.forEach((_,index)=>{
+    inputs.innerHTML+=`<input id="answer${index}" type="text">`;
+  });
   hintText.textContent=s.hint;
   hintText.style.display="none";
   nextBtn.style.display="none";
@@ -160,8 +164,14 @@ function toggleHint(){
 
 function checkAnswer(){
   const s=steps[i];
-  const val=norm(document.getElementById("answer").value);
-  if(s.answers.map(a=>norm(a)).includes(val)){
+  let correct=true;
+  for(let j=0;j<s.answers.length;j++){
+    const val=norm(document.getElementById("answer"+j).value);
+    if(!s.answers[j].map(a=>norm(a)).includes(val)){
+      correct=false;
+    }
+  }
+  if(correct){
     nextBtn.style.display="inline-block";
   }else{
     alert("Not quite, Agent.");
