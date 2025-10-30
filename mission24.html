@@ -5,102 +5,120 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>MISSIN 24 // THE BOOK OF TRUTH</title>
 <style>
-  body{
-    margin:0;
-    font-family:"Garamond",serif;
-    background:#f7f1e6;
-    color:#3b2f1f;
-    text-align:center;
+  body {
+    margin: 0;
+    font-family: "Garamond", serif;
+    background: #f7f1e6;
+    color: #3b2f1f;
+    text-align: center;
   }
-  h1{
-    color:#7a5d2b;
-    margin-top:40px;
-    font-size:22px;
-    letter-spacing:1px;
+
+  h1 {
+    color: #7a5d2b;
+    margin-top: 40px;
+    font-size: 22px;
+    letter-spacing: 1px;
   }
-  .lead{
-    color:#6b5635;
-    margin-bottom:20px;
+
+  .lead {
+    color: #6b5635;
+    margin-bottom: 20px;
   }
-  .isbn{
-    font-family:"Courier New",monospace;
-    font-size:18px;
-    background:#fff;
-    border:1px solid #e8dfcf;
-    border-radius:10px;
-    display:inline-block;
-    padding:12px 16px;
+
+  .isbn {
+    font-family: "Courier New", monospace;
+    font-size: 18px;
+    background: #fff;
+    border: 1px solid #e8dfcf;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 12px 16px;
   }
-  input{
-    padding:10px;
-    border:1px solid #d9ccb7;
-    border-radius:8px;
-    margin-top:15px;
-    font-size:16px;
-    text-align:center;
+
+  input {
+    padding: 10px;
+    border: 1px solid #d9ccb7;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 16px;
+    text-align: center;
   }
-  button{
-    padding:10px 14px;
-    border:1px solid #c59b2a;
-    border-radius:8px;
-    background:#fff7e2;
-    color:#6b4a10;
-    cursor:pointer;
-    margin-left:5px;
+
+  button {
+    padding: 10px 14px;
+    border: 1px solid #c59b2a;
+    border-radius: 8px;
+    background: #fff7e2;
+    color: #6b4a10;
+    cursor: pointer;
+    margin-left: 5px;
   }
-  button:hover{background:#fff0c5}
-  #hint{
-    display:none;
-    margin-top:10px;
-    color:#7a5d2b;
-    font-style:italic;
+
+  button:hover { background: #fff0c5; }
+
+  #hint {
+    display: none;
+    margin-top: 10px;
+    color: #7a5d2b;
+    font-style: italic;
   }
-  #after{
-    display:none;
-    position:fixed;
-    top:0;left:0;width:100%;height:100%;
-    background:black;
-    color:#d4af37;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:24px;
+
+  #page1, #page2 {
+    transition: opacity 1s ease;
   }
-  #quote{
-    font-size:22px;
-    max-width:700px;
-    line-height:1.6;
-    white-space:pre-wrap;
+
+  #page2 {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: black;
+    color: #d4af37;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
   }
-  #from{
-    margin-top:10px;
-    font-size:16px;
-    opacity:0.9;
+
+  #quote {
+    font-size: 22px;
+    max-width: 700px;
+    line-height: 1.6;
+    white-space: pre-wrap;
   }
-  #note{
-    margin-top:20px;
-    font-size:18px;
-    color:#ffd76a;
-    max-width:750px;
-    white-space:pre-wrap;
+
+  #from {
+    margin-top: 10px;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+
+  #note {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ffd76a;
+    max-width: 750px;
+    white-space: pre-wrap;
   }
 </style>
 </head>
 <body>
 
-<h1>MISSIN 24 // THE BOOK OF TRUTH</h1>
-<p class="lead"><em>You already know how to find it, Agent.</em></p>
+<!-- PAGE 1 -->
+<div id="page1">
+  <h1>MISSIN 24 // THE BOOK OF TRUTH</h1>
+  <p class="lead"><em>You already know how to find it, Agent.</em></p>
+  <div class="isbn">ISBN9780451528353</div><br>
+  <input id="year" type="text" placeholder="year">
+  <button onclick="check()">Confirm</button>
+  <button onclick="showHint()">Hint</button>
+  <p id="hint">Can you really find the book?</p>
+</div>
 
-<div class="isbn">ISBN9780451528353</div><br>
-<input id="year" type="text" placeholder="year">
-<button onclick="check()">Confirm</button>
-<button onclick="showHint()">Hint</button>
-
-<p id="hint">Can you really find the book?</p>
-
-<div id="after">
+<!-- PAGE 2 -->
+<div id="page2">
   <div id="quote"></div>
   <div id="from">— Mark Twain</div>
   <div id="note"></div>
@@ -111,45 +129,53 @@ function showHint(){
   document.getElementById("hint").style.display="block";
 }
 
+// Uvek resetuje prikaz da se ne vidi drugi deo pri otvaranju
+window.onload = function(){
+  document.getElementById("page1").style.display = "block";
+  document.getElementById("page2").style.display = "none";
+}
+
 function check(){
-  const val=document.getElementById("year").value.trim();
-  if(val==="1958"){
-    document.querySelector("h1").style.display="none";
-    document.querySelector(".lead").style.display="none";
-    document.querySelector(".isbn").style.display="none";
-    document.querySelector("input").style.display="none";
-    document.querySelectorAll("button").forEach(b=>b.style.display="none");
-    document.getElementById("hint").style.display="none";
-    document.body.style.background="black";
-    document.body.style.color="#d4af37";
-    document.getElementById("after").style.display="flex";
-    typeText();
+  const val = document.getElementById("year").value.trim();
+  if(val === "1958"){
+    // sakrij prvi deo
+    document.getElementById("page1").style.opacity = 0;
+    setTimeout(()=>{
+      document.getElementById("page1").style.display = "none";
+      showPage2();
+    }, 1000);
   }
 }
 
+function showPage2(){
+  const page2 = document.getElementById("page2");
+  page2.style.display = "flex";
+  typeText();
+}
+
 function typeText(){
-  const q="If you tell the truth you don't have to remember anything.";
-  const note="Thank you for always being honest with me.\nI’ll be grateful for that — always.\n\nWith love,\n— M";
-  let i=0;
-  const quote=document.getElementById("quote");
-  const noteBox=document.getElementById("note");
+  const q = "If you tell the truth you don't have to remember anything.";
+  const note = "Thank you for always being honest with me.\nI’ll be grateful for that — always.\n\nWith love,\n— M";
+  let i = 0;
+  const quote = document.getElementById("quote");
+  const noteBox = document.getElementById("note");
   
   function typeQuote(){
-    if(i<q.length){
-      quote.textContent+=q.charAt(i);
+    if(i < q.length){
+      quote.textContent += q.charAt(i);
       i++;
-      setTimeout(typeQuote,40);
+      setTimeout(typeQuote, 40);
     } else {
-      setTimeout(()=>typeNote(),1200);
+      setTimeout(()=>typeNote(), 1200);
     }
   }
 
-  let j=0;
+  let j = 0;
   function typeNote(){
-    if(j<note.length){
-      noteBox.textContent+=note.charAt(j);
+    if(j < note.length){
+      noteBox.textContent += note.charAt(j);
       j++;
-      setTimeout(typeNote,40);
+      setTimeout(typeNote, 40);
     }
   }
   typeQuote();
