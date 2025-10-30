@@ -5,54 +5,101 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>MISSIN 24 // THE BOOK OF TRUTH</title>
 <style>
-  :root{
-    --bg:#f7f1e6; --ink:#3b2f1f; --gold:#c59b2a; --muted:#6b5635;
+  body{
+    margin:0;
+    font-family:"Garamond",serif;
+    background:#f7f1e6;
+    color:#3b2f1f;
+    text-align:center;
   }
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Garamond", Georgia, serif;}
-  .wrap{max-width:900px;margin:0 auto;padding:28px 16px;text-align:center}
-  h1{font-size:22px;letter-spacing:1px;color:#7a5d2b;margin:0 0 8px}
-  .lead{color:var(--muted);margin-bottom:20px}
-  .isbn{font-family:"Courier New",monospace;font-size:18px;background:#fff;border:1px solid #e8dfcf;border-radius:10px;display:inline-block;padding:12px 16px}
-  .controls{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  input[type="text"]{padding:10px 12px;border:1px solid #d9ccb7;border-radius:8px;background:#fff;color:#3b2f1f;font-size:16px;min-width:160px}
-  button{padding:10px 14px;border:1px solid var(--gold);border-radius:8px;background:#fff7e2;color:#6b4a10;cursor:pointer}
+  h1{
+    color:#7a5d2b;
+    margin-top:40px;
+    font-size:22px;
+    letter-spacing:1px;
+  }
+  .lead{
+    color:#6b5635;
+    margin-bottom:20px;
+  }
+  .isbn{
+    font-family:"Courier New",monospace;
+    font-size:18px;
+    background:#fff;
+    border:1px solid #e8dfcf;
+    border-radius:10px;
+    display:inline-block;
+    padding:12px 16px;
+  }
+  input{
+    padding:10px;
+    border:1px solid #d9ccb7;
+    border-radius:8px;
+    margin-top:15px;
+    font-size:16px;
+    text-align:center;
+  }
+  button{
+    padding:10px 14px;
+    border:1px solid #c59b2a;
+    border-radius:8px;
+    background:#fff7e2;
+    color:#6b4a10;
+    cursor:pointer;
+    margin-left:5px;
+  }
   button:hover{background:#fff0c5}
-  .hint{margin-top:10px;font-size:14px;color:#7a5d2b;display:none}
-  .msg{margin-top:8px;min-height:20px;font-size:14px}
-  .ok{color:#2f8f46} .err{color:#b33a3a}
-  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:22px 0}
-
-  /* After screen */
-  #after{display:none;position:fixed;inset:0;background:#000;color:#d4af37;
-         display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
-  #quote{max-width:780px;font-size:22px;line-height:1.6;white-space:pre-wrap}
-  #from{margin-top:8px;font-size:16px;opacity:0.9}
-  #note{margin-top:18px;max-width:760px;font-size:18px;color:#ffd76a;white-space:pre-wrap}
-  @media (max-width:740px){
-    #quote{font-size:20px}
-    #note{font-size:17px}
+  #hint{
+    display:none;
+    margin-top:10px;
+    color:#7a5d2b;
+    font-style:italic;
+  }
+  #after{
+    display:none;
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    background:black;
+    color:#d4af37;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+  }
+  #quote{
+    font-size:22px;
+    max-width:700px;
+    line-height:1.6;
+    white-space:pre-wrap;
+  }
+  #from{
+    margin-top:10px;
+    font-size:16px;
+    opacity:0.9;
+  }
+  #note{
+    margin-top:20px;
+    font-size:18px;
+    color:#ffd76a;
+    max-width:750px;
+    white-space:pre-wrap;
   }
 </style>
 </head>
 <body>
-<div class="wrap" id="main">
-  <h1>MISSION 24 // THE BOOK OF TRUTH</h1>
-  <div class="lead"><em>You already know how to find it, Agent.</em></div>
 
-  <div class="isbn">ISBN9780451528353</div>
+<h1>MISSION 24 // THE BOOK OF TRUTH</h1>
+<p class="lead"><em>You already know how to find it, Agent.</em></p>
 
-  <div class="controls">
-    <input id="year" type="text" placeholder="year"/>
-    <button onclick="checkYear()">Confirm</button>
-    <button onclick="toggleHint()">Hint</button>
-  </div>
-  <div id="hint" class="hint">Can you really find the book?</div>
-  <div id="msg" class="msg"></div>
+<div class="isbn">ISBN9780451528353</div><br>
+<input id="year" type="text" placeholder="year">
+<button onclick="check()">Confirm</button>
+<button onclick="showHint()">Hint</button>
 
-  <div class="divider"></div>
-</div>
+<p id="hint">Can you really find the book?</p>
 
-<!-- After-correct screen -->
 <div id="after">
   <div id="quote"></div>
   <div id="from">— Mark Twain</div>
@@ -60,54 +107,49 @@
 </div>
 
 <script>
-function toggleHint(){ 
-  const h=document.getElementById('hint'); 
-  h.style.display = h.style.display==='block' ? 'none' : 'block'; 
+function showHint(){
+  document.getElementById("hint").style.display="block";
 }
 
-function normNum(s){ return (s||'').replace(/[^\d]/g,''); }
-
-function checkYear(){
-  const v = normNum(document.getElementById('year').value);
-  const msg = document.getElementById('msg');
-  if(v==='1958'){
-    msg.className='msg ok'; msg.textContent='✓';
-    setTimeout(showAfter,300);
-  } else {
-    msg.className='msg err'; msg.textContent='Not quite.';
+function check(){
+  const val=document.getElementById("year").value.trim();
+  if(val==="1958"){
+    document.body.style.background="black";
+    document.body.style.color="#d4af37";
+    document.querySelectorAll("h1,.lead,.isbn,input,button,#hint").forEach(e=>e.style.display="none");
+    document.getElementById("after").style.display="flex";
+    typeText();
   }
 }
 
-function typewrite(el, text, speed=26){
-  el.textContent='';
+function typeText(){
+  const q="If you tell the truth you don't have to remember anything.";
+  const note="Thank you for always being honest with me.\nI’ll be grateful for that — always.\n\nWith love,\n— M";
   let i=0;
-  (function step(){
-    if(i<=text.length){
-      el.textContent = text.slice(0,i);
+  const quote=document.getElementById("quote");
+  const noteBox=document.getElementById("note");
+  
+  function typeQuote(){
+    if(i<q.length){
+      quote.textContent+=q.charAt(i);
       i++;
-      setTimeout(step, speed);
+      setTimeout(typeQuote,40);
+    } else {
+      setTimeout(()=>typeNote(),1200);
     }
-  })();
-}
+  }
 
-function showAfter(){
-  document.getElementById('main').style.display='none';
-  const after = document.getElementById('after');
-  after.style.display='flex';
-  // type quote
-  const q = "If you tell the truth you don't have to remember anything.";
-  typewrite(document.getElementById('quote'), q, 24);
-  // type note after a small delay
-  setTimeout(()=>{
-    const note = "Thank you for always being honest with me.\nI’ll be grateful for that — always.\n\nWith love,\n— M";
-    typewrite(document.getElementById('note'), note, 22);
-  }, q.length*24 + 400);
+  let j=0;
+  function typeNote(){
+    if(j<note.length){
+      noteBox.textContent+=note.charAt(j);
+      j++;
+      setTimeout(typeNote,40);
+    }
+  }
+  typeQuote();
 }
-
-// Enter key shortcuts
-document.getElementById('year').addEventListener('keypress', e=>{
-  if(e.key==='Enter') checkYear();
-});
 </script>
+
 </body>
 </html>
