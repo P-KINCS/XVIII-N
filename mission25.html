@@ -1,223 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>MISSjION 25 // THE WORDS BETWEEN US</title>
 <style>
-  :root{
-    --bg:#f7f1e6; --ink:#3b2f1f; --gold:#d4af37; --muted:#6b5635;
-    --card:#fff8; --line:#e8dfcf; --ok:#2f8f46; --err:#b33a3a;
-  }
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Garamond", Georgia, serif}
-  .wrap{max-width:960px;margin:0 auto;padding:28px 16px;text-align:center}
-  h1{font-size:22px;letter-spacing:1px;color:#7a5d2b;margin:0 0 10px}
-  .lead{color:var(--muted);margin:8px 0 20px}
-  #stage{position:relative;min-height:56vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-
-  .card{
-    position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:22px 18px;width:min(720px,92vw);margin:0 auto;text-align:center;
-    box-shadow:0 4px 14px rgba(0,0,0,.06);transition:opacity .3s ease, transform .3s ease;
-  }
-  .sentence{font-size:22px;line-height:1.6;margin-bottom:14px}
-  .hintWrap{margin-top:10px}
-  .hintBtn, .confirmBtn, .nextBtn{
-    border:1px solid var(--gold);background:#fff7e2;color:#6b4a10;border-radius:8px;cursor:pointer
-  }
-  .hintBtn{padding:8px 12px}
-  .confirmBtn{padding:10px 16px;margin-top:10px}
-  .nextBtn{padding:10px 18px;margin-top:14px;font-weight:600}
-  .hint{display:none;margin-top:8px;color:#7a5d2b;font-style:italic}
-  .msg{min-height:20px;margin-top:10px;font-size:14px}
-  .ok{color:var(--ok)} .err{color:var(--err)}
-  input.blank{
-    width:140px;max-width:44vw;border:1px solid #d9ccb7;border-radius:8px;background:#fff;color:#3b2f1f;
-    font-size:18px;padding:8px 10px;margin:0 6px;text-align:center
-  }
-  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:22px auto;width:min(760px,92vw)}
-
-  /* Gold dust overlay */
-  #dust{
-    position:absolute;inset:0;pointer-events:none;display:none;overflow:hidden;
-  }
-  .spark{
-    position:absolute;width:6px;height:6px;border-radius:50%;
-    background: radial-gradient(circle, #ffe899 0%, #ffd24a 45%, rgba(255,215,0,0) 70%);
-    opacity:0;animation:fly 3s ease-out forwards;
-  }
-  @keyframes fly{
-    0%{opacity:0; transform:translate(0,0) scale(.6)}
-    10%{opacity:1}
-    100%{opacity:0; transform:translate(var(--dx),var(--dy)) scale(.95)}
-  }
-
-  /* Final screen */
-  #final{
-    display:none;position:fixed;inset:0;background:#f8efdc;color:#b9932c;
-    display:flex;align-items:center;justify-content:center;text-align:center;padding:28px
-  }
-  #finalText{max-width:800px;font-size:24px;line-height:1.7;white-space:pre-wrap;text-shadow:0 0 6px rgba(212,175,55,.35)}
+body {
+  margin: 0;
+  background: #f6f0e1;
+  font-family: "Garamond", serif;
+  color: #3b2f1f;
+  text-align: center;
+  overflow: hidden;
+}
+h1 {
+  margin-top: 50px;
+  color: #7a5d2b;
+  letter-spacing: 1px;
+}
+p {
+  color: #6b5635;
+}
+button {
+  background: #fff7e2;
+  border: 1px solid #d4af37;
+  color: #6b4a10;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+}
+#startScreen, #taskScreen, #finalScreen {
+  display: none;
+}
+input {
+  border: 1px solid #d9ccb7;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 18px;
+  text-align: center;
+  font-family: inherit;
+  color: #3b2f1f;
+  width: 140px;
+}
+.hint {
+  display: none;
+  margin-top: 8px;
+  font-style: italic;
+  color: #7a5d2b;
+}
+#dust {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+  overflow: hidden;
+}
+.spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe899 0%, #ffd24a 45%, rgba(255,215,0,0) 70%);
+  opacity: 0;
+  animation: fly 3s ease-out forwards;
+}
+@keyframes fly {
+  0% { opacity: 0; transform: translate(0,0) scale(.6); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx),var(--dy)) scale(.95); }
+}
+#finalScreen {
+  position: fixed;
+  inset: 0;
+  background: #f8efdc;
+  color: #b9932c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+}
+#finalText {
+  font-size: 24px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  text-shadow: 0 0 6px rgba(212,175,55,.35);
+}
 </style>
 </head>
 <body>
-<div class="wrap">
+
+<div id="startScreen">
   <h1>MISSjION 25 // THE WORDS BETWEEN US</h1>
-  <div class="lead"><em>Let’s see if you can remember my words, Agent.<br>They were never just words… they were clues.</em></div>
-
-  <div id="stage">
-    <div id="dust"></div>
-    <div class="card" id="card"></div>
-  </div>
-
-  <div class="divider"></div>
+  <p><em>Let’s see if you can remember my words, Agent.<br>
+  They were never just words… they were clues.</em></p>
+  <button onclick="startMission()">Start</button>
 </div>
 
-<div id="final"><div id="finalText"></div></div>
+<div id="taskScreen">
+  <h2 id="sentence"></h2>
+  <div id="inputs"></div>
+  <button id="confirmBtn" onclick="checkAnswer()">Confirm</button>
+  <button id="hintBtn" onclick="toggleHint()">Hint</button>
+  <div class="hint" id="hintText"></div>
+  <button id="nextBtn" style="display:none;" onclick="nextStep()">Continue →</button>
+</div>
+
+<div id="dust"></div>
+
+<div id="finalScreen" style="display:none;">
+  <div id="finalText"></div>
+</div>
 
 <script>
-/* Normalizacija: ignoriše dijakritike, razmake, interpunkciju, velika/mala */
-function norm(s){
-  return (s||'')
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^\p{L}\p{N}]+/gu,'');
-}
-function typewrite(el, text, speed=22){
-  el.textContent=''; let i=0;
-  (function step(){
-    if(i<=text.length){ el.textContent=text.slice(0,i); i++; setTimeout(step,speed); }
-  })();
-}
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zćčšđž]+/g,'');}
 
-/* KORACI */
 const steps = [
-  { template:"Obožavam kako ___.", hints:["Uvek me umiri"], answers:[[ "mirises","mirišes","mirišeš" ]] },
-  { template:"Moje malo ________.", hints:["Na tvom licu"], answers:[[ "sazvezde","sazvezdje","sazvezje","sazvezzde","sazvezdje","sazvezde","sazvezdje","sazvezje","sazvezde","sazvezde","sazvezde","sazvezde", "sazvezde", "sazvezde", "sazvezde", "sazvezde", "sazvezzde", "sazvezde", "sazvezzde", "sazvezde", "sazvezdjee", "sazvezde", "sazvezde", "sazvezzde", "sazvezde", "sazvezde", "sazvezde", "sazvezde", "sazvezde", "sazvezde", "sazvezzde", norm("sazvežđe") ]] },
-  { template:"Volim da naslonim ___ na tvoj ___.", hints:["Nije ništa bezobrazno 💋"], answers:[[ norm("glavu"), norm("čelo"), norm("celo") ],[ norm("obraz") ]] },
-  { template:"Izluđuje me tvoj ______.", hints:["Ne treba ti hint za ovo. 😎"], answers:[[ norm("pogled") ]] },
-  { template:"Mnogo mi je slatko kad ______.", hints:["🤫"], answers:[[ norm("šuškaš"), "suskas" ]] },
-  { template:"_______ na tebe.", hints:["✌️"], answers:[[ norm("ponosna sam"), "ponosna","ponosan" ]] },
-  { template:"_____ ti se.", hints:["😮🤩"], answers:[[ norm("divim") ]] },
-  { template:"_______ si.", hints:["Znaš, ne zafrkavaj. 🥰"], answers:[[ norm("savršen"), "savrsen" ]] }
+  {text:"Obožavam kako _____.", answers:["mirises","mirišes","mirišeš"], hint:"Uvek me umiri"},
+  {text:"Moje malo ________.", answers:["sazvezdje","sazvezde","sazvezje","sazvezdje"], hint:"Na tvom licu"},
+  {text:"Volim da naslonim _____ na tvoj _____.", answers:["glavu","celo","čelo","obraz"], hint:"Nije ništa bezobrazno 💋"},
+  {text:"Izluđuje me tvoj ______.", answers:["pogled"], hint:"Ne treba ti hint za ovo. 😎"},
+  {text:"Mnogo mi je slatko kad ______.", answers:["suskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","suskas","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","suskas","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš","šuskaš"], hint:"🤫"},
+  {text:"_______ na tebe.", answers:["ponosnasam","ponosna","ponosan"], hint:"✌️"},
+  {text:"_____ ti se.", answers:["divim"], hint:"😮🤩"},
+  {text:"_______ si.", answers:["savrsen","savršen"], hint:"Znaš, ne zafrkavaj. 🥰"}
 ];
+let i=0;
 
-/* Jednostavno: normalizuj sve prihvaćene varijante */
-steps.forEach(s=>s.answers = s.answers.map(list => Array.from(new Set(list.map(v=>norm(v))))));
+const startScreen=document.getElementById("startScreen");
+const taskScreen=document.getElementById("taskScreen");
+const finalScreen=document.getElementById("finalScreen");
+const sentence=document.getElementById("sentence");
+const inputs=document.getElementById("inputs");
+const hintText=document.getElementById("hintText");
+const nextBtn=document.getElementById("nextBtn");
+const dust=document.getElementById("dust");
+const finalText=document.getElementById("finalText");
 
-let idx = 0;
-const card = document.getElementById('card');
-const dust = document.getElementById('dust');
+function startMission(){
+  startScreen.style.display="none";
+  taskScreen.style.display="block";
+  showStep();
+}
 
-function renderStep(){
-  const s = steps[idx];
-  let html = s.template.replace(/_{2,}/g,'[[BLANK]]');
-  const blanks = s.answers.length;
-  const inputs = [];
-  for(let i=0;i<blanks;i++){
-    inputs.push(`<input class="blank" id="blank${i}" type="text" />`);
-  }
-  let used = 0;
-  html = html.replace(/\[\[BLANK\]\]/g, ()=>inputs[used++]);
-
-  card.innerHTML = `
-    <div class="sentence">${html}</div>
-    <button class="confirmBtn" onclick="confirmStep()">Confirm</button>
-    <div class="hintWrap">
-      <button class="hintBtn" onclick="toggleHint()">Hint</button>
-      <div class="hint" id="hintBox">${s.hints[0]||""}</div>
-    </div>
-    <div class="msg" id="msg"></div>
-    <button class="nextBtn" id="next" style="display:none" onclick="nextStep()">Continue →</button>
-  `;
+function showStep(){
+  const s=steps[i];
+  sentence.textContent=s.text;
+  inputs.innerHTML='<input id="answer" type="text">';
+  hintText.textContent=s.hint;
+  hintText.style.display="none";
+  nextBtn.style.display="none";
 }
 
 function toggleHint(){
-  const hb = document.getElementById('hintBox');
-  hb.style.display = hb.style.display==='block' ? 'none' : 'block';
+  hintText.style.display=hintText.style.display==="block"?"none":"block";
 }
 
-function confirmStep(){
-  const s = steps[idx];
-  const msg = document.getElementById('msg');
-  for(let i=0;i<s.answers.length;i++){
-    const v = norm(document.getElementById('blank'+i).value);
-    if(!s.answers[i].includes(v)){
-      msg.className='msg err';
-      msg.textContent='Not quite.';
-      return;
-    }
+function checkAnswer(){
+  const s=steps[i];
+  const val=norm(document.getElementById("answer").value);
+  if(s.answers.map(a=>norm(a)).includes(val)){
+    nextBtn.style.display="inline-block";
+  }else{
+    alert("Not quite, Agent.");
   }
-  msg.className='msg ok'; msg.textContent='✓';
-  document.getElementById('next').style.display='inline-block';
 }
-
-let transitioning = false;
 
 function nextStep(){
-  if(transitioning) return;
-  transitioning = true;
-
-  // start gold dust
-  sprinkle(60);
-  dust.style.display='block';
-
-  // after 3s switch content
+  sparkle();
   setTimeout(()=>{
-    dust.style.display='none';
-    idx++;
-    if(idx < steps.length){
-      renderStep();
-    } else {
-      showFinal();
-    }
-    transitioning = false;
-  }, 3000);
+    i++;
+    if(i<steps.length){showStep();}
+    else{endMission();}
+  },3000);
 }
 
-function sprinkle(n=40){
-  const rect = card.getBoundingClientRect();
-  for(let i=0;i<n;i++){
-    const s = document.createElement('div');
-    s.className='spark';
-    const x = rect.left + rect.width/2 + (Math.random()-0.5)*rect.width*0.6;
-    const y = rect.top  + rect.height/2 + (Math.random()-0.5)*rect.height*0.4;
-    s.style.left = x+'px';
-    s.style.top  = y+'px';
-    s.style.setProperty('--dx', (Math.random()-0.5)*280+'px');
-    s.style.setProperty('--dy', (Math.random()-0.5)*200+'px');
-    dust.appendChild(s);
-    setTimeout(()=>s.remove(), 3100);
+function sparkle(){
+  dust.style.display="block";
+  for(let n=0;n<60;n++){
+    const s=document.createElement("div");
+    s.className="spark";
+    s.style.left=window.innerWidth/2+"px";
+    s.style.top=window.innerHeight/2+"px";
+    s.style.setProperty("--dx",(Math.random()-0.5)*400+"px");
+    s.style.setProperty("--dy",(Math.random()-0.5)*300+"px");
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),3100);
   }
+  setTimeout(()=>dust.style.display="none",3000);
 }
 
-/* Final */
-function showFinal(){
-  document.querySelector('.wrap').style.display='none';
-  const final = document.getElementById('final');
-  final.style.display='flex';
-  const text = `“I love you for all that you are,
+function endMission(){
+  taskScreen.style.display="none";
+  finalScreen.style.display="flex";
+  const txt=`“I love you for all that you are,
 all that you have been
 and all that you will be.”
 
 With love,
 — M`;
-  typewrite(document.getElementById('finalText'), text, 24);
+  typeWrite(finalText,txt,25);
 }
 
-/* Enter = Confirm shortcut (ne prelazi na next) */
-document.addEventListener('keypress', (e)=>{
-  if(e.key==='Enter' && document.getElementById('final').style.display!=='flex'){
-    // ako je NEXT već vidljiv, Enter neće automatski ići dalje – traži se klik na Continue
-    const next = document.getElementById('next');
-    if(next && next.style.display==='none'){
-      confirmStep();
-    }
-  }
-});
-
-/* Start */
-renderStep();
+function typeWrite(el,txt,spd){el.textContent="";let i=0;(function t(){if(i<=txt.length){el.textContent=txt.slice(0,i);i++;setTimeout(t,spd);}})();}
+startScreen.style.display="block";
 </script>
 </body>
 </html>
