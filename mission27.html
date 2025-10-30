@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>mISSION 27 // FACT OR FICTION</title>
+<style>
+  :root{
+    --bg:#0b0b0f;
+    --gold:#d4af37;
+    --ink:#e6d59c;
+    --good:#7cd67c;
+    --bad:#ff6b6b;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--gold);font-family:"Courier New",monospace}
+  .wrap{max-width:900px;margin:0 auto;padding:28px 16px}
+  h1{margin:6px 0 10px;letter-spacing:1px}
+  .intro{color:var(--ink);opacity:.9;line-height:1.6;margin:0 0 16px}
+  .card{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(212,175,55,.25);
+    border-radius:12px;
+    padding:14px 14px 16px;
+    margin:16px 0;
+  }
+  .q{
+    margin:4px 0 12px;
+    line-height:1.6;
+  }
+  .actions{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px
+  }
+  button{
+    border:1px solid var(--gold);
+    background:transparent;color:var(--gold);
+    border-radius:8px;padding:8px 16px;cursor:pointer;font-size:15px
+  }
+  button:hover{background:rgba(212,175,55,.1)}
+  button[disabled]{opacity:.5;cursor:default}
+  .explain{
+    min-height:32px;color:var(--ink);white-space:pre-wrap;line-height:1.6;
+  }
+  .good{color:var(--good)}
+  .bad{color:var(--bad)}
+  .hidden{display:none}
+  .final{
+    margin:28px 0 10px;white-space:pre-wrap;line-height:1.8;text-align:center;
+  }
+  .hr{
+    height:1px;margin:26px 0;background:linear-gradient(90deg,transparent,rgba(212,175,55,.4),transparent)
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>mISSION 27 // FACT OR FICTION</h1>
+  <p class="intro">
+    Another test of intuition, Agent B.<br>
+    You’ve proven your logic — now let’s see if you can trust your instincts.<br>
+    Some truths shine, some lie in disguise. Choose wisely.
+  </p>
+
+  <div id="list"></div>
+
+  <div id="ending" class="hidden">
+    <div class="hr"></div>
+    <p class="final" id="finalText"></p>
+  </div>
+</div>
+
+<script>
+/* Typewriter effect */
+function typewrite(el, txt, spd=18, done){
+  el.textContent = '';
+  let i=0;
+  (function step(){
+    if(i<=txt.length){
+      el.textContent = txt.slice(0,i);
+      i++; setTimeout(step,spd);
+    } else { if(done) done(); }
+  })();
+}
+
+/* Data: 27 statements (mixed true/false) with explanations */
+const items = [
+  { t:"Drveće “razgovara” pod zemljom kroz mrežu gljivica (mycorrhizal network).", v:true,
+    e:"✅ Tačno. Drveće razmenjuje vodu, hranljive materije i hemijske signale kroz simbiozu s gljivama (rad Suzanne Simard)." },
+
+  { t:"Mona Lisa nema obrve — obrijane su po renesansnoj modi.", v:false,
+    e:"❌ Netačno u ovom obliku. Tragovi veoma tankih obrva/trepavica postoje; verovatno su izbledeli/restauracijom postali jedva vidljivi." },
+
+  { t:"U Parizu postoji zakon da sve kuće u jednoj ulici moraju biti obojene u boje dugine.", v:false,
+    e:"❌ Netačno. Rue Crémieux jeste šarena, ali to je estetska/privatna stvar — nema takvog zakona." },
+
+  { t:"Na Antarktiku postoji “krvavi” vodopad (oksidacija gvožđa daje crvenu boju).", v:true,
+    e:"✅ Tačno. “Blood Falls” u dolini Mekmurdo duguje boju oksidovanom gvožđu." },
+
+  { t:"Na Veneri dan traje duže od godine.", v:true,
+    e:"✅ Tačno. Rotacija Venere je sporija od njenog obilaska oko Sunca." },
+
+  { t:"Van Gogh je objavio autobiografiju Letters to My Ear pre smrti.", v:false,
+    e:"❌ Netačno. Nije objavio autobiografiju; pisma su posthumno sabrana." },
+
+  { t:"Na Mesecu se i dalje vide otisci stopala — nema vetra ni erozije.", v:true,
+    e:"✅ Tačno. Bez atmosfere nema vetra; otisci mogu trajati veoma dugo." },
+
+  { t:"Eiffelov toranj leti naraste oko 15 cm zbog širenja metala.", v:true,
+    e:"✅ Tačno. Termička ekspanzija čelika podiže strukturu tokom toplih meseci." },
+
+  { t:"Pingvini poklanjaju kamenčiće kao dokaz ljubavi.", v:true,
+    e:"✅ Tačno. Pebble-gifting je deo udvaranja i građenja gnezda kod nekih vrsta." },
+
+  { t:"Internet ‘teži’ oko 50 grama — masa elektrona u prenosu podataka.", v:true,
+    e:"✅ Tačno kao popularna procena: efektivna masa elektrona potrebnih za prenos je reda desetina grama." },
+
+  { t:"Picasso je crtao pre nego što je hodao; prva reč mu je bila “piz” (pencil).", v:false,
+    e:"❌ Netačno/mit. Često citirano, ali nepouzdano dokumentovano." },
+
+  { t:"Srce može da se “resetuje” ako osoba samo pomisli na nekoga koga voli.", v:false,
+    e:"❌ Netačno. Emocije utiču na ritam, ali ne ‘restartuju’ srce na taj način." },
+
+  { t:"Mozak troši približno energiju kao sijalica od 10 W.", v:true,
+    e:"✅ Tačno. Potrošnja u mirovanju je oko 10–20 W; brojka 10 W je često korišćena ilustracija." },
+
+  { t:"Kleopatra je živela bliže prvom McDonald’su nego izgradnji piramida.", v:true,
+    e:"✅ Tačno. Vremenska razlika do piramida je ~2500 godina; do 20. veka znatno manja." },
+
+  { t:"Na tvojim rukama ima više bakterija nego ljudi na Zemlji.", v:true,
+    e:"✅ Tačno u smislu reda veličine — mikrobiom je izuzetno bogat; većina je korisna." },
+
+  { t:"Jedna pirana može da pojede kravu za manje od minuta.", v:false,
+    e:"❌ Netačno. Urban mit; čak i jato bi to radilo znatno duže i u specifičnim uslovima." },
+
+  { t:"Zagrljaj duži od 20 sekundi povećava oksitocin (‘hormon poverenja’).", v:true,
+    e:"✅ Tačno. Duži fizički kontakt podiže oksitocin i osećaj vezivanja." },
+
+  { t:"Svakog dana bar jedan mikroskopski komad svemirske prašine padne na tvoju glavu.", v:true,
+    e:"✅ Tačno. Zemlja dnevno prikupi >100 tona kosmičkog materijala." },
+
+  { t:"Na Marsu postoji stena koja liči na ljudsko lice — optička iluzija.", v:true,
+    e:"✅ Tačno. ‘Face on Mars’ je pareidolija uočena na Viking snimcima." },
+
+  { t:"Delfini spavaju s jednim okom otvorenim.", v:true,
+    e:"✅ Tačno. Unilateralni san: polovina mozga spava, druga ostaje budna." },
+
+  { t:"Svemir miriše na vanilu i ugljen-monoksid.", v:false,
+    e:"❌ Netačno u ovoj formi. Astronauti opisuju miris kao metalan/dimast; ‘vanila’ nije opis realnog mirisa EVA opreme." },
+
+  { t:"U telu prosečne osobe ima dovoljno gvožđa za jedan mali ekser.", v:true,
+    e:"✅ Tačno. U telu je ~3–4 g Fe — približno za mali ekser." },
+
+  { t:"Kornjače dišu kroz zadnjicu (cloacal respiration).", v:true,
+    e:"✅ Tačno za neke vodene vrste — apsorpcija kiseonika preko kloakalnih vrećica." },
+
+  { t:"Mačke ne osećaju ukus slatkog.", v:true,
+    e:"✅ Tačno. Nedostaje im funkcionalna jedinica receptora za slatko (T1R2/T1R3)." },
+
+  { t:"U Engleskoj je bilo zakonom zabranjeno da žene jedu čokoladu u javnosti.", v:false,
+    e:"❌ Netačno. Mit bez verodostojne zakonske osnove." },
+
+  { t:"Reykjavik zabranjuje vlasništvo nad zmijama, mačkama i psima.", v:false,
+    e:"❌ Zastarelo/pogrešno. Neke restrikcije su postojale, danas ne važi tako generalno." },
+
+  { t:"Na Antarktiku postoji poštansko sanduče za razglednice ‘iz ljubavi’.", v:false,
+    e:"❌ Netačno u tom smislu. Postoje turistička sanduča/stanice, ali ne ‘romantična inicijativa’."
+  }
+];
+
+/* Render & flow */
+const list = document.getElementById('list');
+const ending = document.getElementById('ending');
+const finalText = document.getElementById('finalText');
+
+let index = 0;
+renderNext();
+
+function renderNext(){
+  if(index >= items.length){ showEnding(); return; }
+  const it = items[index];
+
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  const q = document.createElement('div');
+  q.className = 'q';
+  q.textContent = (index+1)+". "+it.t;
+
+  const bar = document.createElement('div');
+  bar.className = 'actions';
+
+  const btnT = document.createElement('button');
+  btnT.textContent = 'TRUE';
+  const btnF = document.createElement('button');
+  btnF.textContent = 'FALSE';
+
+  const ex = document.createElement('div');
+  ex.className = 'explain';
+
+  function lockButtons(){ btnT.disabled = true; btnF.disabled = true; }
+
+  btnT.onclick = () => {
+    lockButtons();
+    const correct = it.v===true;
+    ex.classList.add(correct?'good':'bad');
+    typewrite(ex, it.e, 18, () => { index++; renderNext(); card.scrollIntoView({behavior:'smooth',block:'start'}); });
+  };
+  btnF.onclick = () => {
+    lockButtons();
+    const correct = it.v===false;
+    ex.classList.add(correct?'good':'bad');
+    typewrite(ex, it.e, 18, () => { index++; renderNext(); card.scrollIntoView({behavior:'smooth',block:'start'}); });
+  };
+
+  bar.appendChild(btnT); bar.appendChild(btnF);
+  card.appendChild(q); card.appendChild(bar); card.appendChild(ex);
+  list.appendChild(card);
+}
+
+function showEnding(){
+  ending.classList.remove('hidden');
+  const msg = `“Truth, instinct, curiosity — the tools of every great mind.”
+
+But even the best agents know:
+Not every truth lives in facts.
+Some hide in the way someone looks at you — and never says a word.
+
+— M`;
+  typewrite(finalText, msg, 20);
+}
+</script>
+</body>
+</html>
