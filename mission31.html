@@ -48,6 +48,25 @@
     font-size:30px;opacity:0;animation:fadeIn 2s ease forwards;
   }
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  /* 💌 Final letter overlay */
+  #letterOverlay {
+    display:none; position:fixed; inset:0; background:#f8f4e6;
+    justify-content:center; align-items:center; animation:fadeInLetter 2s ease forwards; z-index:9999;
+  }
+  @keyframes fadeInLetter { from {opacity:0;} to {opacity:1;} }
+  #letterOverlay img {
+    width:80%; max-width:700px; box-shadow:0 0 20px rgba(212,175,55,0.4);
+    border-radius:8px;
+  }
+  #envelope {
+    display:none; font-size:3rem; cursor:pointer; animation:pulse 0.8s infinite alternate ease-in-out;
+    margin-top:25px;
+  }
+  @keyframes pulse {
+    from {transform:scale(1); opacity:0.7;}
+    to {transform:scale(1.25); opacity:1;}
+  }
 </style>
 </head>
 <body>
@@ -85,6 +104,12 @@
     <rect x="202" y="84" width="14" height="16" fill="#d4af37"/>
   </svg>
   <p id="sig"></p>
+  <div id="envelope">💌</div>
+</div>
+
+<!-- Final letter overlay -->
+<div id="letterOverlay">
+  <img src="IMG_8893.jpeg" alt="Letter">
 </div>
 
 <script>
@@ -121,6 +146,7 @@ function checkA2(){
       const stage=document.getElementById('keyStage');
       stage.style.display='flex';
       typewrite(document.getElementById('sig'),"Zauvek tvoja, Maja",65);
+      setTimeout(()=>{document.getElementById('envelope').style.display='block';},4000);
     },800);
   } else alert("Try again.");
 }
@@ -134,6 +160,13 @@ function gatherToCenter(n=120){
     layer.appendChild(sp);}
   setTimeout(()=>{layer.style.display='none';layer.innerHTML='';},1200);
 }
+
+const envelope = document.getElementById('envelope');
+const letterOverlay = document.getElementById('letterOverlay');
+envelope.addEventListener('click', ()=>{
+  envelope.style.display='none';
+  letterOverlay.style.display='flex';
+});
 </script>
 </body>
 </html>
