@@ -6,66 +6,137 @@
 <title>MISSION 31 // THE KEY</title>
 <style>
   :root{ --night:#001f3f; --gold:#d4af37; --ink:#f5e6b1; }
-  html,body{margin:0;height:100%;background:var(--night);color:var(--gold);font-family:"Garamond",serif;overflow-x:hidden}
-  .wrap{max-width:900px;margin:0 auto;padding:36px 18px;text-align:center;position:relative;z-index:1}
-  h1{letter-spacing:1px;margin:0 0 16px}
-  p{margin:12px auto;line-height:1.7;max-width:780px}
+
+  html,body{
+    margin:0;height:100%;
+    background:var(--night);
+    color:var(--gold);
+    font-family:"Garamond",serif;
+    overflow:hidden;
+  }
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:36px 18px;
+    text-align:center;
+    position:relative;
+    z-index:1;
+  }
+  h1{letter-spacing:1px;margin:0 0 16px;}
+  p{margin:12px auto;line-height:1.7;max-width:780px;}
+
   .btn{
-    display:inline-block;margin-top:18px;padding:8px 14px;border:1px solid var(--gold);
-    color:var(--gold);background:transparent;border-radius:8px;cursor:pointer
+    display:inline-block;
+    margin-top:18px;
+    padding:8px 14px;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    background:transparent;
+    border-radius:8px;
+    cursor:pointer;
   }
-  .btn:hover{background:rgba(212,175,55,.08)}
+  .btn:hover{background:rgba(212,175,55,.08);}
   input{
-    margin:12px auto;padding:10px 12px;border-radius:8px;border:1px solid var(--gold);
-    background:#0a223d;color:var(--ink);text-align:center;font-size:16px;min-width:280px;max-width:90%
+    margin:12px auto;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid var(--gold);
+    background:#0a223d;
+    color:var(--ink);
+    text-align:center;
+    font-size:16px;
+    min-width:280px;
   }
-  .sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+
+  /* Zvezdice */
+  .sky{position:fixed;inset:0;pointer-events:none;z-index:0;}
   .star{
     position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;
-    opacity:.4;animation:twinkle var(--t) linear infinite;filter:drop-shadow(0 0 4px rgba(212,175,55,.6))
+    opacity:.4;animation:twinkle var(--t) linear infinite;
+    filter:drop-shadow(0 0 4px rgba(212,175,55,.6));
   }
-  @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.9)}50%{opacity:1;transform:scale(1.4)}}
-  #s1,#s2,#s3,#final{display:none}
-  .fadeOut{animation:fade .8s ease forwards}
+  @keyframes twinkle{
+    0%,100%{opacity:.25;transform:scale(.9)}
+    50%{opacity:1;transform:scale(1.4)}
+  }
+
+  #s1,#s2,#s3,#final{display:none;}
+  .fadeOut{animation:fade .8s ease forwards;}
   @keyframes fade{to{opacity:0;filter:blur(2px)}}
-  #gather{position:fixed;inset:0;pointer-events:none;display:none;z-index:5}
+
+  /* Efekat zlatnog praha */
+  #gather{position:fixed;inset:0;pointer-events:none;display:none;z-index:5;}
   .speck{
     position:absolute;width:5px;height:5px;border-radius:50%;
     background:radial-gradient(circle,#fff3b0 0%,#ffd24a 50%,rgba(255,215,0,0) 75%);
-    opacity:0;animation:toCenter 1.1s ease-in forwards
+    opacity:0;animation:toCenter 1.1s ease-in forwards;
   }
   @keyframes toCenter{
     0%{opacity:.15;transform:translate(0,0) scale(.6)}
     100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}
   }
-  #keyStage{display:none;position:fixed;inset:0;z-index:6;pointer-events:none;display:flex;align-items:center;justify-content:center;flex-direction:column}
-  #key{width:40px;height:auto;opacity:.95;transform:scale(.4);animation:grow 1.6s ease-out forwards}
+
+  /* Ključ */
+  #keyStage{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:6;
+    pointer-events:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+  }
+  #key{width:40px;height:auto;opacity:.95;transform:scale(.4);animation:grow 1.6s ease-out forwards;}
   @keyframes grow{to{transform:scale(1.2)}}
-  #keyPulse{position:absolute;width:90px;height:90px;border-radius:50%;border:2px solid rgba(212,175,55,.35);animation:pulse 2s ease-in-out infinite}
-  @keyframes pulse{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.85;transform:scale(1.25)}}
+  #keyPulse{
+    position:absolute;width:90px;height:90px;border-radius:50%;
+    border:2px solid rgba(212,175,55,.35);
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:.2;transform:scale(1)}
+    50%{opacity:.85;transform:scale(1.25)}
+  }
   #sig{
-    margin-top:30px;font-style:italic;font-family:"Great Vibes","Brush Script MT",cursive;
-    font-size:30px;opacity:0;animation:fadeIn 2s ease forwards;
+    margin-top:30px;
+    font-style:italic;
+    font-family:"Great Vibes","Brush Script MT",cursive;
+    font-size:30px;
+    opacity:0;
+    animation:fadeIn 2s ease forwards;
   }
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-  /* 💌 Final letter overlay */
-  #letterOverlay {
-    display:none; position:fixed; inset:0; background:#f8f4e6;
-    justify-content:center; align-items:center; animation:fadeInLetter 2s ease forwards; z-index:9999;
+  /* Dugme pismo 💌 */
+  #letterBtn{
+    margin-top:40px;
+    font-size:42px;
+    cursor:pointer;
+    animation:pulseHeart 1.2s infinite ease-in-out;
   }
-  @keyframes fadeInLetter { from {opacity:0;} to {opacity:1;} }
-  #letterOverlay img {
-    width:80%; max-width:700px; box-shadow:0 0 20px rgba(212,175,55,0.4);
+  @keyframes pulseHeart{
+    0%,100%{transform:scale(1);opacity:.85;}
+    50%{transform:scale(1.2);opacity:1;}
+  }
+
+  /* Overlay sa slikom pisma */
+  #letterOverlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:radial-gradient(circle at center, rgba(212,175,55,0.1) 0%, var(--night) 80%);
+    align-items:center;
+    justify-content:center;
+    z-index:20;
+    animation:fadeIn 1s ease forwards;
+  }
+  #letterOverlay img{
+    max-width:90%;
+    max-height:90%;
     border-radius:8px;
-  }
-  #envelope {
-    display:none; font-size:3rem; cursor:pointer; animation:pulse 0.8s infinite alternate ease-in-out;
-    margin-top:25px;
-  }
-  @keyframes pulse {
-    from {transform:scale(1); opacity:0.7;}
-    to {transform:scale(1.25); opacity:1;}
+    box-shadow:0 0 30px rgba(212,175,55,0.4);
   }
 </style>
 </head>
@@ -104,36 +175,62 @@
     <rect x="202" y="84" width="14" height="16" fill="#d4af37"/>
   </svg>
   <p id="sig"></p>
-  <div id="envelope">💌</div>
+  <div id="letterBtn" onclick="openLetter()">💌</div>
 </div>
 
-<!-- Final letter overlay -->
-<div id="letterOverlay">
+<!-- Overlay za pismo -->
+<div id="letterOverlay" onclick="closeLetter()">
   <img src="IMG_8893.jpeg" alt="Letter">
 </div>
 
 <script>
-function typewrite(el, txt, spd=26){ el.textContent=""; let i=0; (function step(){ if(i<=txt.length){ el.textContent=txt.slice(0,i); i++; setTimeout(step,spd);} })(); }
+function typewrite(el, txt, spd=26){
+  el.textContent=""; let i=0;
+  (function step(){
+    if(i<=txt.length){
+      el.textContent=txt.slice(0,i);
+      i++;
+      setTimeout(step,spd);
+    }
+  })();
+}
 function norm(s){
   return (s||'').toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/&/g,'and').replace(/[^a-z0-9\s]/g,' ')
     .replace(/\s+/g,' ').trim();
 }
+
 (function makeStars(){
-  const sky = document.getElementById('sky'); const N=70;
-  for(let i=0;i<N;i++){const s=document.createElement('div');s.className='star';
-    s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';
-    s.style.opacity=Math.random()*0.8+0.2;s.style.setProperty('--t',(2.5+Math.random()*3.5)+'s');
-    sky.appendChild(s);}
+  const sky = document.getElementById('sky');
+  const N=70;
+  for(let i=0;i<N;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.left=Math.random()*100+'vw';
+    s.style.top=Math.random()*100+'vh';
+    s.style.opacity=Math.random()*0.8+0.2;
+    s.style.setProperty('--t',(2.5+Math.random()*3.5)+'s');
+    sky.appendChild(s);
+  }
 })();
-const s1=document.getElementById('s1'),s2=document.getElementById('s2'),s3=document.getElementById('s3'),content=document.getElementById('content');
-window.onload=()=>{s1.style.display='block';typewrite(document.getElementById('t1'),"To reach the key, only one thing remains…",28);}
+
+const s1=document.getElementById('s1'),
+      s2=document.getElementById('s2'),
+      s3=document.getElementById('s3'),
+      content=document.getElementById('content');
+
+window.onload=()=>{
+  s1.style.display='block';
+  typewrite(document.getElementById('t1'),"To reach the key, only one thing remains…",28);
+}
 function goS2(){s1.style.display='none';s2.style.display='block';}
 function checkA1(){
   const v=norm(document.getElementById('a1').value),ok=norm("Cary Grant");
-  if(v===ok){s2.style.display='none';s3.style.display='block';
-    typewrite(document.getElementById('t2'),"Inside the box, there are three secrets dressed in scent.\nOnly one was made for him.\n\nCareful now, Agent B.\nOne wrong move might trigger… a sweet surprise.",24);
+  if(v===ok){
+    s2.style.display='none';s3.style.display='block';
+    typewrite(document.getElementById('t2'),
+    "Inside the box, there are three secrets dressed in scent.\nOnly one was made for him.\n\nCareful now, Agent B.\nOne wrong move might trigger… a sweet surprise.",24);
   } else alert("Not quite, Agent.");
 }
 function checkA2(){
@@ -146,27 +243,33 @@ function checkA2(){
       const stage=document.getElementById('keyStage');
       stage.style.display='flex';
       typewrite(document.getElementById('sig'),"Zauvek tvoja, Maja",65);
-      setTimeout(()=>{document.getElementById('envelope').style.display='block';},4000);
     },800);
   } else alert("Try again.");
 }
 function gatherToCenter(n=120){
   const layer=document.getElementById('gather');layer.innerHTML='';layer.style.display='block';
   const cx=window.innerWidth/2,cy=window.innerHeight/2;
-  for(let i=0;i<n;i++){const sp=document.createElement('div');sp.className='speck';
+  for(let i=0;i<n;i++){
+    const sp=document.createElement('div');
+    sp.className='speck';
     const sx=Math.random()*window.innerWidth,sy=Math.random()*window.innerHeight*0.95;
     sp.style.left=sx+'px';sp.style.top=sy+'px';
-    sp.style.setProperty('--dx',(cx-sx)+'px');sp.style.setProperty('--dy',(cy-sy)+'px');
-    layer.appendChild(sp);}
+    sp.style.setProperty('--dx',(cx-sx)+'px');
+    sp.style.setProperty('--dy',(cy-sy)+'px');
+    layer.appendChild(sp);
+  }
   setTimeout(()=>{layer.style.display='none';layer.innerHTML='';},1200);
 }
 
-const envelope = document.getElementById('envelope');
-const letterOverlay = document.getElementById('letterOverlay');
-envelope.addEventListener('click', ()=>{
-  envelope.style.display='none';
-  letterOverlay.style.display='flex';
-});
+/* 💌 otvaranje pisma */
+function openLetter(){
+  const overlay=document.getElementById('letterOverlay');
+  overlay.style.display='flex';
+}
+function closeLetter(){
+  const overlay=document.getElementById('letterOverlay');
+  overlay.style.display='none';
+}
 </script>
 </body>
 </html>
