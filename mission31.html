@@ -1,143 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>MISSION 31 // THE KEY</title>
 <style>
-  :root{
-    --night:#001f3f;
-    --gold:#d4af37;
-    --ink:#f5e6b1;
-  }
-  html,body{margin:0;height:100%;background:var(--night);color:var(--gold);
-    font-family:"Garamond",serif;overflow-x:hidden;text-align:center;}
-  .wrap{max-width:900px;margin:0 auto;padding:36px 18px;position:relative;z-index:1}
-  h1{margin-top:40px;font-size:22px;letter-spacing:1px}
-  p{margin:12px auto;line-height:1.7;max-width:720px}
+  :root{ --night:#001f3f; --gold:#d4af37; --ink:#f5e6b1; }
 
+  html,body{margin:0;height:100%;background:var(--night);color:var(--gold);
+    font-family:"Garamond",serif;overflow-x:hidden}
+
+  .wrap{max-width:900px;margin:0 auto;padding:36px 18px;text-align:center;position:relative;z-index:1}
+  h1{letter-spacing:1px;margin:0 0 16px}
+  p{margin:12px auto;line-height:1.7;max-width:780px}
+
+  .btn{display:inline-block;margin-top:14px;padding:8px 14px;border:1px solid var(--gold);
+    color:var(--gold);background:transparent;border-radius:8px;cursor:pointer}
+  .btn:hover{background:rgba(212,175,55,.08)}
+
+  input{margin:12px auto;padding:10px 12px;border-radius:8px;border:1px solid var(--gold);
+    background:#0a223d;color:var(--ink);text-align:center;font-size:16px;min-width:260px;max-width:90%}
+
+  /* twinkling background */
+  .sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .star{position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;
+    opacity:.4;animation:twinkle var(--t) linear infinite;filter:drop-shadow(0 0 4px rgba(212,175,55,.6))}
+  @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.9)}50%{opacity:1;transform:scale(1.4)}}
+
+  /* stage visibility */
+  #intro,#q1,#q2,#endStage{display:none}
   .fadeOut{animation:fade .8s ease forwards}
   @keyframes fade{to{opacity:0;filter:blur(2px)}}
 
-  /* efekat zvezdica */
+  /* star gather effect */
   #gather{position:fixed;inset:0;pointer-events:none;display:none;z-index:5}
-  .speck{
-    position:absolute;width:5px;height:5px;border-radius:50%;
-    background:radial-gradient(circle,#fff3b0 0%,#ffd24a 40%,rgba(255,215,0,0) 80%);
-    opacity:0;animation:toCenter 1.1s ease-in forwards;
-  }
+  .speck{position:absolute;width:5px;height:5px;border-radius:50%;
+    background:radial-gradient(circle,#fff3b0 0%,#ffd24a 50%,rgba(255,215,0,0) 75%);
+    opacity:0;animation:toCenter 1.1s ease-in forwards}
   @keyframes toCenter{
-    0%{opacity:.2;transform:translate(0,0) scale(.6)}
+    0%{opacity:.15;transform:translate(0,0) scale(.6)}
     100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}
   }
 
-  /* kljuc + potpis */
-  #keyStage{display:none;position:fixed;inset:0;z-index:6;
-    align-items:center;justify-content:center;flex-direction:column}
-  #sig{
-    margin-top:40px;font-style:italic;
-    font-family:"Great Vibes","Brush Script MT",cursive;
-    font-size:36px;opacity:0;animation:fadeIn 2s ease forwards;
-  }
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  /* key + signature */
+  #keyStage{display:none;position:fixed;inset:0;z-index:6;pointer-events:none;
+    display:flex;align-items:center;justify-content:center;flex-direction:column}
+  #key{width:40px;height:auto;opacity:.95;transform:scale(.4);animation:grow 1.6s ease-out forwards}
+  @keyframes grow{to{transform:scale(1.2)}}
+  #keyPulse{position:absolute;width:90px;height:90px;border-radius:50%;border:2px solid rgba(212,175,55,.35);
+    animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.85;transform:scale(1.25)}}
 
-  /* pismo dugme */
-  #letterBtn{
-    display:none;font-size:60px;color:var(--gold);cursor:pointer;
-    animation:pulse 1.2s ease-in-out infinite;margin-top:30px;user-select:none;
-  }
-  @keyframes pulse{
-    0%,100%{transform:scale(1);opacity:.8}
-    50%{transform:scale(1.25);opacity:1}
-  }
+  #sig{margin-top:26px;font-style:italic;font-family:"Great Vibes","Brush Script MT",cursive;
+    font-size:34px;opacity:0}
 
-  /* overlay slika */
-  #overlay{
-    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);
-    align-items:center;justify-content:center;z-index:10;
-    animation:fadeIn 0.6s ease forwards;
-  }
-  #overlay img{
-    max-width:90vw;max-height:90vh;border:3px solid var(--gold);
-    border-radius:8px;box-shadow:0 0 20px rgba(212,175,55,0.5);
-  }
+  /* envelope button */
+  #letterBtn{display:none;margin-top:18px;font-size:34px;cursor:pointer;user-select:none}
+  .pulseFast{animation:pulseFast .9s ease-in-out infinite}
+  @keyframes pulseFast{0%,100%{transform:scale(0.95);opacity:.8}50%{transform:scale(1.12);opacity:1}}
+
+  /* image overlay */
+  #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10;
+    align-items:center;justify-content:center}
+  #overlayImg{max-width:92vw;max-height:90vh;border:2px solid var(--gold);opacity:0;transition:opacity .35s}
 </style>
 </head>
 <body>
+<div class="sky" id="sky"></div>
 
 <div class="wrap" id="content">
   <h1>MISSION 31 // THE KEY</h1>
-  <p>Final stage initialized... please wait.</p>
+
+  <div id="intro">
+    <p>Final stage initialized... please wait.</p>
+  </div>
+
+  <div id="q1">
+    <p>Who said that everyone wants to be him — even he wants to be him?</p>
+    <input id="a1" type="text" placeholder="">
+    <div><button class="btn" onclick="checkA1()">Confirm</button></div>
+  </div>
+
+  <div id="q2">
+    <p>Inside the box, there are three secrets dressed in scent.<br>Only one was made for him.<br><br>Careful now, Agent B.<br>One wrong move might trigger… a sweet surprise.</p>
+    <input id="a2" type="text" placeholder="">
+    <div><button class="btn" onclick="checkA2()">Confirm</button></div>
+  </div>
 </div>
 
+<!-- star gather -->
 <div id="gather"></div>
 
-<div id="keyStage" style="display:flex;flex-direction:column;">
-  <svg id="key" viewBox="0 0 256 256" fill="none"
-    xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+<!-- key + signature -->
+<div id="keyStage">
+  <div id="keyPulse"></div>
+  <svg id="key" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="70" cy="128" r="42" stroke="#d4af37" stroke-width="10" fill="none"/>
     <rect x="112" y="120" width="108" height="16" fill="#d4af37"/>
     <rect x="184" y="100" width="18" height="16" fill="#d4af37"/>
     <rect x="202" y="84" width="14" height="16" fill="#d4af37"/>
   </svg>
   <p id="sig"></p>
-  <div id="letterBtn" onclick="showLetter()">💌</div>
+  <div id="letterBtn" title="Open letter">💌</div>
 </div>
 
-<div id="overlay" onclick="hideLetter()">
-  <img src="IMG_8893.jpeg" alt="Letter Image">
+<!-- image overlay -->
+<div id="overlay" onclick="closeOverlay()">
+  <img id="overlayImg" src="IMG_8893.jpeg" alt="Letter"/>
 </div>
 
 <script>
-/* simulacija završetka misije — pozovi showFinal() kad treba */
-window.onload = () => { setTimeout(showFinal, 1000); }
-
-function showFinal(){
-  const content=document.getElementById('content');
-  content.classList.add('fadeOut');
-  setTimeout(()=>{
-    content.style.display='none';
-    gatherToCenter(160);
-    setTimeout(()=>{
-      const stage=document.getElementById('keyStage');
-      stage.style.display='flex';
-      typewrite(document.getElementById('sig'),"Zauvek tvoja, Maja",70,()=>{
-        document.getElementById('letterBtn').style.display='block';
-      });
-    },800);
-  },800);
+/* helpers */
+function typewrite(el, txt, spd=28, done){ el.textContent=""; let i=0; (function step(){ 
+  if(i<=txt.length){ el.textContent=txt.slice(0,i); i++; setTimeout(step,spd);} else if(done){done();}
+})();}
+function norm(s){
+  return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/&/g,'and').replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
 }
 
-/* efekat zvezdica */
-function gatherToCenter(n=120){
-  const layer=document.getElementById('gather');layer.innerHTML='';layer.style.display='block';
+/* stars */
+(function makeStars(){
+  const sky = document.getElementById('sky'); const N=75;
+  for(let i=0;i<N;i++){const s=document.createElement('div');s.className='star';
+    s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';
+    s.style.opacity=Math.random()*0.8+0.2;s.style.setProperty('--t',(2.5+Math.random()*3.5)+'s');
+    sky.appendChild(s);}
+})();
+
+/* flow */
+const intro = document.getElementById('intro');
+const q1 = document.getElementById('q1');
+const q2 = document.getElementById('q2');
+const content = document.getElementById('content');
+const gatherLayer = document.getElementById('gather');
+const keyStage = document.getElementById('keyStage');
+const sig = document.getElementById('sig');
+const letterBtn = document.getElementById('letterBtn');
+
+window.addEventListener('load', () => {
+  intro.style.display = 'block';
+  // kratki intro pa prvo pitanje
+  setTimeout(()=>{ intro.style.display='none'; q1.style.display='block'; }, 1200);
+});
+
+function checkA1(){
+  const v = norm(document.getElementById('a1').value);
+  const ok = norm("Cary Grant");
+  if(v===ok){
+    q1.style.display='none';
+    q2.style.display='block';
+  } else {
+    alert("Not quite, Agent.");
+  }
+}
+
+function checkA2(){
+  const v = norm(document.getElementById('a2').value);
+  const ok = norm("Creed Green Irish Tweed");
+  if(v===ok){
+    // transition: fade content, gather stars, show key
+    content.classList.add('fadeOut');
+    setTimeout(()=>gatherToCenter(160),200);
+    setTimeout(()=>{
+      content.style.display='none';
+      keyStage.style.display='flex';
+      // ispis potpisa pa tek onda dugme pisma
+      typewrite(sig,"Zauvek tvoja, Maja",60, ()=>{
+        letterBtn.style.display='block';
+        letterBtn.classList.add('pulseFast');
+      });
+    },900);
+  } else {
+    alert("Try again.");
+  }
+}
+
+function gatherToCenter(n=130){
+  gatherLayer.innerHTML='';gatherLayer.style.display='block';
   const cx=window.innerWidth/2,cy=window.innerHeight/2;
   for(let i=0;i<n;i++){
     const sp=document.createElement('div');sp.className='speck';
     const sx=Math.random()*window.innerWidth,sy=Math.random()*window.innerHeight*0.95;
     sp.style.left=sx+'px';sp.style.top=sy+'px';
     sp.style.setProperty('--dx',(cx-sx)+'px');sp.style.setProperty('--dy',(cy-sy)+'px');
-    layer.appendChild(sp);
+    gatherLayer.appendChild(sp);
   }
-  setTimeout(()=>{layer.style.display='none';layer.innerHTML='';},1200);
+  setTimeout(()=>{gatherLayer.style.display='none';gatherLayer.innerHTML='';},1200);
 }
 
-/* ispis teksta kao da se piše */
-function typewrite(el, txt, spd=40, done){
-  el.textContent='';let i=0;
-  (function step(){if(i<=txt.length){el.textContent=txt.slice(0,i);i++;setTimeout(step,spd);}
-  else if(done) done();})();
+/* overlay logic */
+const overlay = document.getElementById('overlay');
+const overlayImg = document.getElementById('overlayImg');
+
+letterBtn.addEventListener('click', ()=> {
+  overlay.style.display='flex';
+  requestAnimationFrame(()=> overlayImg.style.opacity = 1);
+});
+function closeOverlay(){
+  overlayImg.style.opacity = 0;
+  setTimeout(()=> overlay.style.display='none', 220);
 }
 
-/* prikaz / skrivanje slike */
-function showLetter(){
-  const o=document.getElementById('overlay');
-  o.style.display='flex';
-}
-function hideLetter(){
-  document.getElementById('overlay').style.display='none';
-}
+/* Enter = confirm convenience */
+document.addEventListener('keypress',(e)=>{
+  if(e.key!=='Enter') return;
+  if(q1.style.display==='block') checkA1();
+  else if(q2.style.display==='block') checkA2();
+});
 </script>
-
 </body>
 </html>
