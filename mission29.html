@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Mission 29. // The Letters You Never Sent</title>
+<title>Mission 29. // Tje Letters You Never Sent</title>
 <style>
   :root{
     --night:#001f3f;
@@ -11,7 +11,13 @@
     --ink:#e6d59c;
     --panel:rgba(255,255,255,.05);
   }
-  html,body{margin:0;background:var(--night);color:var(--gold);font-family:"Garamond",serif}
+  html,body{
+    margin:0;
+    background:var(--night);
+    color:var(--gold);
+    font-family:"Garamond",serif;
+    overflow-x:hidden;
+  }
   .wrap{max-width:960px;margin:0 auto;padding:28px 16px;position:relative;z-index:2}
   h1{margin:6px 0 10px;letter-spacing:1px;font-size:22px}
   .intro{color:var(--ink);opacity:.9;line-height:1.6;margin:0 0 18px}
@@ -22,16 +28,29 @@
     border-radius:12px;
     padding:16px 14px 18px;
     margin:18px 0;
+    transition:opacity .6s ease;
   }
   .controls{display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:10px}
   label{font-size:14px;color:var(--ink);opacity:.85}
   input{
-    border:1px solid rgba(212,175,55,.6);background:#0a223d;color:var(--ink);
-    border-radius:8px;padding:9px 12px;font-size:16px;min-width:280px;text-align:center
+    border:1px solid rgba(212,175,55,.6);
+    background:#0a223d;
+    color:var(--ink);
+    border-radius:8px;
+    padding:9px 12px;
+    font-size:16px;
+    min-width:280px;
+    text-align:center;
   }
   .btn{
-    border:1px solid var(--gold);background:transparent;color:var(--gold);
-    border-radius:8px;padding:8px 14px;cursor:pointer;font-size:15px;margin-top:2px
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold);
+    border-radius:8px;
+    padding:8px 14px;
+    cursor:pointer;
+    font-size:15px;
+    margin-top:2px;
   }
   .btn:hover{background:rgba(212,175,55,.10)}
   .btn[disabled]{opacity:.5;cursor:default}
@@ -41,12 +60,16 @@
   .hr{height:1px;margin:26px 0;background:linear-gradient(90deg,transparent,rgba(212,175,55,.4),transparent)}
   .final{white-space:pre-wrap;line-height:1.8;text-align:center;max-width:800px;margin:0 auto}
   a.next{
-    display:inline-block;color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold);
-    padding-bottom:2px;margin-top:12px
+    display:inline-block;
+    color:var(--gold);
+    text-decoration:none;
+    border-bottom:1px dotted var(--gold);
+    padding-bottom:2px;
+    margin-top:12px
   }
   a.next:hover{opacity:.85}
 
-  /* Pulsating golden lilies */
+  /* Pulsating lilies */
   .lilies{position:fixed;inset:0;pointer-events:none;z-index:1}
   .lily{
     position:absolute;color:var(--gold);opacity:.45;
@@ -59,26 +82,37 @@
     50%{transform:scale(1.08);opacity:.9}
   }
 
-  /* Step 2 overlay */
-  #step2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:3;overflow:auto}
+  /* Gold dust effect */
+  .dust{
+    position:fixed;width:4px;height:4px;
+    background:radial-gradient(circle,#fff9b8 0%,#ffd84a 40%,rgba(255,215,0,0) 70%);
+    border-radius:50%;pointer-events:none;z-index:5;
+    animation:fly .9s ease-out forwards;
+  }
+  @keyframes fly{
+    0%{opacity:1;transform:scale(1);}
+    100%{opacity:0;transform:translate(var(--x),var(--y)) scale(0);}
+  }
+
+  /* Overlay for last questions */
+  #step2{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:10;overflow:auto}
   .step2-inner{max-width:800px;margin:40px auto;padding:24px 16px;text-align:center}
-  .q{color:var(--ink);margin:14px 0 8px}
   .step2-input{margin:6px 0 14px}
 </style>
 </head>
 <body>
 
-<!-- Golden lilies background -->
+<!-- Lilies background -->
 <div class="lilies" id="lilies"></div>
 
 <div class="wrap" id="main">
-  <h1>Mission 29. // The Letters You Never Sent</h1>
+  <h1>Mission 29. // Tje Letters You Never Sent</h1>
   <p class="intro">
     Some words were never meant to be spoken — only found.<br>
     Let’s see if you can trace the hearts behind these lines.
   </p>
 
-  <!-- 1) Elizabeth Barrett Browning -->
+  <!-- 1 -->
   <div class="card" id="c1">
     <blockquote>
       How do I love thee? Let me count the ways.<br/>
@@ -87,16 +121,13 @@
       For the ends of Being and ideal Grace.
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w1" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t1" type="text" placeholder="">
-      <button class="btn" onclick="check(1,['elizabeth','browning'],['sonnet','43','portuguese','love','thee'])">Confirm</button>
-    </div>
-    <div class="type" id="e1"></div>
+      <label>Writer</label><input id="w1" type="text" placeholder="">
+      <label>Work</label><input id="t1" type="text" placeholder="">
+      <button class="btn" onclick="check(1,['elizabeth','browning'],['sonnet','portuguese','43','love','thee'])">Confirm</button>
+    </div><div class="type" id="e1"></div>
   </div>
 
-  <!-- 2) Pablo Neruda -->
+  <!-- 2 -->
   <div class="card hidden" id="c2">
     <blockquote>
       I love you as certain dark things are to be loved,<br/>
@@ -105,16 +136,13 @@
       but carries in itself the light of hidden flowers.
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w2" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t2" type="text" placeholder="">
-      <button class="btn" onclick="check(2,['pablo','neruda'],['sonnet','xvii','17','hundred','100'])">Confirm</button>
-    </div>
-    <div class="type" id="e2"></div>
+      <label>Writer</label><input id="w2" type="text" placeholder="">
+      <label>Work</label><input id="t2" type="text" placeholder="">
+      <button class="btn" onclick="check(2,['pablo','neruda'],['sonnet','17','xvii'])">Confirm</button>
+    </div><div class="type" id="e2"></div>
   </div>
 
-  <!-- 3) Lord Byron -->
+  <!-- 3 -->
   <div class="card hidden" id="c3">
     <blockquote>
       She walks in beauty, like the night<br/>
@@ -123,16 +151,13 @@
       Meet in her aspect and her eyes.
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w3" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t3" type="text" placeholder="">
-      <button class="btn" onclick="check(3,['lord','byron','george','gordon'],['she','walks','in','beauty'])">Confirm</button>
-    </div>
-    <div class="type" id="e3"></div>
+      <label>Writer</label><input id="w3" type="text" placeholder="">
+      <label>Work</label><input id="t3" type="text" placeholder="">
+      <button class="btn" onclick="check(3,['lord','byron'],['she','walks','in','beauty'])">Confirm</button>
+    </div><div class="type" id="e3"></div>
   </div>
 
-  <!-- 4) E. E. Cummings -->
+  <!-- 4 -->
   <div class="card hidden" id="c4">
     <blockquote>
       i carry your heart with me(i carry it in my heart)<br/>
@@ -140,35 +165,28 @@
       and whatever is done by only me is your doing,my darling)
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w4" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t4" type="text" placeholder="">
-      <button class="btn" onclick="check(4,['e','cummings','ee','e.','e.','cummings'],['i','carry','your','heart'])">Confirm</button>
-    </div>
-    <div class="type" id="e4"></div>
+      <label>Writer</label><input id="w4" type="text" placeholder="">
+      <label>Work</label><input id="t4" type="text" placeholder="">
+      <button class="btn" onclick="check(4,['cummings'],['i','carry','your','heart'])">Confirm</button>
+    </div><div class="type" id="e4"></div>
   </div>
 
-  <!-- 5) John Keats -->
+  <!-- 5 -->
   <div class="card hidden" id="c5">
     <blockquote>
       Bright star, would I were steadfast as thou art—<br/>
       Not in lone splendour hung aloft the night,<br/>
-      …<br/>
       Still, still to hear her tender-taken breath,<br/>
       And so live ever—or else swoon to death.
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w5" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t5" type="text" placeholder="">
-      <button class="btn" onclick="check(5,['john','keats'],['bright','star'])">Confirm</button>
-    </div>
-    <div class="type" id="e5"></div>
+      <label>Writer</label><input id="w5" type="text" placeholder="">
+      <label>Work</label><input id="t5" type="text" placeholder="">
+      <button class="btn" onclick="check(5,['keats'],['bright','star'])">Confirm</button>
+    </div><div class="type" id="e5"></div>
   </div>
 
-  <!-- 6) Alfred Lord Tennyson -->
+  <!-- 6 -->
   <div class="card hidden" id="c6">
     <blockquote>
       Lay your hand upon my heart, beloved—<br/>
@@ -177,16 +195,13 @@
       every silence knows your voice.
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w6" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t6" type="text" placeholder="">
-      <button class="btn" onclick="check(6,['alfred','tennyson'],['maud'])">Confirm</button>
-    </div>
-    <div class="type" id="e6"></div>
+      <label>Writer</label><input id="w6" type="text" placeholder="">
+      <label>Work</label><input id="t6" type="text" placeholder="">
+      <button class="btn" onclick="check(6,['tennyson'],['maud'])">Confirm</button>
+    </div><div class="type" id="e6"></div>
   </div>
 
-  <!-- 7) Rumi -->
+  <!-- 7 -->
   <div class="card hidden" id="c7">
     <blockquote>
       When I found you, I found a mirror of the soul;<br/>
@@ -195,16 +210,13 @@
       only one, breathing together.
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w7" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t7" type="text" placeholder="">
-      <button class="btn" onclick="check(7,['rumi','jalal','jalaluddin'],['meaning','love'])">Confirm</button>
-    </div>
-    <div class="type" id="e7"></div>
+      <label>Writer</label><input id="w7" type="text" placeholder="">
+      <label>Work</label><input id="t7" type="text" placeholder="">
+      <button class="btn" onclick="check(7,['rumi'],['meaning','love'])">Confirm</button>
+    </div><div class="type" id="e7"></div>
   </div>
 
-  <!-- 8) Sara Teasdale -->
+  <!-- 8 -->
   <div class="card hidden" id="c8">
     <blockquote>
       I am not yours, yet I am lost in you,<br/>
@@ -213,16 +225,13 @@
       be the rest from which I cannot return.
     </blockquote>
     <div class="controls">
-      <label>Writer</label>
-      <input id="w8" type="text" placeholder="">
-      <label>Work</label>
-      <input id="t8" type="text" placeholder="">
-      <button class="btn" onclick="check(8,['sara','teasdale'],['i','am','not','yours'])">Confirm</button>
-    </div>
-    <div class="type" id="e8"></div>
+      <label>Writer</label><input id="w8" type="text" placeholder="">
+      <label>Work</label><input id="t8" type="text" placeholder="">
+      <button class="btn" onclick="check(8,['teasdale'],['i','am','not','yours'])">Confirm</button>
+    </div><div class="type" id="e8"></div>
   </div>
 
-  <!-- Final reveal -->
+  <!-- Final -->
   <div id="finalBlock" class="hidden center">
     <div class="hr"></div>
     <p class="final" id="finalText"></p>
@@ -234,85 +243,71 @@
 <div id="step2">
   <div class="step2-inner">
     <div class="hr"></div>
-    <p class="final" id="q1">Do you know who M is?</p>
-    <div class="step2-input">
-      <input id="mWho" type="text" placeholder="">
-    </div>
+    <p class="final">Do you know who M is?</p>
+    <div class="step2-input"><input id="mWho" type="text"></div>
     <button class="btn" onclick="step2Next()">Confirm</button>
-
     <div id="q2Block" class="hidden">
       <div class="hr"></div>
-      <p class="final" id="q2">And what about the Agency?</p>
-      <div class="step2-input">
-        <input id="agency" type="text" placeholder="">
-      </div>
+      <p class="final">And what about the Agency?</p>
+      <div class="step2-input"><input id="agency" type="text"></div>
       <button class="btn" onclick="step2End()">Confirm</button>
     </div>
-
     <div id="endingMsg" class="final hidden" style="margin-top:20px;"></div>
   </div>
 </div>
 
 <script>
 function normalize(s){
-  return (s||'').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/&/g,' and ')
-    .replace(/[^a-z0-9\s]/g,' ')
-    .replace(/\s+/g,' ')
-    .trim();
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
 }
-function containsAllWords(input, requiredWords){
-  const norm = normalize(input);
-  return requiredWords.every(w => norm.includes(normalize(w)));
+function containsAllWords(input, words){
+  const txt=normalize(input);
+  return words.every(w=>txt.includes(normalize(w)));
 }
-function typewrite(el, txt, spd=22, done){
-  el.textContent=''; let i=0;
-  (function step(){
-    if(i<=txt.length){ el.textContent=txt.slice(0,i); i++; setTimeout(step,spd); }
-    else if(done){ done(); }
-  })();
-}
+function typewrite(el,txt,spd=22,cb){el.textContent='';let i=0;(function t(){if(i<=txt.length){el.textContent=txt.slice(0,i);i++;setTimeout(t,spd);}else cb&&cb();})();}
 
-(function lilies(){
-  const host=document.getElementById('lilies');const N=36;
+function makeLilies(){
+  const host=document.getElementById('lilies');const N=40;
   for(let i=0;i<N;i++){const s=document.createElement('span');
     s.className='lily';s.textContent='⚜';
     s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';
     s.style.fontSize=(12+Math.random()*18)+'px';
-    s.style.opacity=(Math.random()*0.6+0.25).toFixed(2);
+    s.style.opacity=(Math.random()*0.6+0.25);
     s.style.setProperty('--spd',(2+Math.random()*2.5)+'s');
     host.appendChild(s);
   }
-})();
-const okMsg = i => `Verified.\n(#${i} saved to file.)`;
+}
+makeLilies();
 
-function check(i,authors,works){
-  const w=document.getElementById('w'+i);
-  const t=document.getElementById('t'+i);
-  const e=document.getElementById('e'+i);
-  const goodAuthor=containsAllWords(w.value,authors);
-  const goodWork=containsAllWords(t.value,works);
-  if(!goodAuthor||!goodWork){alert('Not quite, Agent. Read between the lines.');return;}
-  w.disabled=true;t.disabled=true;
-  typewrite(e,okMsg(i),20,()=>{
-    const next=document.getElementById('c'+(i+1));
-    if(next){next.classList.remove('hidden');next.scrollIntoView({behavior:'smooth'});}
-    else showFinal();
-  });
+function sparkle(){
+  for(let i=0;i<40;i++){
+    const d=document.createElement('div');
+    d.className='dust';
+    d.style.left=Math.random()*100+'vw';
+    d.style.top=Math.random()*100+'vh';
+    d.style.setProperty('--x',(Math.random()*200-100)+'px');
+    d.style.setProperty('--y',(Math.random()*-200)+'px');
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),900);
+  }
+}
+
+function check(i,a,w){
+  const wi=document.getElementById('w'+i),ti=document.getElementById('t'+i),e=document.getElementById('e'+i);
+  if(!containsAllWords(wi.value,a)||!containsAllWords(ti.value,w)){alert('Not quite, Agent. Read between the lines.');return;}
+  wi.disabled=ti.disabled=true;sparkle();typewrite(e,'Verified. (#'+i+' saved to file.)',20,()=>{const n=document.getElementById('c'+(i+1));if(n){n.classList.remove('hidden');n.scrollIntoView({behavior:'smooth'});}else showFinal();});
 }
 
 function showFinal(){
-  const block=document.getElementById('finalBlock');
-  block.classList.remove('hidden');
-  const t=`Some truths are written between the lines.`;
-  typewrite(document.getElementById('finalText'),t,22);
+  const b=document.getElementById('finalBlock');
+  b.classList.remove('hidden');
+  typewrite(document.getElementById('finalText'),'Some truths are written between the lines.',22);
 }
-
 function openStep2(){document.getElementById('step2').style.display='block';}
 function step2Next(){document.getElementById('q2Block').classList.remove('hidden');}
 function step2End(){
-  const end=document.getElementById('endingMsg');
+  const e=document.getElementById('endingMsg');
+  e.classList.remove('hidden');
   const txt=`By now, you’ve probably realized…
 I designed all of this not to test your mind — but to remember your heart.
 Every code, every mission, every word — was a way to say
@@ -321,20 +316,8 @@ what I never could out loud.
 Because love is the only mystery worth solving.
 
 — M`;
-  end.classList.remove('hidden');
-  typewrite(end,txt,22);
+  typewrite(e,txt,22);
 }
-
-document.addEventListener('keypress',(e)=>{
-  if(e.key!=='Enter')return;
-  for(let i=1;i<=8;i++){
-    const c=document.getElementById('c'+i);
-    if(c&&!c.classList.contains('hidden')){
-      const w=document.getElementById('w'+i),t=document.getElementById('t'+i);
-      if(w&&!w.disabled){c.querySelector('button.btn').click();break;}
-    }
-  }
-});
 </script>
 </body>
 </html>
