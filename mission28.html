@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>🌙 MISSION 28 // THE ECHO FAILES</title>
+<style>
+  :root{ --night:#001f3f; --gold:#d4af37; --ink:#e6d59c; --panel:rgba(255,255,255,.04); }
+  html,body{margin:0;background:var(--night);color:var(--gold);font-family:"Garamond",serif}
+  .wrap{max-width:960px;margin:0 auto;padding:28px 16px}
+  h1{margin:6px 0 6px;letter-spacing:1px;font-size:22px}
+  .intro{color:var(--ink);opacity:.9;line-height:1.6;margin:4px 0 18px}
+  .card{background:var(--panel);border:1px solid rgba(212,175,55,.28);border-radius:12px;padding:14px 14px 18px;margin:18px 0}
+  .lyric{margin:6px 0 10px;line-height:1.7}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  input{
+    border:1px solid rgba(212,175,55,.6);background:#0a223d;color:var(--ink);
+    border-radius:8px;padding:9px 12px;font-size:16px;min-width:260px;text-align:center
+  }
+  button{
+    border:1px solid var(--gold);background:transparent;color:var(--gold);
+    border-radius:8px;padding:8px 14px;cursor:pointer;font-size:15px
+  }
+  button:hover{background:rgba(212,175,55,.10)}
+  button[disabled]{opacity:.5;cursor:default}
+  .explain{min-height:28px;color:var(--ink);white-space:pre-wrap;line-height:1.6;margin-top:8px}
+  .hidden{display:none}
+  .final{margin:26px 0 10px;white-space:pre-wrap;line-height:1.8;text-align:center}
+  .hr{height:1px;margin:26px 0;background:linear-gradient(90deg,transparent,rgba(212,175,55,.4),transparent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🌙 MISSION 28 // THE ECHO FAILES</h1>
+  <p class="intro">
+    “Some memories play like old records — soft, imperfect, and unforgettable.<br>
+    Let’s see if you can still hear the echoes, Agent B.”
+  </p>
+
+  <!-- 1 -->
+  <div class="card" id="c1">
+    <div class="lyric"><em>“A kiss is just a kiss, a sigh is just a sigh…”</em></div>
+    <div class="controls">
+      <input id="a1" type="text" placeholder="">
+      <button onclick="check(1,['as','time','goes','by'])">Confirm</button>
+    </div>
+    <div class="explain" id="e1"></div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card hidden" id="c2">
+    <div class="lyric"><em>“The memory of all that — no, no, they can’t take that away from me.”</em></div>
+    <div class="controls">
+      <input id="a2" type="text" placeholder="">
+      <button onclick="check(2,['they','cant','take','that','away','from','me'])">Confirm</button>
+    </div>
+    <div class="explain" id="e2"></div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card hidden" id="c3">
+    <div class="lyric"><em>“Fill my heart with song, and let me sing forevermore…”</em></div>
+    <div class="controls">
+      <input id="a3" type="text" placeholder="">
+      <button onclick="check(3,['fly','me','to','the','moon'])">Confirm</button>
+    </div>
+    <div class="explain" id="e3"></div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card hidden" id="c4">
+    <div class="lyric"><em>“Though near or far, like a song of love that clings to me…”</em></div>
+    <div class="controls">
+      <input id="a4" type="text" placeholder="">
+      <button onclick="check(4,['unforgettable'])">Confirm</button>
+    </div>
+    <div class="explain" id="e4"></div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card hidden" id="c5">
+    <div class="lyric"><em>“Some day, when I’m awfully low… I’ll just remember you, and the way you look…”</em></div>
+    <div class="controls">
+      <input id="a5" type="text" placeholder="">
+      <button onclick="check(5,['the','way','you','look','tonight'])">Confirm</button>
+    </div>
+    <div class="explain" id="e5"></div>
+  </div>
+
+  <!-- 6 -->
+  <div class="card hidden" id="c6">
+    <div class="lyric"><em>“Heaven… I’m in heaven…”</em></div>
+    <div class="controls">
+      <input id="a6" type="text" placeholder="">
+      <button onclick="check(6,['cheek','to','cheek'])">Confirm</button>
+    </div>
+    <div class="explain" id="e6"></div>
+  </div>
+
+  <!-- 7 -->
+  <div class="card hidden" id="c7">
+    <div class="lyric"><em>“And the moment I can feel that you feel that way too…”</em></div>
+    <div class="controls">
+      <input id="a7" type="text" placeholder="">
+      <button onclick="check(7,['when','i','fall','in','love'])">Confirm</button>
+    </div>
+    <div class="explain" id="e7"></div>
+  </div>
+
+  <!-- 8 -->
+  <div class="card hidden" id="c8">
+    <div class="lyric"><em>“I’ve got you deep in the heart…”</em></div>
+    <div class="controls">
+      <input id="a8" type="text" placeholder="">
+      <button onclick="check(8,['ive','got','you','under','my','skin'])">Confirm</button>
+    </div>
+    <div class="explain" id="e8"></div>
+  </div>
+
+  <!-- Final -->
+  <div id="finalBlock" class="hidden">
+    <div class="hr"></div>
+    <p class="final" id="finalText"></p>
+  </div>
+</div>
+
+<script>
+/* Normalize: ignore case/accents/punctuation; compare by words (order doesn't matter) */
+function normalize(s){
+  return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // remove accents
+    .replace(/&/g,' and ')
+    .replace(/[^a-z0-9\s]/g,' ')  // drop punctuation
+    .replace(/\s+/g,' ')          // collapse spaces
+    .trim();
+}
+function containsAllWords(input, requiredWords){
+  const words = new Set(normalize(input).split(' '));
+  return requiredWords.every(w => words.has(normalize(w)));
+}
+
+/* Typewriter */
+function typewrite(el, txt, spd=22, done){
+  el.textContent=''; let i=0;
+  (function step(){
+    if(i<=txt.length){ el.textContent=txt.slice(0,i); i++; setTimeout(step,spd); }
+    else if(done){ done(); }
+  })();
+}
+
+/* Per-answer messages */
+const msg = {
+  1: "“The beginning of every timeless story — a single look, a single kiss.”\n(As Time Goes By — Dooley Wilson, Casablanca)",
+  2: "“Some things never fade. The way you look at me is one of them.”\n(They Can’t Take That Away From Me — Ella & Louis)",
+  3: "“Every agent needs direction. Mine is always toward you.”\n(Fly Me to the Moon — Frank Sinatra)",
+  4: "“You see, some files don’t need to be archived — they just keep playing.”\n(Unforgettable — Nat King Cole & Natalie Cole)",
+  5: "“If elegance had a sound, it would be your voice when you say my name.”\n(The Way You Look Tonight — Fred Astaire)",
+  6: "“Heaven, I’m in heaven — and it looks suspiciously like your arms.”\n(Cheek to Cheek — Fred Astaire)",
+  7: "“Even agents have hearts — mine just confessed.”\n(When I Fall in Love — Nat King Cole)",
+  8: "“Congratulations, Agent B. The case is solved — and the evidence is… undeniable.”\n(I’ve Got You Under My Skin — Frank Sinatra)"
+};
+
+function check(idx, requiredWords){
+  const input = document.getElementById('a'+idx);
+  const exp   = document.getElementById('e'+idx);
+  const ok = containsAllWords(input.value, requiredWords);
+  if(!ok){ alert('Not quite, Agent. Listen closer.'); return; }
+
+  // lock input
+  input.disabled = true;
+  const text = msg[idx];
+  typewrite(exp, text, 20, () => {
+    const next = document.getElementById('c'+(idx+1));
+    if(next){ next.classList.remove('hidden'); next.scrollIntoView({behavior:'smooth',block:'start'}); }
+    else { showFinal(); }
+  });
+}
+
+function showFinal(){
+  const block = document.getElementById('finalBlock');
+  block.classList.remove('hidden');
+  const t = `“Our story never needed music to feel like a song.
+But every time I hear one… I still hear you.”
+— M`;
+  typewrite(document.getElementById('finalText'), t, 22);
+}
+
+/* Optional: Enter confirms the first visible unlocked card */
+document.addEventListener('keypress',(e)=>{
+  if(e.key!=='Enter') return;
+  for(let i=1;i<=8;i++){
+    const card = document.getElementById('c'+i);
+    if(card && !card.classList.contains('hidden')){
+      const input = document.getElementById('a'+i);
+      if(input && !input.disabled){
+        const btn = card.querySelector('button');
+        if(btn) btn.click();
+        break;
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
