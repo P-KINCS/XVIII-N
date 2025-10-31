@@ -5,31 +5,58 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>🌙 MISSION 28 // THE ECHO FAILES</title>
 <style>
-  :root{ --night:#001f3f; --gold:#d4af37; --ink:#e6d59c; --panel:rgba(255,255,255,.04); }
+  :root{ --night:#001f3f; --gold:#d4af37; --ink:#e6d59c; --panel:rgba(255,255,255,.05); }
   html,body{margin:0;background:var(--night);color:var(--gold);font-family:"Garamond",serif}
-  .wrap{max-width:960px;margin:0 auto;padding:28px 16px}
+  .wrap{max-width:960px;margin:0 auto;padding:28px 16px;position:relative;z-index:2}
   h1{margin:6px 0 6px;letter-spacing:1px;font-size:22px}
   .intro{color:var(--ink);opacity:.9;line-height:1.6;margin:4px 0 18px}
   .card{background:var(--panel);border:1px solid rgba(212,175,55,.28);border-radius:12px;padding:14px 14px 18px;margin:18px 0}
   .lyric{margin:6px 0 10px;line-height:1.7}
-  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .controls{display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:6px}
+  label{font-size:14px;color:var(--ink);opacity:.85}
   input{
     border:1px solid rgba(212,175,55,.6);background:#0a223d;color:var(--ink);
     border-radius:8px;padding:9px 12px;font-size:16px;min-width:260px;text-align:center
   }
-  button{
+  .btn{
     border:1px solid var(--gold);background:transparent;color:var(--gold);
     border-radius:8px;padding:8px 14px;cursor:pointer;font-size:15px
   }
-  button:hover{background:rgba(212,175,55,.10)}
-  button[disabled]{opacity:.5;cursor:default}
+  .btn:hover{background:rgba(212,175,55,.10)}
+  .btn[disabled]{opacity:.5;cursor:default}
   .explain{min-height:28px;color:var(--ink);white-space:pre-wrap;line-height:1.6;margin-top:8px}
   .hidden{display:none}
-  .final{margin:26px 0 10px;white-space:pre-wrap;line-height:1.8;text-align:center}
+  .final{margin:26px auto 10px;white-space:pre-wrap;line-height:1.8;text-align:center;max-width:800px}
   .hr{height:1px;margin:26px 0;background:linear-gradient(90deg,transparent,rgba(212,175,55,.4),transparent)}
+  /* twinkling notes layer */
+  .notesLayer{position:fixed;inset:0;pointer-events:none;z-index:1}
+  .note{
+    position:absolute;color:var(--gold);opacity:.6;filter:drop-shadow(0 0 6px rgba(212,175,55,.7));
+    animation:twinkle var(--t) ease-in-out infinite;
+    will-change:transform, opacity;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.25;transform:scale(.9) rotate(0deg)}
+    50%{opacity:1;transform:scale(1.2) rotate(5deg)}
+  }
+  /* falling mode for ending */
+  .fall{
+    animation: fall 6s linear forwards;
+  }
+  @keyframes fall{
+    0%{transform:translateY(-10vh) scale(1); opacity:.9}
+    100%{transform:translateY(110vh) scale(.85); opacity:0}
+  }
+  /* ending overlay */
+  #endingOverlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:3
+  }
 </style>
 </head>
 <body>
+
+<div class="notesLayer" id="notes"></div>
+
 <div class="wrap">
   <h1>🌙 MISSION 28 // THE ECHO FAILES</h1>
   <p class="intro">
@@ -41,8 +68,11 @@
   <div class="card" id="c1">
     <div class="lyric"><em>“A kiss is just a kiss, a sigh is just a sigh…”</em></div>
     <div class="controls">
-      <input id="a1" type="text" placeholder="">
-      <button onclick="check(1,['as','time','goes','by'])">Confirm</button>
+      <label for="t1">Song title</label>
+      <input id="t1" type="text" placeholder="">
+      <label for="r1">Artist</label>
+      <input id="r1" type="text" placeholder="">
+      <button class="btn" onclick="check(1,['as','time','goes','by'],['dooley','wilson'])">Confirm</button>
     </div>
     <div class="explain" id="e1"></div>
   </div>
@@ -51,8 +81,11 @@
   <div class="card hidden" id="c2">
     <div class="lyric"><em>“The memory of all that — no, no, they can’t take that away from me.”</em></div>
     <div class="controls">
-      <input id="a2" type="text" placeholder="">
-      <button onclick="check(2,['they','cant','take','that','away','from','me'])">Confirm</button>
+      <label for="t2">Song title</label>
+      <input id="t2" type="text" placeholder="">
+      <label for="r2">Artist</label>
+      <input id="r2" type="text" placeholder="">
+      <button class="btn" onclick="check(2,['they','cant','take','that','away','from','me'],['ella','louis'])">Confirm</button>
     </div>
     <div class="explain" id="e2"></div>
   </div>
@@ -61,8 +94,11 @@
   <div class="card hidden" id="c3">
     <div class="lyric"><em>“Fill my heart with song, and let me sing forevermore…”</em></div>
     <div class="controls">
-      <input id="a3" type="text" placeholder="">
-      <button onclick="check(3,['fly','me','to','the','moon'])">Confirm</button>
+      <label for="t3">Song title</label>
+      <input id="t3" type="text" placeholder="">
+      <label for="r3">Artist</label>
+      <input id="r3" type="text" placeholder="">
+      <button class="btn" onclick="check(3,['fly','me','to','the','moon'],['frank','sinatra'])">Confirm</button>
     </div>
     <div class="explain" id="e3"></div>
   </div>
@@ -71,8 +107,11 @@
   <div class="card hidden" id="c4">
     <div class="lyric"><em>“Though near or far, like a song of love that clings to me…”</em></div>
     <div class="controls">
-      <input id="a4" type="text" placeholder="">
-      <button onclick="check(4,['unforgettable'])">Confirm</button>
+      <label for="t4">Song title</label>
+      <input id="t4" type="text" placeholder="">
+      <label for="r4">Artist</label>
+      <input id="r4" type="text" placeholder="">
+      <button class="btn" onclick="check(4,['unforgettable'],['nat','natalie','cole'])">Confirm</button>
     </div>
     <div class="explain" id="e4"></div>
   </div>
@@ -81,8 +120,11 @@
   <div class="card hidden" id="c5">
     <div class="lyric"><em>“Some day, when I’m awfully low… I’ll just remember you, and the way you look…”</em></div>
     <div class="controls">
-      <input id="a5" type="text" placeholder="">
-      <button onclick="check(5,['the','way','you','look','tonight'])">Confirm</button>
+      <label for="t5">Song title</label>
+      <input id="t5" type="text" placeholder="">
+      <label for="r5">Artist</label>
+      <input id="r5" type="text" placeholder="">
+      <button class="btn" onclick="check(5,['the','way','you','look','tonight'],['fred','astaire'])">Confirm</button>
     </div>
     <div class="explain" id="e5"></div>
   </div>
@@ -91,8 +133,11 @@
   <div class="card hidden" id="c6">
     <div class="lyric"><em>“Heaven… I’m in heaven…”</em></div>
     <div class="controls">
-      <input id="a6" type="text" placeholder="">
-      <button onclick="check(6,['cheek','to','cheek'])">Confirm</button>
+      <label for="t6">Song title</label>
+      <input id="t6" type="text" placeholder="">
+      <label for="r6">Artist</label>
+      <input id="r6" type="text" placeholder="">
+      <button class="btn" onclick="check(6,['cheek','to','cheek'],['fred','astaire'])">Confirm</button>
     </div>
     <div class="explain" id="e6"></div>
   </div>
@@ -101,8 +146,11 @@
   <div class="card hidden" id="c7">
     <div class="lyric"><em>“And the moment I can feel that you feel that way too…”</em></div>
     <div class="controls">
-      <input id="a7" type="text" placeholder="">
-      <button onclick="check(7,['when','i','fall','in','love'])">Confirm</button>
+      <label for="t7">Song title</label>
+      <input id="t7" type="text" placeholder="">
+      <label for="r7">Artist</label>
+      <input id="r7" type="text" placeholder="">
+      <button class="btn" onclick="check(7,['when','i','fall','in','love'],['nat','king','cole'])">Confirm</button>
     </div>
     <div class="explain" id="e7"></div>
   </div>
@@ -111,35 +159,41 @@
   <div class="card hidden" id="c8">
     <div class="lyric"><em>“I’ve got you deep in the heart…”</em></div>
     <div class="controls">
-      <input id="a8" type="text" placeholder="">
-      <button onclick="check(8,['ive','got','you','under','my','skin'])">Confirm</button>
+      <label for="t8">Song title</label>
+      <input id="t8" type="text" placeholder="">
+      <label for="r8">Artist</label>
+      <input id="r8" type="text" placeholder="">
+      <button class="btn" onclick="check(8,['ive','got','you','under','my','skin'],['frank','sinatra'])">Confirm</button>
     </div>
     <div class="explain" id="e8"></div>
   </div>
 
-  <!-- Final -->
+  <!-- Final page trigger -->
   <div id="finalBlock" class="hidden">
     <div class="hr"></div>
     <p class="final" id="finalText"></p>
   </div>
 </div>
 
+<!-- Ending overlay for falling notes -->
+<div id="endingOverlay">
+  <p class="final" id="endingMessage" style="color:var(--gold);"></p>
+</div>
+
 <script>
-/* Normalize: ignore case/accents/punctuation; compare by words (order doesn't matter) */
+/* --- helpers --- */
 function normalize(s){
   return (s||'').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // remove accents
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // accents
     .replace(/&/g,' and ')
-    .replace(/[^a-z0-9\s]/g,' ')  // drop punctuation
+    .replace(/[^a-z0-9\s]/g,' ')  // strip punctuation
     .replace(/\s+/g,' ')          // collapse spaces
     .trim();
 }
 function containsAllWords(input, requiredWords){
-  const words = new Set(normalize(input).split(' '));
-  return requiredWords.every(w => words.has(normalize(w)));
+  const w = new Set(normalize(input).split(' ').filter(Boolean));
+  return requiredWords.every(req => w.has(normalize(req)));
 }
-
-/* Typewriter */
 function typewrite(el, txt, spd=22, done){
   el.textContent=''; let i=0;
   (function step(){
@@ -148,7 +202,7 @@ function typewrite(el, txt, spd=22, done){
   })();
 }
 
-/* Per-answer messages */
+/* per-answer messages */
 const msg = {
   1: "“The beginning of every timeless story — a single look, a single kiss.”\n(As Time Goes By — Dooley Wilson, Casablanca)",
   2: "“Some things never fade. The way you look at me is one of them.”\n(They Can’t Take That Away From Me — Ella & Louis)",
@@ -160,46 +214,79 @@ const msg = {
   8: "“Congratulations, Agent B. The case is solved — and the evidence is… undeniable.”\n(I’ve Got You Under My Skin — Frank Sinatra)"
 };
 
-function check(idx, requiredWords){
-  const input = document.getElementById('a'+idx);
-  const exp   = document.getElementById('e'+idx);
-  const ok = containsAllWords(input.value, requiredWords);
-  if(!ok){ alert('Not quite, Agent. Listen closer.'); return; }
+/* check logic for each card */
+function check(idx, requiredTitleWords, requiredArtistWords){
+  const t = document.getElementById('t'+idx);
+  const r = document.getElementById('r'+idx);
+  const e = document.getElementById('e'+idx);
 
-  // lock input
-  input.disabled = true;
+  const titleOK  = containsAllWords(t.value, requiredTitleWords);
+  const artistOK = containsAllWords(r.value, requiredArtistWords);
+
+  if(!titleOK || !artistOK){ alert('Not quite, Agent. Listen closer.'); return; }
+
+  // lock inputs
+  t.disabled = true; r.disabled = true;
   const text = msg[idx];
-  typewrite(exp, text, 20, () => {
+  typewrite(e, text, 20, () => {
     const next = document.getElementById('c'+(idx+1));
     if(next){ next.classList.remove('hidden'); next.scrollIntoView({behavior:'smooth',block:'start'}); }
     else { showFinal(); }
   });
 }
 
+/* final page: start falling notes + type message */
 function showFinal(){
-  const block = document.getElementById('finalBlock');
-  block.classList.remove('hidden');
+  const overlay = document.getElementById('endingOverlay');
+  overlay.style.display = 'flex';
+
+  // start falling effect: convert existing notes to falling clones
+  startFallingNotes();
+
   const t = `“Our story never needed music to feel like a song.
 But every time I hear one… I still hear you.”
 — M`;
-  typewrite(document.getElementById('finalText'), t, 22);
+  typewrite(document.getElementById('endingMessage'), t, 22);
 }
 
-/* Optional: Enter confirms the first visible unlocked card */
-document.addEventListener('keypress',(e)=>{
-  if(e.key!=='Enter') return;
-  for(let i=1;i<=8;i++){
-    const card = document.getElementById('c'+i);
-    if(card && !card.classList.contains('hidden')){
-      const input = document.getElementById('a'+i);
-      if(input && !input.disabled){
-        const btn = card.querySelector('button');
-        if(btn) btn.click();
-        break;
-      }
-    }
+/* twinkling notes creation */
+(function makeNotes(){
+  const layer = document.getElementById('notes');
+  const N = 80; // male i još manje note
+  const glyphs = ['♪','♫','𝄞','♩','♬','♭'];
+  for(let i=0;i<N;i++){
+    const s = document.createElement('span');
+    s.className = 'note';
+    s.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    s.style.left = Math.random()*100+'vw';
+    s.style.top  = Math.random()*100+'vh';
+    const size = (Math.random()*14)+10; // 10–24px
+    s.style.fontSize = size+'px';
+    s.style.opacity = (Math.random()*0.7+0.2).toFixed(2);
+    s.style.setProperty('--t',(2.5+Math.random()*3.5)+'s');
+    layer.appendChild(s);
   }
-});
+})();
+
+/* convert twinkling notes to falling ones on the ending */
+function startFallingNotes(){
+  const layer = document.getElementById('notes');
+  const notes = Array.from(layer.querySelectorAll('.note'));
+  // clone a portion to intensify fall
+  for(let i=0;i<40;i++){
+    const clone = notes[i % notes.length].cloneNode(true);
+    clone.style.left = Math.random()*100+'vw';
+    clone.style.top  = (-10 - Math.random()*20)+'vh';
+    clone.classList.add('fall');
+    clone.style.animationDelay = (Math.random()*1.5)+'s';
+    layer.appendChild(clone);
+  }
+  // set all existing to fall from current pos
+  notes.forEach((n,idx)=>{
+    n.classList.add('fall');
+    n.style.animationDelay = (Math.random()*1.2)+'s';
+  });
+}
 </script>
 </body>
 </html>
